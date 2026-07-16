@@ -12,6 +12,7 @@ export interface CreateUserRequest {
   userType: UserType;
   facilityId?: string;
   ambulanceId?: string;
+  crewRole?: string;
 }
 
 export interface UpdateUserRequest {
@@ -22,6 +23,7 @@ export interface UpdateUserRequest {
   status?: UserStatus;
   facilityId?: string;
   ambulanceId?: string;
+  crewRole?: string;
   avatarUrl?: string;
 }
 
@@ -57,4 +59,5 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   lastLoginAt?: string;
+  crewRole?: string;
 }
