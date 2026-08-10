@@ -192,10 +192,10 @@ export default function AmbulanceMap({ ambulances, onAmbulanceClick, isLoading }
               <a href="tel:${ambulance.phone}" style="color: #3b82f6; text-decoration: none;">${ambulance.phone}</a>
             </div>` : ''}
             
-            ${ambulance.crewMembers && ambulance.crewMembers.length > 0 ? `
+            ${ambulance.crew && ambulance.crew.length > 0 ? `
             <div style="display: flex; align-items: flex-start; gap: 6px;">
               <span style="color: #9ca3af;">Crew:</span>
-              <span style="color: #374151;">${ambulance.crewMembers.join(', ')}</span>
+              <span style="color: #374151;">${ambulance.crew.map(c => `${c.firstName} ${c.lastName}`).join(', ')}</span>
             </div>` : ''}
             
             ${ambulance.equipment && ambulance.equipment.length > 0 ? `

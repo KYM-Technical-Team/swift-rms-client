@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ambulanceService, facilityService, userService } from '@/lib/api';
-import type { Ambulance, CreateAmbulanceRequest, AmbulanceStatus } from '@/lib/api/ambulances';
+import type { Ambulance, CreateAmbulanceRequest, UpdateAmbulanceRequest, AmbulanceStatus } from '@/lib/api/ambulances';
 import { 
   Ambulance as AmbulanceIcon, 
   MapPin,
@@ -22,7 +22,8 @@ import {
   Settings,
   Users,
   List,
-  Map
+  Map,
+  Pencil
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
@@ -44,6 +45,15 @@ const ambulanceSchema = z.object({
 });
 
 type AmbulanceFormData = z.infer<typeof ambulanceSchema>;
+
+const editAmbulanceSchema = z.object({
+  facilityId: z.string().optional(),
+  status: z.enum(['AVAILABLE', 'ON_MISSION', 'MAINTENANCE', 'OUT_OF_SERVICE']).optional(),
+  phone: z.string().optional(),
+  equipment: z.string().optional(),
+});
+
+type EditAmbulanceFormData = z.infer<typeof editAmbulanceSchema>;
 
 interface CrewCandidate {
   id: string;
@@ -111,10 +121,12 @@ function StatusBadge({ status }: { status: string }) {
 export default function AmbulancesPage() {
   const [selected, setSelected] = useState<Ambulance | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [statusFilter, setStatusFilter] = useState('');
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [selectedCrewIds, setSelectedCrewIds] = useState<string[]>([]);
+  const [editCrewIds, setEditCrewIds] = useState<string[]>([]);
   const queryClient = useQueryClient();
 
   // Fetch ambulances
@@ -138,7 +150,7 @@ export default function AmbulancesPage() {
   const { data: crewData, isLoading: crewLoading } = useQuery({
     queryKey: ['crew', 'unassigned'],
     queryFn: () => userService.list({ userType: 'AMBULANCE_CREW', limit: 500, status: 'ACTIVE' }),
-    enabled: showModal,
+    enabled: showModal || showEditModal,
   });
 
   const ambulances = ambulancesData?.data || [];
@@ -166,6 +178,10 @@ export default function AmbulancesPage() {
     }
   });
 
+  const { register: registerEdit, handleSubmit: handleEditSubmit, reset: resetEdit, formState: { errors: editErrors } } = useForm<EditAmbulanceFormData>({
+    resolver: zodResolver(editAmbulanceSchema),
+  });
+
   const createMutation = useMutation({
     mutationFn: (data: CreateAmbulanceRequest) => ambulanceService.create(data),
     onSuccess: () => {
@@ -178,21 +194,57 @@ export default function AmbulancesPage() {
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateAmbulanceRequest }) => ambulanceService.update(id, data),
+    onSuccess: (updatedAmbulance) => {
+      queryClient.invalidateQueries({ queryKey: ['ambulances'] });
+      queryClient.invalidateQueries({ queryKey: ['ambulance-stats'] });
+      queryClient.invalidateQueries({ queryKey: ['crew', 'unassigned'] });
+      setSelected(updatedAmbulance);
+      setShowEditModal(false);
+      resetEdit();
+      setEditCrewIds([]);
+    },
+  });
+
   const onSubmit = (data: AmbulanceFormData) => {
-    const selectedCrew = availableCrew.filter((member) => selectedCrewIds.includes(member.id));
-    const crewMembers = selectedCrew
-      .map((member) => `${member.firstName} ${member.lastName}`.trim())
-      .filter(Boolean);
-    
     const request: CreateAmbulanceRequest = {
       ambulanceId: data.ambulanceId,
       facilityId: data.facilityId || undefined,
       status: data.status as AmbulanceStatus,
       phone: data.phone || undefined,
       equipment: data.equipment ? data.equipment.split(',').map(e => e.trim()).filter(Boolean) : undefined,
-      crewMembers: crewMembers.length > 0 ? crewMembers : undefined,
+      crewMemberIds: selectedCrewIds.length > 0 ? selectedCrewIds : undefined,
     };
     createMutation.mutate(request);
+  };
+
+  const handleEdit = (ambulance: Ambulance) => {
+    resetEdit({
+      facilityId: ambulance.facility?.id || '',
+      status: ambulance.status,
+      phone: ambulance.phone || '',
+      equipment: ambulance.equipment?.join(', ') || '',
+    });
+    setEditCrewIds([]);
+    setShowEditModal(true);
+  };
+
+  const onEditSubmit = (data: EditAmbulanceFormData) => {
+    if (!selected) return;
+
+    // Build crew member IDs: keep existing crew IDs and add newly selected ones
+    const existingCrewIds = (selected.crew || []).map(c => c.id);
+    const combinedCrewIds = [...existingCrewIds, ...editCrewIds];
+
+    const request: UpdateAmbulanceRequest = {
+      facilityId: data.facilityId || undefined,
+      status: data.status as AmbulanceStatus,
+      phone: data.phone || undefined,
+      equipment: data.equipment ? data.equipment.split(',').map(e => e.trim()).filter(Boolean) : undefined,
+      crewMemberIds: combinedCrewIds.length > 0 ? combinedCrewIds : [],
+    };
+    updateMutation.mutate({ id: selected.id, data: request });
   };
 
   const isLoading = ambulancesLoading || statsLoading;
@@ -405,14 +457,14 @@ export default function AmbulancesPage() {
                         </div>
                       </div>
                     )}
-                    {selected.crewMembers && selected.crewMembers.length > 0 && (
+                    {selected.crew && selected.crew.length > 0 && (
                       <div>
                         <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
                           Crew Members
                         </div>
                         <div className="flex flex-wrap gap-1">
-                          {selected.crewMembers.map((crew, i) => (
-                            <span key={i} style={{
+                          {selected.crew.map((member) => (
+                            <span key={member.id} style={{
                               padding: '4px 10px',
                               background: 'var(--bg-overlay)',
                               border: '1px solid var(--border-subtle)',
@@ -420,7 +472,7 @@ export default function AmbulancesPage() {
                               fontSize: '12px',
                               color: 'var(--text-secondary)'
                             }}>
-                              {crew}
+                              {member.firstName} {member.lastName}
                             </span>
                           ))}
                         </div>
@@ -485,6 +537,18 @@ export default function AmbulancesPage() {
                         </div>
                       </div>
                     )}
+                  </div>
+
+                  {/* Edit Button */}
+                  <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: 'var(--space-4)', marginTop: 'var(--space-2)' }}>
+                    <button
+                      className="btn btn-primary"
+                      style={{ width: '100%' }}
+                      onClick={() => handleEdit(selected)}
+                    >
+                      <Pencil size={14} />
+                      Edit Ambulance
+                    </button>
                   </div>
                 </div>
               ) : (
@@ -574,10 +638,10 @@ export default function AmbulancesPage() {
                         {amb.phone}
                       </div>
                     ) : <span />}
-                    {amb.crewMembers && amb.crewMembers.length > 0 && (
+                    {amb.crew && amb.crew.length > 0 && (
                       <div className="flex items-center gap-1" style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>
                         <Users size={12} />
-                        {amb.crewMembers.length}
+                        {amb.crew.length}
                       </div>
                     )}
                   </div>
@@ -638,14 +702,14 @@ export default function AmbulancesPage() {
                         </div>
                       </div>
                     )}
-                    {selected.crewMembers && selected.crewMembers.length > 0 && (
+                    {selected.crew && selected.crew.length > 0 && (
                       <div>
                         <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.02em' }}>
                           Crew Members
                         </div>
                         <div className="flex flex-wrap gap-1">
-                          {selected.crewMembers.map((crew, i) => (
-                            <span key={i} style={{
+                          {selected.crew.map((member) => (
+                            <span key={member.id} style={{
                               padding: '4px 10px',
                               background: 'var(--bg-overlay)',
                               border: '1px solid var(--border-subtle)',
@@ -653,7 +717,7 @@ export default function AmbulancesPage() {
                               fontSize: '12px',
                               color: 'var(--text-secondary)'
                             }}>
-                              {crew}
+                              {member.firstName} {member.lastName}
                             </span>
                           ))}
                         </div>
@@ -693,6 +757,18 @@ export default function AmbulancesPage() {
                         </div>
                       </div>
                     )}
+                  </div>
+
+                  {/* Edit Button */}
+                  <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: 'var(--space-4)', marginTop: 'var(--space-2)' }}>
+                    <button
+                      className="btn btn-primary"
+                      style={{ width: '100%' }}
+                      onClick={() => handleEdit(selected)}
+                    >
+                      <Pencil size={14} />
+                      Edit Ambulance
+                    </button>
                   </div>
                 </div>
               ) : (
@@ -950,6 +1026,291 @@ export default function AmbulancesPage() {
               {createMutation.isError && (
                 <p style={{ padding: '0 var(--space-5) var(--space-4)', fontSize: '12px', color: 'var(--danger)' }}>
                   Failed to create ambulance. Please try again.
+                </p>
+              )}
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Ambulance Modal */}
+      {showEditModal && selected && (
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.7)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: 'var(--space-4)'
+          }}
+          onClick={() => setShowEditModal(false)}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{ 
+              background: 'var(--bg-surface)',
+              border: '1px solid var(--border-default)',
+              borderRadius: 'var(--radius-xl)',
+              boxShadow: 'var(--shadow-xl)',
+              maxWidth: 520,
+              width: '100%',
+              maxHeight: '90vh',
+              overflow: 'auto'
+            }}
+          >
+            {/* Header */}
+            <div style={{ 
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: 'var(--space-5)',
+              borderBottom: '1px solid var(--border-subtle)'
+            }}>
+              <div className="flex items-center gap-3">
+                <div style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 'var(--radius-lg)',
+                  background: 'var(--accent-subtle)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Pencil size={20} style={{ color: 'var(--accent-light)' }} />
+                </div>
+                <div>
+                  <h2 style={{ margin: 0, fontSize: '17px', fontWeight: 600, color: 'var(--text-primary)' }}>
+                    Edit Ambulance
+                  </h2>
+                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-tertiary)' }}>
+                    {selected.ambulanceId}
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setShowEditModal(false)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 32,
+                  height: 32,
+                  borderRadius: 'var(--radius-md)',
+                  border: 'none',
+                  background: 'var(--glass-bg)',
+                  color: 'var(--text-tertiary)',
+                  cursor: 'pointer'
+                }}
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <form onSubmit={handleEditSubmit(onEditSubmit)}>
+              <div style={{ padding: 'var(--space-5)' }}>
+                {/* Status & Phone */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)', marginBottom: 'var(--space-4)' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 'var(--space-2)' }}>
+                      Status
+                    </label>
+                    <select className="form-input" {...registerEdit('status')}>
+                      <option value="AVAILABLE">Available</option>
+                      <option value="ON_MISSION">On Mission</option>
+                      <option value="MAINTENANCE">Maintenance</option>
+                      <option value="OUT_OF_SERVICE">Out of Service</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 'var(--space-2)' }}>
+                      Phone Number
+                    </label>
+                    <input 
+                      type="tel" 
+                      className="form-input" 
+                      placeholder="+232 XX XXX XXX"
+                      {...registerEdit('phone')}
+                    />
+                  </div>
+                </div>
+
+                {/* Facility */}
+                <div style={{ marginBottom: 'var(--space-4)' }}>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 'var(--space-2)' }}>
+                    Assigned Facility
+                  </label>
+                  <select className="form-input" {...registerEdit('facilityId')}>
+                    <option value="">-- Select Facility --</option>
+                    {facilities.map((f: { id: string; name: string }) => (
+                      <option key={f.id} value={f.id}>{f.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Equipment */}
+                <div style={{ marginBottom: 'var(--space-4)' }}>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 'var(--space-2)' }}>
+                    Equipment
+                  </label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    placeholder="AED, Oxygen, Stretcher (comma separated)"
+                    {...registerEdit('equipment')}
+                  />
+                </div>
+
+                {/* Current Crew Members */}
+                <div style={{ marginBottom: 'var(--space-4)' }}>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 'var(--space-2)' }}>
+                    Current Crew Members
+                  </label>
+                  {selected.crew && selected.crew.length > 0 ? (
+                    <div style={{
+                      border: '1px solid var(--border-default)',
+                      borderRadius: 'var(--radius-md)',
+                      padding: 'var(--space-3)',
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: 'var(--space-2)',
+                    }}>
+                      {selected.crew.map((member) => (
+                        <span key={member.id} style={{
+                          padding: '4px 10px',
+                          background: 'var(--bg-overlay)',
+                          border: '1px solid var(--border-subtle)',
+                          borderRadius: 'var(--radius-full)',
+                          fontSize: '12px',
+                          color: 'var(--text-secondary)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                        }}>
+                          <User size={12} />
+                          {member.firstName} {member.lastName}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updatedCrew = selected.crew!.filter((c) => c.id !== member.id);
+                              setSelected({ ...selected, crew: updatedCrew });
+                            }}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              cursor: 'pointer',
+                              padding: 0,
+                              color: 'var(--text-tertiary)',
+                              display: 'flex',
+                              alignItems: 'center',
+                            }}
+                            title="Remove crew member"
+                          >
+                            <X size={12} />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-sm text-muted" style={{ padding: 'var(--space-2) 0' }}>
+                      No crew members assigned.
+                    </div>
+                  )}
+                </div>
+
+                {/* Add Crew Members */}
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 'var(--space-2)' }}>
+                    Add Crew Members
+                  </label>
+                  {crewLoading ? (
+                    <div className="flex items-center gap-2" style={{
+                      border: '1px solid var(--border-default)',
+                      borderRadius: 'var(--radius-md)',
+                      padding: 'var(--space-3)',
+                      background: 'var(--bg-subtle)'
+                    }}>
+                      <div className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} />
+                      <span className="text-sm text-muted">Loading crew members...</span>
+                    </div>
+                  ) : availableCrew.length === 0 ? (
+                    <div className="text-sm text-muted" style={{ padding: 'var(--space-3) 0' }}>
+                      No unassigned crew members available.
+                    </div>
+                  ) : (
+                    <div style={{
+                      border: '1px solid var(--border-default)',
+                      borderRadius: 'var(--radius-md)',
+                      padding: 'var(--space-3)',
+                      display: 'grid',
+                      gap: 'var(--space-2)',
+                      maxHeight: 160,
+                      overflow: 'auto'
+                    }}>
+                      {availableCrew.map((member) => {
+                        const fullName = `${member.firstName} ${member.lastName}`.trim();
+                        const isSelected = editCrewIds.includes(member.id);
+                        return (
+                          <label
+                            key={member.id}
+                            className="flex items-start gap-2"
+                            style={{
+                              padding: 'var(--space-2)',
+                              borderRadius: 'var(--radius-md)',
+                              background: isSelected ? 'var(--accent-subtle)' : 'transparent',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => {
+                                setEditCrewIds((prev) =>
+                                  prev.includes(member.id)
+                                    ? prev.filter((id) => id !== member.id)
+                                    : [...prev, member.id]
+                                );
+                              }}
+                              style={{ marginTop: 3 }}
+                            />
+                            <div>
+                              <div className="font-medium" style={{ fontSize: '13px' }}>{fullName}</div>
+                              <div className="text-xs text-muted">
+                                {member.phone}
+                                {member.facility?.name ? ` • ${member.facility.name}` : ''}
+                              </div>
+                            </div>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
+                  <p className="form-hint">Only crew members not already assigned to an ambulance are listed.</p>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div style={{ 
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 'var(--space-3)',
+                padding: 'var(--space-4) var(--space-5)',
+                borderTop: '1px solid var(--border-subtle)',
+                background: 'var(--bg-elevated)'
+              }}>
+                <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={updateMutation.isPending}>
+                  {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+              {updateMutation.isError && (
+                <p style={{ padding: '0 var(--space-5) var(--space-4)', fontSize: '12px', color: 'var(--danger)' }}>
+                  Failed to update ambulance. Please try again.
                 </p>
               )}
             </form>

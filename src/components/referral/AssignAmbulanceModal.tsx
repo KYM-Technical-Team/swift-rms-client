@@ -42,7 +42,7 @@ export function AssignAmbulanceModal({
     (amb: Ambulance) => amb.status === 'AVAILABLE'
   ) || [];
   const selectedAmbulance = availableAmbulances.find((amb) => amb.id === selectedAmbulanceId);
-  const crewMembers = selectedAmbulance?.crewMembers || [];
+  const crewMembers = selectedAmbulance?.crew || [];
 
   // Reset form when modal opens
   useEffect(() => {
@@ -251,7 +251,7 @@ export function AssignAmbulanceModal({
                 >
                   <option value="">Select crew lead...</option>
                   {crewMembers.map((member) => (
-                    <option key={member} value={member}>{member}</option>
+                    <option key={member.id} value={`${member.firstName} ${member.lastName}`}>{member.firstName} {member.lastName}</option>
                   ))}
                 </select>
               ) : (

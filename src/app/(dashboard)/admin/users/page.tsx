@@ -44,6 +44,7 @@ const userSchema = z.object({
   userType: z.string().min(1, 'Role is required'),
   facilityId: z.string().optional(),
   ambulanceId: z.string().optional().or(z.literal('')),
+  crewRole: z.string().optional(),
 });
 
 type UserFormData = z.infer<typeof userSchema>;
@@ -129,6 +130,7 @@ export default function AdminUsersPage() {
       email: data.email || undefined,
       facilityId: data.facilityId || undefined,
       ambulanceId: data.ambulanceId || undefined,
+      crewRole: data.userType === 'AMBULANCE_CREW' ? data.crewRole || undefined : undefined,
       userType: data.userType as UserType,
     }),
     onSuccess: () => {
@@ -524,18 +526,28 @@ export default function AdminUsersPage() {
                 </div>
 
                 {selectedUserType === 'AMBULANCE_CREW' && (
-                  <div className="form-group">
-                    <label className="form-label">Assigned Ambulance (Optional)</label>
-                    <select className="form-input" {...register('ambulanceId')}>
-                      <option value="">-- Select Ambulance --</option>
-                      {ambulances.map((amb: any) => (
-                        <option key={amb.id} value={amb.id}>
-                          {amb.ambulanceId}
-                        </option>
-                      ))}
-                    </select>
-                    <span className="form-hint">Leave blank to create an unassigned crew member.</span>
-                  </div>
+                  <>
+                    <div className="form-group">
+                      <label className="form-label">Crew Role (Optional)</label>
+                      <select className="form-input" {...register('crewRole')}>
+                        <option value="">-- Select Role --</option>
+                        <option value="PARAMEDIC">Paramedic</option>
+                        <option value="DRIVER">Driver</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Assigned Ambulance (Optional)</label>
+                      <select className="form-input" {...register('ambulanceId')}>
+                        <option value="">-- Select Ambulance --</option>
+                        {ambulances.map((amb: any) => (
+                          <option key={amb.id} value={amb.id}>
+                            {amb.ambulanceId}
+                          </option>
+                        ))}
+                      </select>
+                      <span className="form-hint">Leave blank to create an unassigned crew member.</span>
+                    </div>
+                  </>
                 )}
 
                 <div className="form-group">

@@ -3,6 +3,14 @@ import { ApiResponse, PaginationMeta } from '@/types';
 
 export type AmbulanceStatus = 'AVAILABLE' | 'ON_MISSION' | 'MAINTENANCE' | 'OUT_OF_SERVICE';
 
+export interface CrewMember {
+  id: string;
+  firstName: string;
+  lastName: string;
+  userType: string;
+  crewRole?: string;
+}
+
 export interface Ambulance {
   id: string;
   ambulanceId: string;
@@ -10,6 +18,7 @@ export interface Ambulance {
     id: string;
     name: string;
     facilityCode: string;
+    facilityType?: string;
   };
   status: AmbulanceStatus;
   phone?: string;
@@ -17,7 +26,7 @@ export interface Ambulance {
   longitude?: number;
   lastLocationUpdate?: string;
   equipment?: string[];
-  crewMembers?: string[];
+  crew?: CrewMember[];
   createdAt: string;
   updatedAt: string;
 }
@@ -39,7 +48,7 @@ export interface CreateAmbulanceRequest {
   latitude?: number;
   longitude?: number;
   equipment?: string[];
-  crewMembers?: string[];
+  crewMemberIds?: string[];
 }
 
 export interface UpdateAmbulanceRequest {
@@ -49,7 +58,7 @@ export interface UpdateAmbulanceRequest {
   latitude?: number;
   longitude?: number;
   equipment?: string[];
-  crewMembers?: string[];
+  crewMemberIds?: string[];
 }
 
 export interface AmbulanceListQuery {
