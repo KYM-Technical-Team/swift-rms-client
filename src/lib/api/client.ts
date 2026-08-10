@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { ApiResponse, ApiError } from '@/types';
 
-// const BASE_URL = process.env.NEXT_PUBLIC_API_URL  || 'http://loclhost:8080/api/v1' || "https://swfit-rms-server.onrender.com/api/v1";
+// const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/v1' || "https://swfit-rms-server.onrender.com/api/v1";
 const BASE_URL = "https://swfit-rms-server-xc56.onrender.com/api/v1";
 
 // Create axios instance
@@ -102,7 +102,7 @@ apiClient.interceptors.response.use(
 
         const { accessToken, refreshToken: newRefreshToken } = response.data.data;
         setTokens(accessToken, newRefreshToken);
-        
+
         isRefreshing = false;
         onTokenRefreshed(accessToken);
 
