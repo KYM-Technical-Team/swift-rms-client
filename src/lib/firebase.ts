@@ -17,19 +17,25 @@ let messaging: Messaging | undefined;
 function initializeFirebase() {
   if (typeof window === 'undefined') return;
   
-  if (!getApps().length) {
-    app = initializeApp(firebaseConfig);
-  } else {
-    app = getApps()[0];
+  // Gracefully guard against missing configuration properties
+  if (!firebaseConfig.apiKey || !firebaseConfig.projectId || !firebaseConfig.messagingSenderId || !firebaseConfig.appId) {
+    console.warn('Firebase initialization skipped: Missing required configuration keys (apiKey, projectId, messagingSenderId, or appId). Push notifications are disabled.');
+    return;
   }
   
-  // Check if browser supports notifications
-  if ('Notification' in window && 'serviceWorker' in navigator) {
-    try {
-      messaging = getMessaging(app);
-    } catch (error) {
-      console.error('Failed to initialize Firebase Messaging:', error);
+  try {
+    if (!getApps().length) {
+      app = initializeApp(firebaseConfig);
+    } else {
+      app = getApps()[0];
     }
+    
+    // Check if browser supports notifications
+    if ('Notification' in window && 'serviceWorker' in navigator) {
+      messaging = getMessaging(app);
+    }
+  } catch (error) {
+    console.error('Failed to initialize Firebase app or messaging:', error);
   }
 }
 

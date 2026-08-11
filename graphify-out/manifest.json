@@ -1,0 +1,442 @@
+{
+  "/Users/emmieb/work/swift-rms-client/next-env.d.ts": {
+    "mtime": 1786407689.150491,
+    "hash": "2a74d3909800ca5467fa83b0ab4a4890"
+  },
+  "/Users/emmieb/work/swift-rms-client/eslint.config.mjs": {
+    "mtime": 1775553602.2355177,
+    "hash": "dfa1f5f6a7037bf39dc510f30b180002"
+  },
+  "/Users/emmieb/work/swift-rms-client/next.config.ts": {
+    "mtime": 1775553602.2355964,
+    "hash": "32c6f7a3fbad5ecba703f6ca86c055ee"
+  },
+  "/Users/emmieb/work/swift-rms-client/public/firebase-messaging-sw.js": {
+    "mtime": 1775553602.2366083,
+    "hash": "be22d8a0b1709639b9d983972da845ca"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/types/referral.ts": {
+    "mtime": 1786407619.1915233,
+    "hash": "0d42ab06be9756c1f5d67d44d4512a81"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/types/patient-report.ts": {
+    "mtime": 1775553602.2725627,
+    "hash": "60bd234a657b7f04c5938d5b63d5d208"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/types/readiness.ts": {
+    "mtime": 1775553602.272728,
+    "hash": "f771d5477f7a92083489f36cc4744086"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/types/analytics.ts": {
+    "mtime": 1775553602.2720327,
+    "hash": "85cde70324572ef44aabe6a885db6906"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/types/common.ts": {
+    "mtime": 1775553602.2722006,
+    "hash": "a7579d5813d57f96fc4d1a3369ef9c0a"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/types/facility.ts": {
+    "mtime": 1775553602.2722838,
+    "hash": "ad587825f0513e0d73b045055ef72571"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/types/patient.ts": {
+    "mtime": 1775553602.2726393,
+    "hash": "c58b8eaa489e253b7bfb71bf1b3cf637"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/types/index.ts": {
+    "mtime": 1775553602.2723596,
+    "hash": "a3504e3abd47366bd440bde645e15862"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/types/nems.ts": {
+    "mtime": 1775553602.2724497,
+    "hash": "ff34de78b8b3ee6a10e4fc60ab48d281"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/types/user.ts": {
+    "mtime": 1786113829.091822,
+    "hash": "bd3f500506b7eeb4de9acbb6d90e42ad"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/types/auth.ts": {
+    "mtime": 1775553602.2721162,
+    "hash": "096bce03573b0a5844ac3d86cfb5cf7f"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/layout.tsx": {
+    "mtime": 1775553602.2452588,
+    "hash": "edb405f12e3a50f8f90f9007212d6c93"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(auth)/layout.tsx": {
+    "mtime": 1775553602.2375708,
+    "hash": "50ee0a86d6fb4077e43b68b409499ac6"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(auth)/forgot-password/page.tsx": {
+    "mtime": 1778510197.4898617,
+    "hash": "07d49c3971f3f1a5d1e9718b767f86ae"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(auth)/reset-password/page.tsx": {
+    "mtime": 1775553602.237985,
+    "hash": "cc8978fa428e3ee3f570401e0bb80fe3"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(auth)/login/page.tsx": {
+    "mtime": 1775553602.2377772,
+    "hash": "348d3ca87b5fbbb0c908f99925a16e6a"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/layout.tsx": {
+    "mtime": 1775553602.24168,
+    "hash": "22a868ab72280a82ac4ccf916189c46e"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/page.tsx": {
+    "mtime": 1775553602.2419577,
+    "hash": "13b5f268be71e11335d8a8b8cc45c1c3"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/patients/page.tsx": {
+    "mtime": 1775553602.2426994,
+    "hash": "883be4e81d4c96bf2ac7590595867415"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/patients/new/page.tsx": {
+    "mtime": 1775553602.2425144,
+    "hash": "7879a1eb422d7db9c107e9250bc50e3e"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/patients/[id]/page.tsx": {
+    "mtime": 1775553602.2421973,
+    "hash": "6618daf0760635e0fe941acddf39513b"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/settings/page.tsx": {
+    "mtime": 1775553602.2446485,
+    "hash": "cd6983a3a562532b9c8316355535e378"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/clinician-workflow/page.tsx": {
+    "mtime": 1775553602.2403545,
+    "hash": "91d4c2f52a1087711fa2aa472a796713"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/referrals/page.tsx": {
+    "mtime": 1775553602.2443006,
+    "hash": "0fb8c463e72ce9264ffcaa3e96aecf8f"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/referrals/new/page.tsx": {
+    "mtime": 1775553602.2441638,
+    "hash": "cb3b65ad68a788567dff468b997bd792"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/referrals/[id]/page.tsx": {
+    "mtime": 1786448228.9599562,
+    "hash": "d217e44473968e4b0db11f605de56562"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/admin/settings/page.tsx": {
+    "mtime": 1775553602.2386754,
+    "hash": "1c1490fffb715a4a1073c7561ae32ca0"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/admin/users/page.tsx": {
+    "mtime": 1786113829.0874627,
+    "hash": "0e056bd3f5dd7fca6b42fe2b4edfdd46"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/admin/facilities/page.tsx": {
+    "mtime": 1775553602.2383795,
+    "hash": "e17cf7b5a271b34996dc61e02e7cb407"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/national-dashboard/page.tsx": {
+    "mtime": 1775553602.2418158,
+    "hash": "b5b2d27b3e5f1fd63b63580545c6e3f5"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/triage/page.tsx": {
+    "mtime": 1775553602.2448196,
+    "hash": "8c9fb2c5378135bd24ca29a90989c83b"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/ambulances/page.tsx": {
+    "mtime": 1786113829.0881643,
+    "hash": "1ae11e346414c3300d5e56793fc1e5af"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/ambulances/mission/[id]/vitals/page.tsx": {
+    "mtime": 1775553602.239442,
+    "hash": "a50c3d2ad3f5e0c8f79d7ff1bfdbcf4e"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/ambulances/mission/[id]/patient-report/page.tsx": {
+    "mtime": 1775553602.2392247,
+    "hash": "b36696ea6898276ec57a066efe40b2ee"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/call-centre/page.tsx": {
+    "mtime": 1775553602.2401319,
+    "hash": "b53b5850a0664dec3535030f49e54229"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/profile/page.tsx": {
+    "mtime": 1775553602.2432842,
+    "hash": "f94bc04a2b79827dec31ccb0c75f52bb"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/readiness/page.tsx": {
+    "mtime": 1775553602.2434602,
+    "hash": "c78a0cbe6272a6d4e9e2769d2d6e5907"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/readiness/update/page.tsx": {
+    "mtime": 1775553602.2438734,
+    "hash": "3f6ba60ee7e1a5ab8b14ee96654ea79b"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/readiness/reminders/page.tsx": {
+    "mtime": 1775553602.2436688,
+    "hash": "58965e9281b4f66cd2ba44054956945e"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/district-dashboard/page.tsx": {
+    "mtime": 1775553602.241066,
+    "hash": "3e57c85a23dbecbd634faad528a0462b"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/counter-referrals/page.tsx": {
+    "mtime": 1775553602.24059,
+    "hash": "8189363755eaafde0b5262ec3b658066"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/facilities/page.tsx": {
+    "mtime": 1775553602.2415564,
+    "hash": "330eb88f94ce7eef8564cb75a04bbdbc"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/facilities/[id]/page.tsx": {
+    "mtime": 1775553602.241462,
+    "hash": "5ca51f728641294dded47bd5bd658af1"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/analytics/page.tsx": {
+    "mtime": 1775553602.2399433,
+    "hash": "5e44c769e8fac610e4007c2953562b9e"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/app/(dashboard)/reports/page.tsx": {
+    "mtime": 1775553602.24446,
+    "hash": "85ba81ca2de2f7146f67d23a7c4311f4"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/providers/index.tsx": {
+    "mtime": 1775553602.271386,
+    "hash": "86e1ff0bb1a11c70dce14f6d5b4c8eee"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/providers/ThemeProvider.tsx": {
+    "mtime": 1775553602.2713115,
+    "hash": "18d2d31d89972068775b58e586f22256"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/providers/PushNotificationProvider.tsx": {
+    "mtime": 1775553602.2711513,
+    "hash": "d17dc32373549673e560b1e18573a140"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/providers/QueryProvider.tsx": {
+    "mtime": 1775553602.2712314,
+    "hash": "28adf7b48769fcfb0c32cb25115afdee"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/FacilitiesMap.tsx": {
+    "mtime": 1775553602.2458546,
+    "hash": "35fd031c885e945ce5a1a1bece6c6a80"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/AmbulanceMap.tsx": {
+    "mtime": 1786113829.0888917,
+    "hash": "340c9afb075eec46de12884f5f95e482"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/SingleFacilityMap.tsx": {
+    "mtime": 1775553602.2462332,
+    "hash": "47b47ae92bf494634c3d4b0ceeddbf3c"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/NotificationDropdown.tsx": {
+    "mtime": 1775553602.2461333,
+    "hash": "185ef51fe93619d4475511b64d18a437"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/maps/NationalReferralMap.tsx": {
+    "mtime": 1775553602.2470787,
+    "hash": "b9b55491e9465e7a9791740ad1984664"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/maps/FacilityReadinessMap.tsx": {
+    "mtime": 1775553602.2469416,
+    "hash": "075b785de51c8fb5b154bd570142a92a"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/ui/PageTransition.tsx": {
+    "mtime": 1775553602.247723,
+    "hash": "b3cc2c32e873d7734039fcf4a64bda19"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/ui/LoadingButton.tsx": {
+    "mtime": 1775553602.2476346,
+    "hash": "0341291a26efb48153501096c7d68a97"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/ui/SearchableSelect.tsx": {
+    "mtime": 1775553602.2479165,
+    "hash": "56571dc43495e7e4720759ef36853107"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/ui/PriorityBadge.tsx": {
+    "mtime": 1775553602.2478054,
+    "hash": "43fb632a109df4d130971b49bcb924e2"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/ui/StatusIndicator.tsx": {
+    "mtime": 1775553602.2482646,
+    "hash": "416b2634580a65eceafed1fcca71a5b9"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/ui/StatCard.tsx": {
+    "mtime": 1775553602.2480938,
+    "hash": "e125ea4e7ad6a1b4e09b06d9d28d2f82"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/ui/StatusBadge.tsx": {
+    "mtime": 1775553602.248179,
+    "hash": "4c0e515bc425b826279eb5dc7a0a3a04"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/ui/DataTable.tsx": {
+    "mtime": 1775553602.2474604,
+    "hash": "d8b762feadbfaa6ab08f986d1c379d23"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/ui/index.ts": {
+    "mtime": 1775553602.2688003,
+    "hash": "a1a64a8c2fcaf101f043d1829fbec6c3"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/ui/Toast.tsx": {
+    "mtime": 1775553602.2686036,
+    "hash": "d57a8aa6ec0c892c464e091fbdc1ac5c"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/ui/EmptyState.tsx": {
+    "mtime": 1775553602.2475498,
+    "hash": "055f44d581015186edd6b9487c051f82"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/ui/Skeleton.tsx": {
+    "mtime": 1775553602.2479994,
+    "hash": "1386e7535a63cc0d86c7190187b63b77"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/referral/AssignAmbulanceModal.tsx": {
+    "mtime": 1786113829.0896072,
+    "hash": "e84b48b5bbf2a48fe5bee1d1e4b8c43d"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/referral/VitalSignsCard.tsx": {
+    "mtime": 1786406507.3929112,
+    "hash": "d9e396a22d071371da27b7e37ae2472f"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/referral/FacilityTransferVisualizer.tsx": {
+    "mtime": 1786406633.6594393,
+    "hash": "372e93afe18f386b1259616bdf91c0d0"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/referral/ReferralLifecycleStepper.tsx": {
+    "mtime": 1786406513.0993276,
+    "hash": "cdf45a4009be0f50d1d88df856727f12"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/auth/index.ts": {
+    "mtime": 1775553602.2464457,
+    "hash": "0c168787985ae0aff4eb6429ddd17895"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/auth/RouteGuard.tsx": {
+    "mtime": 1775553602.2463658,
+    "hash": "817cc6dfbffe100b2a93a693c9ba5f96"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/layout/Header.tsx": {
+    "mtime": 1775553602.2466197,
+    "hash": "b02af784681de4fb5c4b0e6ceabb89ba"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/layout/Sidebar.tsx": {
+    "mtime": 1775553602.2467406,
+    "hash": "18cd9b1fcd1d42d4edc48e50d148a7dc"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/components/layout/index.ts": {
+    "mtime": 1775553602.2468145,
+    "hash": "ac9633bd381f25651683f5f3fa8360c9"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/validation.ts": {
+    "mtime": 1775553602.2709613,
+    "hash": "a693e1f07401aed1b200cba12332d8a6"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/firebase.ts": {
+    "mtime": 1786448433.6357176,
+    "hash": "d8b82de31ec5dbde5f7dbbc5d1726d2c"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/permissions.ts": {
+    "mtime": 1775553602.2707856,
+    "hash": "f7054e453683db8eccbc4ea140e4dbd3"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/referral-auth.ts": {
+    "mtime": 1775553602.2708766,
+    "hash": "bd111e2de9fc524e7006ecac615aa005"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/hooks/use-referrals.ts": {
+    "mtime": 1775553602.2706575,
+    "hash": "6ce734cbf285376fe401fa737cfd4c11"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/hooks/index.ts": {
+    "mtime": 1775553602.270544,
+    "hash": "f1fc2623fc06cc10460002e452c0657b"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/patient-report.ts": {
+    "mtime": 1775553602.269832,
+    "hash": "97dfe45a8f664b68d35d07955244cbea"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/readiness.ts": {
+    "mtime": 1775553602.2700129,
+    "hash": "3e300855b6c75a92e66f3aaaee81510e"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/analytics.ts": {
+    "mtime": 1775553602.2690957,
+    "hash": "3268bee33c0cec57e314155f35eb71a4"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/notifications.ts": {
+    "mtime": 1775553602.2697482,
+    "hash": "94f978f467d3136a60373398677656de"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/districts.ts": {
+    "mtime": 1775553602.2693696,
+    "hash": "8ac685554e621f6c6c8846b1e4f2f76a"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/patients.ts": {
+    "mtime": 1775553602.2699187,
+    "hash": "a9fcc06f333b6bafe91ab7866f095138"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/facilities.ts": {
+    "mtime": 1775553602.26947,
+    "hash": "9844fdfc935adca8e82b3e05dd8f3a5b"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/ambulances.ts": {
+    "mtime": 1786113829.090828,
+    "hash": "7d87960104465727f600bab42b0442aa"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/client.ts": {
+    "mtime": 1786113872.2343888,
+    "hash": "10d70221c49c07f7f1af5f7e0d0b96dd"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/users.ts": {
+    "mtime": 1775553602.2702017,
+    "hash": "55cfe60336b211cb4df37fd81e5ff716"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/index.ts": {
+    "mtime": 1775553602.2695582,
+    "hash": "bed81dbd1c412466e331c6ad0696e931"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/referrals.ts": {
+    "mtime": 1775553602.270116,
+    "hash": "9b1cbf91858c14137bf5c6fc86ae69a3"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/nems.ts": {
+    "mtime": 1775553602.2696693,
+    "hash": "7c903fac1c06a86f1397baa668709599"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/lib/api/auth.ts": {
+    "mtime": 1775553602.2691886,
+    "hash": "86bc8ae2c7528469b7120e5190aa26e8"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/store/patientReportFormStore.ts": {
+    "mtime": 1775553602.271787,
+    "hash": "c47770eef38f96b74bd8cf593cf15af9"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/store/authStore.ts": {
+    "mtime": 1775553602.2715054,
+    "hash": "82274ef8600c6abcedd02b2c6ac6139d"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/store/uiStore.ts": {
+    "mtime": 1775553602.2719,
+    "hash": "702bba21edb5a0318f14b63203bb600c"
+  },
+  "/Users/emmieb/work/swift-rms-client/src/store/index.ts": {
+    "mtime": 1775553602.2715821,
+    "hash": "90d8bad666cefc6fe84e45bca77368c2"
+  },
+  "/Users/emmieb/work/swift-rms-client/README.md": {
+    "mtime": 1775553602.235436,
+    "hash": "f15aaa42d5d299d091b1171097ea56ad"
+  },
+  "/Users/emmieb/work/swift-rms-client/public/file.svg": {
+    "mtime": 1775553602.236515,
+    "hash": "d09f95206c3fa0bb9bd9fefabfd0ea71"
+  },
+  "/Users/emmieb/work/swift-rms-client/public/vercel.svg": {
+    "mtime": 1775553602.236965,
+    "hash": "c0af2f507b369b085b35ef4bbe3bcf1e"
+  },
+  "/Users/emmieb/work/swift-rms-client/public/next.svg": {
+    "mtime": 1775553602.236885,
+    "hash": "8e061864f388b47f33a1c3780831193e"
+  },
+  "/Users/emmieb/work/swift-rms-client/public/globe.svg": {
+    "mtime": 1775553602.2367969,
+    "hash": "2aaafa6a49b6563925fe440891e32717"
+  },
+  "/Users/emmieb/work/swift-rms-client/public/window.svg": {
+    "mtime": 1775553602.2370448,
+    "hash": "a2760511c65806022ad20adf74370ff3"
+  }
+}

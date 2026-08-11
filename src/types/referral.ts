@@ -49,6 +49,8 @@ export interface Referral {
   arrivalCondition?: ArrivalCondition;
   arrivalConditionNotes?: string;
   // Additional clinical fields from National Referral Form
+  patientCategory?: string;
+  assignedDepartment?: string;
   knownAllergies: boolean;
   allergyDetails?: string;
   oxygenSaturation?: number;
