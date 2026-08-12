@@ -9,7 +9,7 @@
       "source_file": "next-env.d.ts",
       "source_location": "L1",
       "id": "next_env_d_ts",
-      "community": 41,
+      "community": 48,
       "norm_label": "next-env.d.ts"
     },
     {
@@ -18,7 +18,7 @@
       "source_file": "eslint.config.mjs",
       "source_location": "L1",
       "id": "eslint_config_mjs",
-      "community": 36,
+      "community": 43,
       "norm_label": "eslint.config.mjs"
     },
     {
@@ -27,7 +27,7 @@
       "source_file": "eslint.config.mjs",
       "source_location": "L5",
       "id": "swift_rms_client_eslint_config_eslintconfig",
-      "community": 36,
+      "community": 43,
       "norm_label": "eslintconfig"
     },
     {
@@ -36,7 +36,7 @@
       "source_file": "next.config.ts",
       "source_location": "L1",
       "id": "next_config_ts",
-      "community": 37,
+      "community": 44,
       "norm_label": "next.config.ts"
     },
     {
@@ -45,7 +45,7 @@
       "source_file": "next.config.ts",
       "source_location": "L3",
       "id": "swift_rms_client_next_config_nextconfig",
-      "community": 37,
+      "community": 44,
       "norm_label": "nextconfig"
     },
     {
@@ -54,7 +54,7 @@
       "source_file": "public/firebase-messaging-sw.js",
       "source_location": "L1",
       "id": "public_firebase_messaging_sw_js",
-      "community": 24,
+      "community": 30,
       "norm_label": "firebase-messaging-sw.js"
     },
     {
@@ -63,7 +63,7 @@
       "source_file": "public/firebase-messaging-sw.js",
       "source_location": "L10",
       "id": "public_firebase_messaging_sw_firebaseconfig",
-      "community": 24,
+      "community": 30,
       "norm_label": "firebaseconfig"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "public/firebase-messaging-sw.js",
       "source_location": "L30",
       "id": "public_firebase_messaging_sw_initializefirebase",
-      "community": 24,
+      "community": 30,
       "norm_label": "initializefirebase()"
     },
     {
@@ -81,7 +81,7 @@
       "source_file": "public/firebase-messaging-sw.js",
       "source_location": "L103",
       "id": "public_firebase_messaging_sw_payload",
-      "community": 24,
+      "community": 30,
       "norm_label": "payload"
     },
     {
@@ -90,7 +90,7 @@
       "source_file": "public/firebase-messaging-sw.js",
       "source_location": "L105",
       "id": "public_firebase_messaging_sw_options",
-      "community": 24,
+      "community": 30,
       "norm_label": "options"
     },
     {
@@ -99,7 +99,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L1",
       "id": "src_types_referral_ts",
-      "community": 4,
+      "community": 0,
       "norm_label": "referral.ts"
     },
     {
@@ -108,7 +108,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L7",
       "id": "types_referral_referral",
-      "community": 4,
+      "community": 0,
       "norm_label": "referral"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L65",
       "id": "types_referral_vitalsigns",
-      "community": 4,
+      "community": 0,
       "norm_label": "vitalsigns"
     },
     {
@@ -126,7 +126,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L74",
       "id": "types_referral_attachment",
-      "community": 4,
+      "community": 0,
       "norm_label": "attachment"
     },
     {
@@ -135,7 +135,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L82",
       "id": "types_referral_usersummary",
-      "community": 4,
+      "community": 0,
       "norm_label": "usersummary"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L88",
       "id": "types_referral_nemsrequestsummary",
-      "community": 4,
+      "community": 0,
       "norm_label": "nemsrequestsummary"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L96",
       "id": "types_referral_createreferralrequest",
-      "community": 4,
+      "community": 0,
       "norm_label": "createreferralrequest"
     },
     {
@@ -162,7 +162,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L123",
       "id": "types_referral_updatereferralrequest",
-      "community": 4,
+      "community": 0,
       "norm_label": "updatereferralrequest"
     },
     {
@@ -171,7 +171,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L135",
       "id": "types_referral_referrallistquery",
-      "community": 4,
+      "community": 0,
       "norm_label": "referrallistquery"
     },
     {
@@ -180,7 +180,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L149",
       "id": "types_referral_referralsummary",
-      "community": 4,
+      "community": 0,
       "norm_label": "referralsummary"
     },
     {
@@ -189,7 +189,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L162",
       "id": "types_referral_timelineentry",
-      "community": 4,
+      "community": 0,
       "norm_label": "timelineentry"
     },
     {
@@ -198,7 +198,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L171",
       "id": "types_referral_addnoterequest",
-      "community": 4,
+      "community": 0,
       "norm_label": "addnoterequest"
     },
     {
@@ -207,7 +207,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L175",
       "id": "types_referral_createreferralresponse",
-      "community": 4,
+      "community": 0,
       "norm_label": "createreferralresponse"
     },
     {
@@ -216,7 +216,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L187",
       "id": "types_referral_clinicianreviewrequest",
-      "community": 4,
+      "community": 0,
       "norm_label": "clinicianreviewrequest"
     },
     {
@@ -225,7 +225,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L195",
       "id": "types_referral_assignambulancerequest",
-      "community": 4,
+      "community": 0,
       "norm_label": "assignambulancerequest"
     },
     {
@@ -234,7 +234,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L204",
       "id": "types_referral_assignambulanceresponse",
-      "community": 4,
+      "community": 0,
       "norm_label": "assignambulanceresponse"
     },
     {
@@ -243,7 +243,7 @@
       "source_file": "src/types/referral.ts",
       "source_location": "L212",
       "id": "types_referral_ambulancesummary",
-      "community": 4,
+      "community": 0,
       "norm_label": "ambulancesummary"
     },
     {
@@ -252,7 +252,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L1",
       "id": "src_types_patient_report_ts",
-      "community": 6,
+      "community": 5,
       "norm_label": "patient-report.ts"
     },
     {
@@ -261,7 +261,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L5",
       "id": "types_patient_report_locationtype",
-      "community": 6,
+      "community": 5,
       "norm_label": "locationtype"
     },
     {
@@ -270,7 +270,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L15",
       "id": "types_patient_report_abcstatus",
-      "community": 6,
+      "community": 5,
       "norm_label": "abcstatus"
     },
     {
@@ -279,7 +279,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L18",
       "id": "types_patient_report_triagecolorcode",
-      "community": 6,
+      "community": 5,
       "norm_label": "triagecolorcode"
     },
     {
@@ -288,7 +288,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L21",
       "id": "types_patient_report_transportdecision",
-      "community": 6,
+      "community": 5,
       "norm_label": "transportdecision"
     },
     {
@@ -297,7 +297,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L30",
       "id": "types_patient_report_patientcondition",
-      "community": 6,
+      "community": 5,
       "norm_label": "patientcondition"
     },
     {
@@ -306,7 +306,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L33",
       "id": "types_patient_report_syncstatus",
-      "community": 6,
+      "community": 5,
       "norm_label": "syncstatus"
     },
     {
@@ -315,7 +315,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L36",
       "id": "types_patient_report_non_traumatic_conditions",
-      "community": 6,
+      "community": 5,
       "norm_label": "non_traumatic_conditions"
     },
     {
@@ -324,7 +324,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L43",
       "id": "types_patient_report_traumatic_conditions",
-      "community": 6,
+      "community": 5,
       "norm_label": "traumatic_conditions"
     },
     {
@@ -333,7 +333,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L52",
       "id": "types_patient_report_body_regions",
-      "community": 6,
+      "community": 5,
       "norm_label": "body_regions"
     },
     {
@@ -342,7 +342,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L53",
       "id": "types_patient_report_bodyregion",
-      "community": 6,
+      "community": 5,
       "norm_label": "bodyregion"
     },
     {
@@ -351,7 +351,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L56",
       "id": "types_patient_report_trauma_findings",
-      "community": 6,
+      "community": 5,
       "norm_label": "trauma_findings"
     },
     {
@@ -360,7 +360,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L57",
       "id": "types_patient_report_traumafinding",
-      "community": 6,
+      "community": 5,
       "norm_label": "traumafinding"
     },
     {
@@ -369,7 +369,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L60",
       "id": "types_patient_report_interventions",
-      "community": 6,
+      "community": 5,
       "norm_label": "interventions"
     },
     {
@@ -378,7 +378,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L66",
       "id": "types_patient_report_traumaregion",
-      "community": 6,
+      "community": 5,
       "norm_label": "traumaregion"
     },
     {
@@ -387,7 +387,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L72",
       "id": "types_patient_report_missiontimeline",
-      "community": 6,
+      "community": 5,
       "norm_label": "missiontimeline"
     },
     {
@@ -396,7 +396,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L82",
       "id": "types_patient_report_vitalsignsreading",
-      "community": 6,
+      "community": 5,
       "norm_label": "vitalsignsreading"
     },
     {
@@ -405,7 +405,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L93",
       "id": "types_patient_report_pregnancyassessment",
-      "community": 6,
+      "community": 5,
       "norm_label": "pregnancyassessment"
     },
     {
@@ -414,7 +414,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L112",
       "id": "types_patient_report_patientreport",
-      "community": 6,
+      "community": 5,
       "norm_label": "patientreport"
     },
     {
@@ -423,7 +423,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L160",
       "id": "types_patient_report_createpatientreportrequest",
-      "community": 6,
+      "community": 5,
       "norm_label": "createpatientreportrequest"
     },
     {
@@ -432,7 +432,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L202",
       "id": "types_patient_report_updatepatientreportrequest",
-      "community": 6,
+      "community": 5,
       "norm_label": "updatepatientreportrequest"
     },
     {
@@ -441,7 +441,7 @@
       "source_file": "src/types/patient-report.ts",
       "source_location": "L218",
       "id": "types_patient_report_patientreportlistquery",
-      "community": 6,
+      "community": 5,
       "norm_label": "patientreportlistquery"
     },
     {
@@ -450,7 +450,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L1",
       "id": "src_types_readiness_ts",
-      "community": 13,
+      "community": 14,
       "norm_label": "readiness.ts"
     },
     {
@@ -459,7 +459,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L6",
       "id": "types_readiness_facilityreadiness",
-      "community": 13,
+      "community": 14,
       "norm_label": "facilityreadiness"
     },
     {
@@ -468,7 +468,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L56",
       "id": "types_readiness_bedsbyward",
-      "community": 13,
+      "community": 14,
       "norm_label": "bedsbyward"
     },
     {
@@ -477,7 +477,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L63",
       "id": "types_readiness_bloodbankstatus",
-      "community": 13,
+      "community": 14,
       "norm_label": "bloodbankstatus"
     },
     {
@@ -486,7 +486,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L68",
       "id": "types_readiness_bloodunit",
-      "community": 13,
+      "community": 14,
       "norm_label": "bloodunit"
     },
     {
@@ -495,7 +495,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L74",
       "id": "types_readiness_equipmentstatus",
-      "community": 13,
+      "community": 14,
       "norm_label": "equipmentstatus"
     },
     {
@@ -504,7 +504,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L81",
       "id": "types_readiness_bloodunits",
-      "community": 13,
+      "community": 14,
       "norm_label": "bloodunits"
     },
     {
@@ -513,7 +513,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L92",
       "id": "types_readiness_createreadinessrequest",
-      "community": 13,
+      "community": 14,
       "norm_label": "createreadinessrequest"
     },
     {
@@ -522,7 +522,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L113",
       "id": "types_readiness_bedmonitoring",
-      "community": 13,
+      "community": 14,
       "norm_label": "bedmonitoring"
     },
     {
@@ -531,7 +531,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L120",
       "id": "types_readiness_facilitybedstatus",
-      "community": 13,
+      "community": 14,
       "norm_label": "facilitybedstatus"
     },
     {
@@ -540,7 +540,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L130",
       "id": "types_readiness_readinessreminder",
-      "community": 13,
+      "community": 14,
       "norm_label": "readinessreminder"
     },
     {
@@ -549,7 +549,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L145",
       "id": "types_readiness_createreminderrequest",
-      "community": 13,
+      "community": 14,
       "norm_label": "createreminderrequest"
     },
     {
@@ -558,7 +558,7 @@
       "source_file": "src/types/readiness.ts",
       "source_location": "L155",
       "id": "types_readiness_updatereminderrequest",
-      "community": 13,
+      "community": 14,
       "norm_label": "updatereminderrequest"
     },
     {
@@ -567,7 +567,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L1",
       "id": "src_types_analytics_ts",
-      "community": 9,
+      "community": 8,
       "norm_label": "analytics.ts"
     },
     {
@@ -576,7 +576,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L3",
       "id": "types_analytics_referralsummarystats",
-      "community": 9,
+      "community": 8,
       "norm_label": "referralsummarystats"
     },
     {
@@ -585,7 +585,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L13",
       "id": "types_analytics_trendpoint",
-      "community": 9,
+      "community": 8,
       "norm_label": "trendpoint"
     },
     {
@@ -594,7 +594,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L18",
       "id": "types_analytics_referralanalytics",
-      "community": 9,
+      "community": 8,
       "norm_label": "referralanalytics"
     },
     {
@@ -603,7 +603,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L26",
       "id": "types_analytics_facilityanalytics",
-      "community": 9,
+      "community": 8,
       "norm_label": "facilityanalytics"
     },
     {
@@ -612,7 +612,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L37",
       "id": "types_analytics_facilityresponsetime",
-      "community": 9,
+      "community": 8,
       "norm_label": "facilityresponsetime"
     },
     {
@@ -621,7 +621,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L44",
       "id": "types_analytics_responsetimeanalytics",
-      "community": 9,
+      "community": 8,
       "norm_label": "responsetimeanalytics"
     },
     {
@@ -630,7 +630,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L52",
       "id": "types_analytics_facilityoutcome",
-      "community": 9,
+      "community": 8,
       "norm_label": "facilityoutcome"
     },
     {
@@ -639,7 +639,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L58",
       "id": "types_analytics_outcomeanalytics",
-      "community": 9,
+      "community": 8,
       "norm_label": "outcomeanalytics"
     },
     {
@@ -648,7 +648,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L65",
       "id": "types_analytics_rcperformanceentry",
-      "community": 9,
+      "community": 8,
       "norm_label": "rcperformanceentry"
     },
     {
@@ -657,7 +657,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L77",
       "id": "types_analytics_rcperformanceresponse",
-      "community": 9,
+      "community": 8,
       "norm_label": "rcperformanceresponse"
     },
     {
@@ -666,7 +666,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L81",
       "id": "types_analytics_heatmapdata",
-      "community": 9,
+      "community": 8,
       "norm_label": "heatmapdata"
     },
     {
@@ -675,7 +675,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L89",
       "id": "types_analytics_dhis2export",
-      "community": 9,
+      "community": 8,
       "norm_label": "dhis2export"
     },
     {
@@ -684,7 +684,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L95",
       "id": "types_analytics_dhis2datavalue",
-      "community": 9,
+      "community": 8,
       "norm_label": "dhis2datavalue"
     },
     {
@@ -693,7 +693,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L101",
       "id": "types_analytics_analyticsquery",
-      "community": 9,
+      "community": 8,
       "norm_label": "analyticsquery"
     },
     {
@@ -702,7 +702,7 @@
       "source_file": "src/types/analytics.ts",
       "source_location": "L108",
       "id": "types_analytics_generatereportrequest",
-      "community": 9,
+      "community": 8,
       "norm_label": "generatereportrequest"
     },
     {
@@ -711,7 +711,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L1",
       "id": "src_types_common_ts",
-      "community": 15,
+      "community": 16,
       "norm_label": "common.ts"
     },
     {
@@ -720,7 +720,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L3",
       "id": "types_common_apiresponse",
-      "community": 15,
+      "community": 16,
       "norm_label": "apiresponse"
     },
     {
@@ -729,7 +729,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L10",
       "id": "types_common_apierror",
-      "community": 15,
+      "community": 16,
       "norm_label": "apierror"
     },
     {
@@ -738,7 +738,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L16",
       "id": "types_common_paginationmeta",
-      "community": 15,
+      "community": 16,
       "norm_label": "paginationmeta"
     },
     {
@@ -747,7 +747,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L23",
       "id": "types_common_pagination",
-      "community": 15,
+      "community": 16,
       "norm_label": "pagination"
     },
     {
@@ -756,7 +756,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L28",
       "id": "types_common_daterange",
-      "community": 15,
+      "community": 16,
       "norm_label": "daterange"
     },
     {
@@ -765,7 +765,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L34",
       "id": "types_common_referralstatus",
-      "community": 4,
+      "community": 0,
       "norm_label": "referralstatus"
     },
     {
@@ -774,7 +774,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L44",
       "id": "types_common_priority",
-      "community": 12,
+      "community": 9,
       "norm_label": "priority"
     },
     {
@@ -783,7 +783,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L46",
       "id": "types_common_usertype",
-      "community": 10,
+      "community": 23,
       "norm_label": "usertype"
     },
     {
@@ -792,7 +792,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L58",
       "id": "types_common_userstatus",
-      "community": 10,
+      "community": 23,
       "norm_label": "userstatus"
     },
     {
@@ -801,7 +801,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L60",
       "id": "types_common_facilitytype",
-      "community": 14,
+      "community": 16,
       "norm_label": "facilitytype"
     },
     {
@@ -810,7 +810,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L66",
       "id": "types_common_referraltype",
-      "community": 15,
+      "community": 16,
       "norm_label": "referraltype"
     },
     {
@@ -819,7 +819,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L72",
       "id": "types_common_outcome",
-      "community": 15,
+      "community": 16,
       "norm_label": "outcome"
     },
     {
@@ -828,7 +828,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L80",
       "id": "types_common_arrivalcondition",
-      "community": 15,
+      "community": 16,
       "norm_label": "arrivalcondition"
     },
     {
@@ -837,7 +837,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L82",
       "id": "types_common_readinesslevel",
-      "community": 13,
+      "community": 16,
       "norm_label": "readinesslevel"
     },
     {
@@ -846,7 +846,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L84",
       "id": "types_common_nemsrequeststatus",
-      "community": 15,
+      "community": 9,
       "norm_label": "nemsrequeststatus"
     },
     {
@@ -855,7 +855,7 @@
       "source_file": "src/types/common.ts",
       "source_location": "L94",
       "id": "types_common_ambulancestatus",
-      "community": 12,
+      "community": 9,
       "norm_label": "ambulancestatus"
     },
     {
@@ -864,7 +864,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L1",
       "id": "src_types_facility_ts",
-      "community": 14,
+      "community": 15,
       "norm_label": "facility.ts"
     },
     {
@@ -873,7 +873,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L5",
       "id": "types_facility_facilitysummary",
-      "community": 10,
+      "community": 23,
       "norm_label": "facilitysummary"
     },
     {
@@ -882,7 +882,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L12",
       "id": "types_facility_facility",
-      "community": 14,
+      "community": 15,
       "norm_label": "facility"
     },
     {
@@ -891,7 +891,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L32",
       "id": "types_facility_districtsummary",
-      "community": 14,
+      "community": 15,
       "norm_label": "districtsummary"
     },
     {
@@ -900,7 +900,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L43",
       "id": "types_facility_createfacilityrequest",
-      "community": 14,
+      "community": 15,
       "norm_label": "createfacilityrequest"
     },
     {
@@ -909,7 +909,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L58",
       "id": "types_facility_updatefacilityrequest",
-      "community": 14,
+      "community": 15,
       "norm_label": "updatefacilityrequest"
     },
     {
@@ -918,7 +918,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L72",
       "id": "types_facility_facilitylistquery",
-      "community": 14,
+      "community": 15,
       "norm_label": "facilitylistquery"
     },
     {
@@ -927,7 +927,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L82",
       "id": "types_facility_nearbyquery",
-      "community": 14,
+      "community": 15,
       "norm_label": "nearbyquery"
     },
     {
@@ -936,7 +936,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L88",
       "id": "types_facility_facilitywithdistance",
-      "community": 14,
+      "community": 15,
       "norm_label": "facilitywithdistance"
     },
     {
@@ -945,7 +945,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L93",
       "id": "types_facility_bulkuploadfacilityitem",
-      "community": 14,
+      "community": 15,
       "norm_label": "bulkuploadfacilityitem"
     },
     {
@@ -954,7 +954,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L114",
       "id": "types_facility_bulkuploaderror",
-      "community": 14,
+      "community": 15,
       "norm_label": "bulkuploaderror"
     },
     {
@@ -963,7 +963,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L121",
       "id": "types_facility_bulkuploadresult",
-      "community": 14,
+      "community": 15,
       "norm_label": "bulkuploadresult"
     },
     {
@@ -972,7 +972,7 @@
       "source_file": "src/types/facility.ts",
       "source_location": "L130",
       "id": "types_facility_facilitystats",
-      "community": 14,
+      "community": 15,
       "norm_label": "facilitystats"
     },
     {
@@ -981,7 +981,7 @@
       "source_file": "src/types/patient.ts",
       "source_location": "L1",
       "id": "src_types_patient_ts",
-      "community": 4,
+      "community": 0,
       "norm_label": "patient.ts"
     },
     {
@@ -990,7 +990,7 @@
       "source_file": "src/types/patient.ts",
       "source_location": "L3",
       "id": "types_patient_patient",
-      "community": 4,
+      "community": 0,
       "norm_label": "patient"
     },
     {
@@ -999,7 +999,7 @@
       "source_file": "src/types/patient.ts",
       "source_location": "L23",
       "id": "types_patient_createpatientrequest",
-      "community": 4,
+      "community": 0,
       "norm_label": "createpatientrequest"
     },
     {
@@ -1008,7 +1008,7 @@
       "source_file": "src/types/patient.ts",
       "source_location": "L40",
       "id": "types_patient_updatepatientrequest",
-      "community": 4,
+      "community": 0,
       "norm_label": "updatepatientrequest"
     },
     {
@@ -1017,7 +1017,7 @@
       "source_file": "src/types/patient.ts",
       "source_location": "L56",
       "id": "types_patient_patientlistquery",
-      "community": 4,
+      "community": 0,
       "norm_label": "patientlistquery"
     },
     {
@@ -1026,7 +1026,7 @@
       "source_file": "src/types/patient.ts",
       "source_location": "L63",
       "id": "types_patient_patientsearchquery",
-      "community": 4,
+      "community": 0,
       "norm_label": "patientsearchquery"
     },
     {
@@ -1035,7 +1035,7 @@
       "source_file": "src/types/patient.ts",
       "source_location": "L68",
       "id": "types_patient_patientsummary",
-      "community": 4,
+      "community": 0,
       "norm_label": "patientsummary"
     },
     {
@@ -1044,7 +1044,7 @@
       "source_file": "src/types/index.ts",
       "source_location": "L1",
       "id": "src_types_index_ts",
-      "community": 1,
+      "community": 20,
       "norm_label": "index.ts"
     },
     {
@@ -1053,7 +1053,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L1",
       "id": "src_types_nems_ts",
-      "community": 12,
+      "community": 9,
       "norm_label": "nems.ts"
     },
     {
@@ -1062,7 +1062,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L5",
       "id": "types_nems_ambulance",
-      "community": 12,
+      "community": 9,
       "norm_label": "ambulance"
     },
     {
@@ -1071,7 +1071,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L17",
       "id": "types_nems_location",
-      "community": 12,
+      "community": 9,
       "norm_label": "location"
     },
     {
@@ -1080,7 +1080,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L23",
       "id": "types_nems_crewmember",
-      "community": 12,
+      "community": 9,
       "norm_label": "crewmember"
     },
     {
@@ -1089,7 +1089,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L30",
       "id": "types_nems_nemsrequest",
-      "community": 12,
+      "community": 9,
       "norm_label": "nemsrequest"
     },
     {
@@ -1098,7 +1098,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L56",
       "id": "types_nems_createnemsrequest",
-      "community": 12,
+      "community": 9,
       "norm_label": "createnemsrequest"
     },
     {
@@ -1107,7 +1107,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L73",
       "id": "types_nems_updatenemsrequest",
-      "community": 12,
+      "community": 9,
       "norm_label": "updatenemsrequest"
     },
     {
@@ -1116,7 +1116,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L80",
       "id": "types_nems_nemslistquery",
-      "community": 12,
+      "community": 9,
       "norm_label": "nemslistquery"
     },
     {
@@ -1125,7 +1125,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L89",
       "id": "types_nems_call",
-      "community": 12,
+      "community": 9,
       "norm_label": "call"
     },
     {
@@ -1134,7 +1134,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L110",
       "id": "types_nems_createcallrequest",
-      "community": 12,
+      "community": 9,
       "norm_label": "createcallrequest"
     },
     {
@@ -1143,7 +1143,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L121",
       "id": "types_nems_callcentredashboard",
-      "community": 12,
+      "community": 9,
       "norm_label": "callcentredashboard"
     },
     {
@@ -1152,7 +1152,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L131",
       "id": "types_nems_vitalslogentry",
-      "community": 12,
+      "community": 9,
       "norm_label": "vitalslogentry"
     },
     {
@@ -1161,7 +1161,7 @@
       "source_file": "src/types/nems.ts",
       "source_location": "L144",
       "id": "types_nems_logvitalsrequest",
-      "community": 12,
+      "community": 9,
       "norm_label": "logvitalsrequest"
     },
     {
@@ -1170,7 +1170,7 @@
       "source_file": "src/types/user.ts",
       "source_location": "L1",
       "id": "src_types_user_ts",
-      "community": 10,
+      "community": 23,
       "norm_label": "user.ts"
     },
     {
@@ -1179,43 +1179,43 @@
       "source_file": "src/types/user.ts",
       "source_location": "L6",
       "id": "types_user_createuserrequest",
-      "community": 3,
+      "community": 22,
       "norm_label": "createuserrequest"
     },
     {
       "label": "UpdateUserRequest",
       "file_type": "code",
       "source_file": "src/types/user.ts",
-      "source_location": "L17",
+      "source_location": "L18",
       "id": "types_user_updateuserrequest",
-      "community": 10,
+      "community": 23,
       "norm_label": "updateuserrequest"
     },
     {
       "label": "UpdateProfileRequest",
       "file_type": "code",
       "source_file": "src/types/user.ts",
-      "source_location": "L28",
+      "source_location": "L30",
       "id": "types_user_updateprofilerequest",
-      "community": 10,
+      "community": 23,
       "norm_label": "updateprofilerequest"
     },
     {
       "label": "UserListQuery",
       "file_type": "code",
       "source_file": "src/types/user.ts",
-      "source_location": "L35",
+      "source_location": "L37",
       "id": "types_user_userlistquery",
-      "community": 10,
+      "community": 23,
       "norm_label": "userlistquery"
     },
     {
       "label": "User",
       "file_type": "code",
       "source_file": "src/types/user.ts",
-      "source_location": "L47",
+      "source_location": "L49",
       "id": "types_user_user",
-      "community": 4,
+      "community": 13,
       "norm_label": "user"
     },
     {
@@ -1224,7 +1224,7 @@
       "source_file": "src/types/auth.ts",
       "source_location": "L1",
       "id": "src_types_auth_ts",
-      "community": 10,
+      "community": 13,
       "norm_label": "auth.ts"
     },
     {
@@ -1233,7 +1233,7 @@
       "source_file": "src/types/auth.ts",
       "source_location": "L6",
       "id": "types_auth_loginrequest",
-      "community": 10,
+      "community": 13,
       "norm_label": "loginrequest"
     },
     {
@@ -1242,7 +1242,7 @@
       "source_file": "src/types/auth.ts",
       "source_location": "L12",
       "id": "types_auth_loginresponse",
-      "community": 10,
+      "community": 13,
       "norm_label": "loginresponse"
     },
     {
@@ -1251,7 +1251,7 @@
       "source_file": "src/types/auth.ts",
       "source_location": "L19",
       "id": "types_auth_refreshrequest",
-      "community": 10,
+      "community": 13,
       "norm_label": "refreshrequest"
     },
     {
@@ -1260,7 +1260,7 @@
       "source_file": "src/types/auth.ts",
       "source_location": "L23",
       "id": "types_auth_refreshresponse",
-      "community": 10,
+      "community": 13,
       "norm_label": "refreshresponse"
     },
     {
@@ -1269,7 +1269,7 @@
       "source_file": "src/types/auth.ts",
       "source_location": "L29",
       "id": "types_auth_registerrequest",
-      "community": 10,
+      "community": 13,
       "norm_label": "registerrequest"
     },
     {
@@ -1278,7 +1278,7 @@
       "source_file": "src/types/auth.ts",
       "source_location": "L40",
       "id": "types_auth_forgotpasswordrequest",
-      "community": 10,
+      "community": 13,
       "norm_label": "forgotpasswordrequest"
     },
     {
@@ -1287,7 +1287,7 @@
       "source_file": "src/types/auth.ts",
       "source_location": "L44",
       "id": "types_auth_resetpasswordrequest",
-      "community": 10,
+      "community": 13,
       "norm_label": "resetpasswordrequest"
     },
     {
@@ -1296,7 +1296,7 @@
       "source_file": "src/types/auth.ts",
       "source_location": "L49",
       "id": "types_auth_changepasswordrequest",
-      "community": 10,
+      "community": 13,
       "norm_label": "changepasswordrequest"
     },
     {
@@ -1305,7 +1305,7 @@
       "source_file": "src/types/auth.ts",
       "source_location": "L54",
       "id": "types_auth_userresponse",
-      "community": 4,
+      "community": 13,
       "norm_label": "userresponse"
     },
     {
@@ -1314,7 +1314,7 @@
       "source_file": "src/app/layout.tsx",
       "source_location": "L1",
       "id": "src_app_layout_tsx",
-      "community": 29,
+      "community": 36,
       "norm_label": "layout.tsx"
     },
     {
@@ -1323,7 +1323,7 @@
       "source_file": "src/app/layout.tsx",
       "source_location": "L5",
       "id": "app_layout_metadata",
-      "community": 29,
+      "community": 36,
       "norm_label": "metadata"
     },
     {
@@ -1332,7 +1332,7 @@
       "source_file": "src/app/layout.tsx",
       "source_location": "L10",
       "id": "app_layout_rootlayout",
-      "community": 29,
+      "community": 36,
       "norm_label": "rootlayout()"
     },
     {
@@ -1341,7 +1341,7 @@
       "source_file": "src/app/(auth)/layout.tsx",
       "source_location": "L1",
       "id": "src_app_auth_layout_tsx",
-      "community": 38,
+      "community": 45,
       "norm_label": "layout.tsx"
     },
     {
@@ -1350,7 +1350,7 @@
       "source_file": "src/app/(auth)/layout.tsx",
       "source_location": "L4",
       "id": "auth_layout_authlayout",
-      "community": 38,
+      "community": 45,
       "norm_label": "authlayout()"
     },
     {
@@ -1359,7 +1359,7 @@
       "source_file": "src/app/(auth)/forgot-password/page.tsx",
       "source_location": "L1",
       "id": "src_app_auth_forgot_password_page_tsx",
-      "community": 3,
+      "community": 2,
       "norm_label": "page.tsx"
     },
     {
@@ -1368,7 +1368,7 @@
       "source_file": "src/app/(auth)/forgot-password/page.tsx",
       "source_location": "L11",
       "id": "forgot_password_page_forgotpasswordschema",
-      "community": 3,
+      "community": 2,
       "norm_label": "forgotpasswordschema"
     },
     {
@@ -1377,7 +1377,7 @@
       "source_file": "src/app/(auth)/forgot-password/page.tsx",
       "source_location": "L18",
       "id": "forgot_password_page_forgotpasswordformdata",
-      "community": 3,
+      "community": 2,
       "norm_label": "forgotpasswordformdata"
     },
     {
@@ -1386,7 +1386,7 @@
       "source_file": "src/app/(auth)/forgot-password/page.tsx",
       "source_location": "L20",
       "id": "forgot_password_page_forgotpasswordpage",
-      "community": 3,
+      "community": 2,
       "norm_label": "forgotpasswordpage()"
     },
     {
@@ -1395,7 +1395,7 @@
       "source_file": "src/app/(auth)/reset-password/page.tsx",
       "source_location": "L1",
       "id": "src_app_auth_reset_password_page_tsx",
-      "community": 3,
+      "community": 2,
       "norm_label": "page.tsx"
     },
     {
@@ -1404,7 +1404,7 @@
       "source_file": "src/app/(auth)/reset-password/page.tsx",
       "source_location": "L12",
       "id": "reset_password_page_resetpasswordschema",
-      "community": 3,
+      "community": 2,
       "norm_label": "resetpasswordschema"
     },
     {
@@ -1413,7 +1413,7 @@
       "source_file": "src/app/(auth)/reset-password/page.tsx",
       "source_location": "L21",
       "id": "reset_password_page_resetpasswordformdata",
-      "community": 3,
+      "community": 2,
       "norm_label": "resetpasswordformdata"
     },
     {
@@ -1422,7 +1422,7 @@
       "source_file": "src/app/(auth)/reset-password/page.tsx",
       "source_location": "L23",
       "id": "reset_password_page_resetpasswordpage",
-      "community": 3,
+      "community": 2,
       "norm_label": "resetpasswordpage()"
     },
     {
@@ -1431,7 +1431,7 @@
       "source_file": "src/app/(auth)/login/page.tsx",
       "source_location": "L1",
       "id": "src_app_auth_login_page_tsx",
-      "community": 2,
+      "community": 1,
       "norm_label": "page.tsx"
     },
     {
@@ -1440,7 +1440,7 @@
       "source_file": "src/app/(auth)/login/page.tsx",
       "source_location": "L13",
       "id": "login_page_loginschema",
-      "community": 2,
+      "community": 1,
       "norm_label": "loginschema"
     },
     {
@@ -1449,7 +1449,7 @@
       "source_file": "src/app/(auth)/login/page.tsx",
       "source_location": "L18",
       "id": "login_page_loginformdata",
-      "community": 2,
+      "community": 1,
       "norm_label": "loginformdata"
     },
     {
@@ -1458,7 +1458,7 @@
       "source_file": "src/app/(auth)/login/page.tsx",
       "source_location": "L20",
       "id": "login_page_loginform",
-      "community": 2,
+      "community": 1,
       "norm_label": "loginform()"
     },
     {
@@ -1467,7 +1467,7 @@
       "source_file": "src/app/(auth)/login/page.tsx",
       "source_location": "L198",
       "id": "login_page_loginpage",
-      "community": 2,
+      "community": 1,
       "norm_label": "loginpage()"
     },
     {
@@ -1476,7 +1476,7 @@
       "source_file": "src/app/(dashboard)/layout.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_layout_tsx",
-      "community": 0,
+      "community": 3,
       "norm_label": "layout.tsx"
     },
     {
@@ -1485,7 +1485,7 @@
       "source_file": "src/app/(dashboard)/layout.tsx",
       "source_location": "L8",
       "id": "dashboard_layout_dashboardlayout",
-      "community": 0,
+      "community": 3,
       "norm_label": "dashboardlayout()"
     },
     {
@@ -1494,7 +1494,7 @@
       "source_file": "src/app/(dashboard)/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_page_tsx",
-      "community": 2,
+      "community": 1,
       "norm_label": "page.tsx"
     },
     {
@@ -1503,7 +1503,7 @@
       "source_file": "src/app/(dashboard)/page.tsx",
       "source_location": "L28",
       "id": "dashboard_page_referral",
-      "community": 2,
+      "community": 1,
       "norm_label": "referral"
     },
     {
@@ -1512,7 +1512,7 @@
       "source_file": "src/app/(dashboard)/page.tsx",
       "source_location": "L45",
       "id": "dashboard_page_quickactioncard",
-      "community": 2,
+      "community": 1,
       "norm_label": "quickactioncard()"
     },
     {
@@ -1521,7 +1521,7 @@
       "source_file": "src/app/(dashboard)/page.tsx",
       "source_location": "L108",
       "id": "dashboard_page_dashboardpage",
-      "community": 2,
+      "community": 1,
       "norm_label": "dashboardpage()"
     },
     {
@@ -1530,7 +1530,7 @@
       "source_file": "src/app/(dashboard)/patients/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_patients_page_tsx",
-      "community": 0,
+      "community": 3,
       "norm_label": "page.tsx"
     },
     {
@@ -1539,7 +1539,7 @@
       "source_file": "src/app/(dashboard)/patients/page.tsx",
       "source_location": "L27",
       "id": "patients_page_patientavatar",
-      "community": 0,
+      "community": 3,
       "norm_label": "patientavatar()"
     },
     {
@@ -1548,7 +1548,7 @@
       "source_file": "src/app/(dashboard)/patients/page.tsx",
       "source_location": "L68",
       "id": "patients_page_genderbadge",
-      "community": 0,
+      "community": 3,
       "norm_label": "genderbadge()"
     },
     {
@@ -1557,7 +1557,7 @@
       "source_file": "src/app/(dashboard)/patients/page.tsx",
       "source_location": "L90",
       "id": "patients_page_patientspage",
-      "community": 0,
+      "community": 3,
       "norm_label": "patientspage()"
     },
     {
@@ -1566,7 +1566,7 @@
       "source_file": "src/app/(dashboard)/patients/new/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_patients_new_page_tsx",
-      "community": 3,
+      "community": 2,
       "norm_label": "page.tsx"
     },
     {
@@ -1575,7 +1575,7 @@
       "source_file": "src/app/(dashboard)/patients/new/page.tsx",
       "source_location": "L21",
       "id": "new_page_patientschema",
-      "community": 3,
+      "community": 2,
       "norm_label": "patientschema"
     },
     {
@@ -1584,7 +1584,7 @@
       "source_file": "src/app/(dashboard)/patients/new/page.tsx",
       "source_location": "L36",
       "id": "new_page_patientformdata",
-      "community": 3,
+      "community": 2,
       "norm_label": "patientformdata"
     },
     {
@@ -1593,7 +1593,7 @@
       "source_file": "src/app/(dashboard)/patients/new/page.tsx",
       "source_location": "L38",
       "id": "new_page_newpatientpage",
-      "community": 3,
+      "community": 2,
       "norm_label": "newpatientpage()"
     },
     {
@@ -1602,7 +1602,7 @@
       "source_file": "src/app/(dashboard)/patients/[id]/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_patients_id_page_tsx",
-      "community": 3,
+      "community": 2,
       "norm_label": "page.tsx"
     },
     {
@@ -1611,7 +1611,7 @@
       "source_file": "src/app/(dashboard)/facilities/[id]/page.tsx",
       "source_location": "L41",
       "id": "id_page_props",
-      "community": 3,
+      "community": 2,
       "norm_label": "props"
     },
     {
@@ -1620,7 +1620,7 @@
       "source_file": "src/app/(dashboard)/patients/[id]/page.tsx",
       "source_location": "L23",
       "id": "id_page_referral",
-      "community": 3,
+      "community": 2,
       "norm_label": "referral"
     },
     {
@@ -1629,7 +1629,7 @@
       "source_file": "src/app/(dashboard)/patients/[id]/page.tsx",
       "source_location": "L34",
       "id": "id_page_patientdetailpage",
-      "community": 3,
+      "community": 2,
       "norm_label": "patientdetailpage()"
     },
     {
@@ -1638,7 +1638,7 @@
       "source_file": "src/app/(dashboard)/settings/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_settings_page_tsx",
-      "community": 39,
+      "community": 46,
       "norm_label": "page.tsx"
     },
     {
@@ -1647,7 +1647,7 @@
       "source_file": "src/app/(dashboard)/settings/page.tsx",
       "source_location": "L15",
       "id": "settings_page_settingspage",
-      "community": 39,
+      "community": 46,
       "norm_label": "settingspage()"
     },
     {
@@ -1656,7 +1656,7 @@
       "source_file": "src/app/(dashboard)/clinician-workflow/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_clinician_workflow_page_tsx",
-      "community": 3,
+      "community": 28,
       "norm_label": "page.tsx"
     },
     {
@@ -1665,7 +1665,7 @@
       "source_file": "src/app/(dashboard)/clinician-workflow/page.tsx",
       "source_location": "L21",
       "id": "clinician_workflow_page_colourcodebadge",
-      "community": 3,
+      "community": 28,
       "norm_label": "colourcodebadge()"
     },
     {
@@ -1674,7 +1674,7 @@
       "source_file": "src/app/(dashboard)/clinician-workflow/page.tsx",
       "source_location": "L50",
       "id": "clinician_workflow_page_timesincearrival",
-      "community": 3,
+      "community": 28,
       "norm_label": "timesincearrival()"
     },
     {
@@ -1683,7 +1683,7 @@
       "source_file": "src/app/(dashboard)/clinician-workflow/page.tsx",
       "source_location": "L72",
       "id": "clinician_workflow_page_reviewmodalprops",
-      "community": 3,
+      "community": 28,
       "norm_label": "reviewmodalprops"
     },
     {
@@ -1692,7 +1692,7 @@
       "source_file": "src/app/(dashboard)/clinician-workflow/page.tsx",
       "source_location": "L79",
       "id": "clinician_workflow_page_reviewmodal",
-      "community": 3,
+      "community": 28,
       "norm_label": "reviewmodal()"
     },
     {
@@ -1701,7 +1701,7 @@
       "source_file": "src/app/(dashboard)/clinician-workflow/page.tsx",
       "source_location": "L349",
       "id": "clinician_workflow_page_clinicianworkflowpage",
-      "community": 3,
+      "community": 28,
       "norm_label": "clinicianworkflowpage()"
     },
     {
@@ -1710,7 +1710,7 @@
       "source_file": "src/app/(dashboard)/referrals/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_referrals_page_tsx",
-      "community": 0,
+      "community": 2,
       "norm_label": "page.tsx"
     },
     {
@@ -1719,7 +1719,7 @@
       "source_file": "src/app/(dashboard)/referrals/page.tsx",
       "source_location": "L26",
       "id": "referrals_page_referral",
-      "community": 0,
+      "community": 2,
       "norm_label": "referral"
     },
     {
@@ -1728,7 +1728,7 @@
       "source_file": "src/app/(dashboard)/referrals/page.tsx",
       "source_location": "L46",
       "id": "referrals_page_filterchip",
-      "community": 0,
+      "community": 2,
       "norm_label": "filterchip()"
     },
     {
@@ -1737,7 +1737,7 @@
       "source_file": "src/app/(dashboard)/referrals/page.tsx",
       "source_location": "L82",
       "id": "referrals_page_referralspage",
-      "community": 0,
+      "community": 2,
       "norm_label": "referralspage()"
     },
     {
@@ -1746,7 +1746,7 @@
       "source_file": "src/app/(dashboard)/referrals/new/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_referrals_new_page_tsx",
-      "community": 2,
+      "community": 1,
       "norm_label": "page.tsx"
     },
     {
@@ -1755,7 +1755,7 @@
       "source_file": "src/app/(dashboard)/referrals/new/page.tsx",
       "source_location": "L26",
       "id": "new_page_referralschema",
-      "community": 2,
+      "community": 1,
       "norm_label": "referralschema"
     },
     {
@@ -1764,7 +1764,7 @@
       "source_file": "src/app/(dashboard)/referrals/new/page.tsx",
       "source_location": "L43",
       "id": "new_page_referralformdata",
-      "community": 2,
+      "community": 1,
       "norm_label": "referralformdata"
     },
     {
@@ -1773,7 +1773,7 @@
       "source_file": "src/app/(dashboard)/referrals/new/page.tsx",
       "source_location": "L45",
       "id": "new_page_dangersignoptions",
-      "community": 2,
+      "community": 1,
       "norm_label": "dangersignoptions"
     },
     {
@@ -1782,7 +1782,7 @@
       "source_file": "src/app/(dashboard)/referrals/new/page.tsx",
       "source_location": "L58",
       "id": "new_page_referraltypes",
-      "community": 2,
+      "community": 1,
       "norm_label": "referraltypes"
     },
     {
@@ -1791,7 +1791,7 @@
       "source_file": "src/app/(dashboard)/referrals/new/page.tsx",
       "source_location": "L62",
       "id": "new_page_priorities",
-      "community": 2,
+      "community": 1,
       "norm_label": "priorities"
     },
     {
@@ -1800,7 +1800,7 @@
       "source_file": "src/app/(dashboard)/referrals/new/page.tsx",
       "source_location": "L66",
       "id": "new_page_newreferralpage",
-      "community": 2,
+      "community": 1,
       "norm_label": "newreferralpage()"
     },
     {
@@ -1809,16 +1809,34 @@
       "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_referrals_id_page_tsx",
-      "community": 4,
+      "community": 0,
       "norm_label": "page.tsx"
+    },
+    {
+      "label": "PriorityBadge()",
+      "file_type": "code",
+      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
+      "source_location": "L37",
+      "id": "id_page_prioritybadge",
+      "community": 0,
+      "norm_label": "prioritybadge()"
+    },
+    {
+      "label": "StatusBadge()",
+      "file_type": "code",
+      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
+      "source_location": "L56",
+      "id": "id_page_statusbadge",
+      "community": 0,
+      "norm_label": "statusbadge()"
     },
     {
       "label": "ReferralDetailPage()",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
-      "source_location": "L41",
+      "source_location": "L64",
       "id": "id_page_referraldetailpage",
-      "community": 4,
+      "community": 0,
       "norm_label": "referraldetailpage()"
     },
     {
@@ -1827,7 +1845,7 @@
       "source_file": "src/app/(dashboard)/admin/settings/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_admin_settings_page_tsx",
-      "community": 28,
+      "community": 35,
       "norm_label": "page.tsx"
     },
     {
@@ -1836,7 +1854,7 @@
       "source_file": "src/app/(dashboard)/admin/settings/page.tsx",
       "source_location": "L18",
       "id": "settings_page_settingsection",
-      "community": 28,
+      "community": 35,
       "norm_label": "settingsection"
     },
     {
@@ -1845,7 +1863,7 @@
       "source_file": "src/app/(dashboard)/admin/settings/page.tsx",
       "source_location": "L25",
       "id": "settings_page_sections",
-      "community": 28,
+      "community": 35,
       "norm_label": "sections"
     },
     {
@@ -1854,7 +1872,7 @@
       "source_file": "src/app/(dashboard)/admin/settings/page.tsx",
       "source_location": "L32",
       "id": "settings_page_adminsettingspage",
-      "community": 28,
+      "community": 35,
       "norm_label": "adminsettingspage()"
     },
     {
@@ -1863,7 +1881,7 @@
       "source_file": "src/app/(dashboard)/admin/users/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_admin_users_page_tsx",
-      "community": 3,
+      "community": 22,
       "norm_label": "page.tsx"
     },
     {
@@ -1872,43 +1890,43 @@
       "source_file": "src/app/(dashboard)/admin/users/page.tsx",
       "source_location": "L38",
       "id": "users_page_userschema",
-      "community": 3,
+      "community": 22,
       "norm_label": "userschema"
     },
     {
       "label": "UserFormData",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/admin/users/page.tsx",
-      "source_location": "L49",
+      "source_location": "L50",
       "id": "users_page_userformdata",
-      "community": 3,
+      "community": 22,
       "norm_label": "userformdata"
     },
     {
       "label": "User",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/admin/users/page.tsx",
-      "source_location": "L52",
+      "source_location": "L53",
       "id": "users_page_user",
-      "community": 3,
+      "community": 22,
       "norm_label": "user"
     },
     {
       "label": "RoleBadge()",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/admin/users/page.tsx",
-      "source_location": "L67",
+      "source_location": "L68",
       "id": "users_page_rolebadge",
-      "community": 3,
+      "community": 22,
       "norm_label": "rolebadge()"
     },
     {
       "label": "AdminUsersPage()",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/admin/users/page.tsx",
-      "source_location": "L97",
+      "source_location": "L98",
       "id": "users_page_adminuserspage",
-      "community": 3,
+      "community": 22,
       "norm_label": "adminuserspage()"
     },
     {
@@ -1917,7 +1935,7 @@
       "source_file": "src/app/(dashboard)/admin/facilities/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_admin_facilities_page_tsx",
-      "community": 0,
+      "community": 2,
       "norm_label": "page.tsx"
     },
     {
@@ -1926,7 +1944,7 @@
       "source_file": "src/app/(dashboard)/admin/facilities/page.tsx",
       "source_location": "L24",
       "id": "facilities_page_facilitiesmap",
-      "community": 0,
+      "community": 2,
       "norm_label": "facilitiesmap"
     },
     {
@@ -1935,7 +1953,7 @@
       "source_file": "src/app/(dashboard)/admin/facilities/page.tsx",
       "source_location": "L33",
       "id": "facilities_page_facilitytypes",
-      "community": 0,
+      "community": 2,
       "norm_label": "facilitytypes"
     },
     {
@@ -1944,7 +1962,7 @@
       "source_file": "src/app/(dashboard)/admin/facilities/page.tsx",
       "source_location": "L35",
       "id": "facilities_page_adminfacilitiespage",
-      "community": 0,
+      "community": 2,
       "norm_label": "adminfacilitiespage()"
     },
     {
@@ -1953,7 +1971,7 @@
       "source_file": "src/app/(dashboard)/national-dashboard/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_national_dashboard_page_tsx",
-      "community": 0,
+      "community": 3,
       "norm_label": "page.tsx"
     },
     {
@@ -1962,7 +1980,7 @@
       "source_file": "src/app/(dashboard)/national-dashboard/page.tsx",
       "source_location": "L32",
       "id": "national_dashboard_page_nationalreferralmap",
-      "community": 0,
+      "community": 3,
       "norm_label": "nationalreferralmap"
     },
     {
@@ -1971,7 +1989,7 @@
       "source_file": "src/app/(dashboard)/national-dashboard/page.tsx",
       "source_location": "L51",
       "id": "national_dashboard_page_districtperformance",
-      "community": 0,
+      "community": 3,
       "norm_label": "districtperformance"
     },
     {
@@ -1980,7 +1998,7 @@
       "source_file": "src/app/(dashboard)/national-dashboard/page.tsx",
       "source_location": "L60",
       "id": "national_dashboard_page_customtooltip",
-      "community": 0,
+      "community": 3,
       "norm_label": "customtooltip()"
     },
     {
@@ -1989,7 +2007,7 @@
       "source_file": "src/app/(dashboard)/national-dashboard/page.tsx",
       "source_location": "L85",
       "id": "national_dashboard_page_nationaldashboardpage",
-      "community": 0,
+      "community": 3,
       "norm_label": "nationaldashboardpage()"
     },
     {
@@ -1998,7 +2016,7 @@
       "source_file": "src/app/(dashboard)/triage/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_triage_page_tsx",
-      "community": 3,
+      "community": 2,
       "norm_label": "page.tsx"
     },
     {
@@ -2007,7 +2025,7 @@
       "source_file": "src/app/(dashboard)/triage/page.tsx",
       "source_location": "L17",
       "id": "triage_page_prioritybadge",
-      "community": 3,
+      "community": 2,
       "norm_label": "prioritybadge()"
     },
     {
@@ -2016,7 +2034,7 @@
       "source_file": "src/app/(dashboard)/triage/page.tsx",
       "source_location": "L41",
       "id": "triage_page_triagepage",
-      "community": 3,
+      "community": 2,
       "norm_label": "triagepage()"
     },
     {
@@ -2025,7 +2043,7 @@
       "source_file": "src/app/(dashboard)/triage/page.tsx",
       "source_location": "L179",
       "id": "triage_page_checkmark",
-      "community": 3,
+      "community": 2,
       "norm_label": "checkmark()"
     },
     {
@@ -2034,61 +2052,79 @@
       "source_file": "src/app/(dashboard)/ambulances/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_ambulances_page_tsx",
-      "community": 5,
+      "community": 4,
       "norm_label": "page.tsx"
     },
     {
       "label": "AmbulanceMap",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/ambulances/page.tsx",
-      "source_location": "L29",
+      "source_location": "L30",
       "id": "ambulances_page_ambulancemap",
-      "community": 5,
+      "community": 4,
       "norm_label": "ambulancemap"
     },
     {
       "label": "ambulanceSchema",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/ambulances/page.tsx",
-      "source_location": "L38",
+      "source_location": "L39",
       "id": "ambulances_page_ambulanceschema",
-      "community": 5,
+      "community": 4,
       "norm_label": "ambulanceschema"
     },
     {
       "label": "AmbulanceFormData",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/ambulances/page.tsx",
-      "source_location": "L46",
+      "source_location": "L47",
       "id": "ambulances_page_ambulanceformdata",
-      "community": 5,
+      "community": 4,
       "norm_label": "ambulanceformdata"
+    },
+    {
+      "label": "editAmbulanceSchema",
+      "file_type": "code",
+      "source_file": "src/app/(dashboard)/ambulances/page.tsx",
+      "source_location": "L49",
+      "id": "ambulances_page_editambulanceschema",
+      "community": 4,
+      "norm_label": "editambulanceschema"
+    },
+    {
+      "label": "EditAmbulanceFormData",
+      "file_type": "code",
+      "source_file": "src/app/(dashboard)/ambulances/page.tsx",
+      "source_location": "L56",
+      "id": "ambulances_page_editambulanceformdata",
+      "community": 4,
+      "norm_label": "editambulanceformdata"
     },
     {
       "label": "CrewCandidate",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/ambulances/page.tsx",
-      "source_location": "L48",
+      "source_location": "L58",
       "id": "ambulances_page_crewcandidate",
-      "community": 5,
+      "community": 4,
       "norm_label": "crewcandidate"
     },
     {
       "label": "StatusBadge()",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/ambulances/page.tsx",
-      "source_location": "L60",
+      "source_location": "L70",
       "id": "ambulances_page_statusbadge",
-      "community": 5,
+      "community": 4,
       "norm_label": "statusbadge()"
     },
     {
       "label": "AmbulancesPage()",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/ambulances/page.tsx",
-      "source_location": "L111",
+      "source_location": "L121",
       "id": "ambulances_page_ambulancespage",
-      "community": 5,
+      "community": 4,
       "norm_label": "ambulancespage()"
     },
     {
@@ -2097,7 +2133,7 @@
       "source_file": "src/app/(dashboard)/ambulances/mission/[id]/vitals/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_ambulances_mission_id_vitals_page_tsx",
-      "community": 3,
+      "community": 33,
       "norm_label": "page.tsx"
     },
     {
@@ -2106,7 +2142,7 @@
       "source_file": "src/app/(dashboard)/ambulances/mission/[id]/vitals/page.tsx",
       "source_location": "L24",
       "id": "vitals_page_intervention_options",
-      "community": 3,
+      "community": 33,
       "norm_label": "intervention_options"
     },
     {
@@ -2115,7 +2151,7 @@
       "source_file": "src/app/(dashboard)/ambulances/mission/[id]/vitals/page.tsx",
       "source_location": "L37",
       "id": "vitals_page_vitalsformdata",
-      "community": 3,
+      "community": 33,
       "norm_label": "vitalsformdata"
     },
     {
@@ -2124,7 +2160,7 @@
       "source_file": "src/app/(dashboard)/ambulances/mission/[id]/vitals/page.tsx",
       "source_location": "L49",
       "id": "vitals_page_vitalslogcard",
-      "community": 3,
+      "community": 33,
       "norm_label": "vitalslogcard()"
     },
     {
@@ -2133,7 +2169,7 @@
       "source_file": "src/app/(dashboard)/ambulances/mission/[id]/vitals/page.tsx",
       "source_location": "L107",
       "id": "vitals_page_missionvitalspage",
-      "community": 3,
+      "community": 33,
       "norm_label": "missionvitalspage()"
     },
     {
@@ -2142,7 +2178,7 @@
       "source_file": "src/app/(dashboard)/ambulances/mission/[id]/patient-report/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_ambulances_mission_id_patient_report_page_tsx",
-      "community": 1,
+      "community": 11,
       "norm_label": "page.tsx"
     },
     {
@@ -2151,7 +2187,7 @@
       "source_file": "src/app/(dashboard)/ambulances/mission/[id]/patient-report/page.tsx",
       "source_location": "L43",
       "id": "patient_report_page_step_icons",
-      "community": 1,
+      "community": 11,
       "norm_label": "step_icons"
     },
     {
@@ -2160,7 +2196,7 @@
       "source_file": "src/app/(dashboard)/ambulances/mission/[id]/patient-report/page.tsx",
       "source_location": "L47",
       "id": "patient_report_page_patientreportpage",
-      "community": 1,
+      "community": 11,
       "norm_label": "patientreportpage()"
     },
     {
@@ -2169,7 +2205,7 @@
       "source_file": "src/app/(dashboard)/ambulances/mission/[id]/patient-report/page.tsx",
       "source_location": "L965",
       "id": "patient_report_page_vitalsignsstep",
-      "community": 1,
+      "community": 11,
       "norm_label": "vitalsignsstep()"
     },
     {
@@ -2178,7 +2214,7 @@
       "source_file": "src/app/(dashboard)/call-centre/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_call_centre_page_tsx",
-      "community": 17,
+      "community": 18,
       "norm_label": "page.tsx"
     },
     {
@@ -2187,7 +2223,7 @@
       "source_file": "src/app/(dashboard)/call-centre/page.tsx",
       "source_location": "L21",
       "id": "call_centre_page_call",
-      "community": 17,
+      "community": 18,
       "norm_label": "call"
     },
     {
@@ -2196,7 +2232,7 @@
       "source_file": "src/app/(dashboard)/call-centre/page.tsx",
       "source_location": "L33",
       "id": "call_centre_page_mockcalls",
-      "community": 17,
+      "community": 18,
       "norm_label": "mockcalls"
     },
     {
@@ -2205,7 +2241,7 @@
       "source_file": "src/app/(dashboard)/call-centre/page.tsx",
       "source_location": "L41",
       "id": "call_centre_page_calltypebadge",
-      "community": 17,
+      "community": 18,
       "norm_label": "calltypebadge()"
     },
     {
@@ -2214,7 +2250,7 @@
       "source_file": "src/app/(dashboard)/call-centre/page.tsx",
       "source_location": "L65",
       "id": "call_centre_page_callstatusbadge",
-      "community": 17,
+      "community": 18,
       "norm_label": "callstatusbadge()"
     },
     {
@@ -2223,7 +2259,7 @@
       "source_file": "src/app/(dashboard)/call-centre/page.tsx",
       "source_location": "L93",
       "id": "call_centre_page_formatduration",
-      "community": 17,
+      "community": 18,
       "norm_label": "formatduration()"
     },
     {
@@ -2232,7 +2268,7 @@
       "source_file": "src/app/(dashboard)/call-centre/page.tsx",
       "source_location": "L100",
       "id": "call_centre_page_logcallmodalprops",
-      "community": 17,
+      "community": 18,
       "norm_label": "logcallmodalprops"
     },
     {
@@ -2241,7 +2277,7 @@
       "source_file": "src/app/(dashboard)/call-centre/page.tsx",
       "source_location": "L105",
       "id": "call_centre_page_logcallmodal",
-      "community": 17,
+      "community": 18,
       "norm_label": "logcallmodal()"
     },
     {
@@ -2250,7 +2286,7 @@
       "source_file": "src/app/(dashboard)/call-centre/page.tsx",
       "source_location": "L361",
       "id": "call_centre_page_callcentrepage",
-      "community": 17,
+      "community": 18,
       "norm_label": "callcentrepage()"
     },
     {
@@ -2259,7 +2295,7 @@
       "source_file": "src/app/(dashboard)/profile/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_profile_page_tsx",
-      "community": 2,
+      "community": 1,
       "norm_label": "page.tsx"
     },
     {
@@ -2268,7 +2304,7 @@
       "source_file": "src/app/(dashboard)/profile/page.tsx",
       "source_location": "L17",
       "id": "profile_page_profilepage",
-      "community": 2,
+      "community": 1,
       "norm_label": "profilepage()"
     },
     {
@@ -2277,7 +2313,7 @@
       "source_file": "src/app/(dashboard)/readiness/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_readiness_page_tsx",
-      "community": 16,
+      "community": 17,
       "norm_label": "page.tsx"
     },
     {
@@ -2286,7 +2322,7 @@
       "source_file": "src/app/(dashboard)/readiness/page.tsx",
       "source_location": "L30",
       "id": "readiness_page_getscorecolor",
-      "community": 16,
+      "community": 17,
       "norm_label": "getscorecolor()"
     },
     {
@@ -2295,7 +2331,7 @@
       "source_file": "src/app/(dashboard)/readiness/page.tsx",
       "source_location": "L36",
       "id": "readiness_page_getstatuscolor",
-      "community": 16,
+      "community": 17,
       "norm_label": "getstatuscolor()"
     },
     {
@@ -2304,7 +2340,7 @@
       "source_file": "src/app/(dashboard)/readiness/page.tsx",
       "source_location": "L53",
       "id": "readiness_page_getstatusbg",
-      "community": 16,
+      "community": 17,
       "norm_label": "getstatusbg()"
     },
     {
@@ -2313,7 +2349,7 @@
       "source_file": "src/app/(dashboard)/readiness/page.tsx",
       "source_location": "L70",
       "id": "readiness_page_statusbadge",
-      "community": 16,
+      "community": 17,
       "norm_label": "statusbadge()"
     },
     {
@@ -2322,7 +2358,7 @@
       "source_file": "src/app/(dashboard)/readiness/page.tsx",
       "source_location": "L84",
       "id": "readiness_page_calculatescore",
-      "community": 16,
+      "community": 17,
       "norm_label": "calculatescore()"
     },
     {
@@ -2331,7 +2367,7 @@
       "source_file": "src/app/(dashboard)/readiness/page.tsx",
       "source_location": "L125",
       "id": "readiness_page_gettotalbloodunits",
-      "community": 16,
+      "community": 17,
       "norm_label": "gettotalbloodunits()"
     },
     {
@@ -2340,7 +2376,7 @@
       "source_file": "src/app/(dashboard)/readiness/page.tsx",
       "source_location": "L139",
       "id": "readiness_page_facilityreadinesscard",
-      "community": 16,
+      "community": 17,
       "norm_label": "facilityreadinesscard()"
     },
     {
@@ -2349,7 +2385,7 @@
       "source_file": "src/app/(dashboard)/readiness/page.tsx",
       "source_location": "L346",
       "id": "readiness_page_readinessdetailmodal",
-      "community": 16,
+      "community": 17,
       "norm_label": "readinessdetailmodal()"
     },
     {
@@ -2358,7 +2394,7 @@
       "source_file": "src/app/(dashboard)/readiness/page.tsx",
       "source_location": "L653",
       "id": "readiness_page_singlefacilityview",
-      "community": 16,
+      "community": 17,
       "norm_label": "singlefacilityview()"
     },
     {
@@ -2367,7 +2403,7 @@
       "source_file": "src/app/(dashboard)/readiness/page.tsx",
       "source_location": "L1051",
       "id": "readiness_page_readinesspage",
-      "community": 2,
+      "community": 1,
       "norm_label": "readinesspage()"
     },
     {
@@ -2376,7 +2412,7 @@
       "source_file": "src/app/(dashboard)/readiness/update/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_readiness_update_page_tsx",
-      "community": 0,
+      "community": 3,
       "norm_label": "page.tsx"
     },
     {
@@ -2385,7 +2421,7 @@
       "source_file": "src/app/(dashboard)/readiness/update/page.tsx",
       "source_location": "L22",
       "id": "update_page_wardbed",
-      "community": 0,
+      "community": 3,
       "norm_label": "wardbed"
     },
     {
@@ -2394,7 +2430,7 @@
       "source_file": "src/app/(dashboard)/readiness/update/page.tsx",
       "source_location": "L28",
       "id": "update_page_bloodunit",
-      "community": 0,
+      "community": 3,
       "norm_label": "bloodunit"
     },
     {
@@ -2403,7 +2439,7 @@
       "source_file": "src/app/(dashboard)/readiness/update/page.tsx",
       "source_location": "L33",
       "id": "update_page_bloodtypes",
-      "community": 0,
+      "community": 3,
       "norm_label": "bloodtypes"
     },
     {
@@ -2412,7 +2448,7 @@
       "source_file": "src/app/(dashboard)/readiness/update/page.tsx",
       "source_location": "L34",
       "id": "update_page_statusoptions",
-      "community": 0,
+      "community": 3,
       "norm_label": "statusoptions"
     },
     {
@@ -2421,7 +2457,7 @@
       "source_file": "src/app/(dashboard)/readiness/update/page.tsx",
       "source_location": "L35",
       "id": "update_page_staffingstatusoptions",
-      "community": 0,
+      "community": 3,
       "norm_label": "staffingstatusoptions"
     },
     {
@@ -2430,7 +2466,7 @@
       "source_file": "src/app/(dashboard)/readiness/update/page.tsx",
       "source_location": "L38",
       "id": "update_page_updatereadinesspage",
-      "community": 0,
+      "community": 3,
       "norm_label": "updatereadinesspage()"
     },
     {
@@ -2439,7 +2475,7 @@
       "source_file": "src/app/(dashboard)/readiness/reminders/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_readiness_reminders_page_tsx",
-      "community": 3,
+      "community": 2,
       "norm_label": "page.tsx"
     },
     {
@@ -2448,7 +2484,7 @@
       "source_file": "src/app/(dashboard)/readiness/reminders/page.tsx",
       "source_location": "L21",
       "id": "reminders_page_days_of_week",
-      "community": 3,
+      "community": 2,
       "norm_label": "days_of_week"
     },
     {
@@ -2457,7 +2493,7 @@
       "source_file": "src/app/(dashboard)/readiness/reminders/page.tsx",
       "source_location": "L23",
       "id": "reminders_page_reminderformdata",
-      "community": 3,
+      "community": 2,
       "norm_label": "reminderformdata"
     },
     {
@@ -2466,7 +2502,7 @@
       "source_file": "src/app/(dashboard)/readiness/reminders/page.tsx",
       "source_location": "L32",
       "id": "reminders_page_remindercard",
-      "community": 3,
+      "community": 2,
       "norm_label": "remindercard()"
     },
     {
@@ -2475,7 +2511,7 @@
       "source_file": "src/app/(dashboard)/readiness/reminders/page.tsx",
       "source_location": "L110",
       "id": "reminders_page_readinessreminderspage",
-      "community": 3,
+      "community": 2,
       "norm_label": "readinessreminderspage()"
     },
     {
@@ -2484,7 +2520,7 @@
       "source_file": "src/app/(dashboard)/district-dashboard/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_district_dashboard_page_tsx",
-      "community": 0,
+      "community": 3,
       "norm_label": "page.tsx"
     },
     {
@@ -2493,7 +2529,7 @@
       "source_file": "src/app/(dashboard)/district-dashboard/page.tsx",
       "source_location": "L40",
       "id": "district_dashboard_page_facilityreadinessmap",
-      "community": 0,
+      "community": 3,
       "norm_label": "facilityreadinessmap"
     },
     {
@@ -2502,7 +2538,7 @@
       "source_file": "src/app/(dashboard)/district-dashboard/page.tsx",
       "source_location": "L59",
       "id": "district_dashboard_page_colors",
-      "community": 0,
+      "community": 3,
       "norm_label": "colors"
     },
     {
@@ -2511,7 +2547,7 @@
       "source_file": "src/app/(dashboard)/district-dashboard/page.tsx",
       "source_location": "L70",
       "id": "district_dashboard_page_facilityperformance",
-      "community": 0,
+      "community": 3,
       "norm_label": "facilityperformance"
     },
     {
@@ -2520,7 +2556,7 @@
       "source_file": "src/app/(dashboard)/district-dashboard/page.tsx",
       "source_location": "L80",
       "id": "district_dashboard_page_customtooltip",
-      "community": 0,
+      "community": 3,
       "norm_label": "customtooltip()"
     },
     {
@@ -2529,7 +2565,7 @@
       "source_file": "src/app/(dashboard)/district-dashboard/page.tsx",
       "source_location": "L105",
       "id": "district_dashboard_page_districtdashboardpage",
-      "community": 0,
+      "community": 3,
       "norm_label": "districtdashboardpage()"
     },
     {
@@ -2538,7 +2574,7 @@
       "source_file": "src/app/(dashboard)/counter-referrals/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_counter_referrals_page_tsx",
-      "community": 2,
+      "community": 1,
       "norm_label": "page.tsx"
     },
     {
@@ -2547,7 +2583,7 @@
       "source_file": "src/app/(dashboard)/counter-referrals/page.tsx",
       "source_location": "L21",
       "id": "counter_referrals_page_referral",
-      "community": 2,
+      "community": 1,
       "norm_label": "referral"
     },
     {
@@ -2556,7 +2592,7 @@
       "source_file": "src/app/(dashboard)/counter-referrals/page.tsx",
       "source_location": "L41",
       "id": "counter_referrals_page_statusbadge",
-      "community": 2,
+      "community": 1,
       "norm_label": "statusbadge()"
     },
     {
@@ -2565,7 +2601,7 @@
       "source_file": "src/app/(dashboard)/counter-referrals/page.tsx",
       "source_location": "L49",
       "id": "counter_referrals_page_directionbadge",
-      "community": 2,
+      "community": 1,
       "norm_label": "directionbadge()"
     },
     {
@@ -2574,7 +2610,7 @@
       "source_file": "src/app/(dashboard)/counter-referrals/page.tsx",
       "source_location": "L69",
       "id": "counter_referrals_page_counterreferralspage",
-      "community": 2,
+      "community": 1,
       "norm_label": "counterreferralspage()"
     },
     {
@@ -2583,7 +2619,7 @@
       "source_file": "src/app/(dashboard)/facilities/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_facilities_page_tsx",
-      "community": 1,
+      "community": 21,
       "norm_label": "page.tsx"
     },
     {
@@ -2592,7 +2628,7 @@
       "source_file": "src/app/(dashboard)/facilities/page.tsx",
       "source_location": "L32",
       "id": "facilities_page_facilityschema",
-      "community": 1,
+      "community": 21,
       "norm_label": "facilityschema"
     },
     {
@@ -2601,7 +2637,7 @@
       "source_file": "src/app/(dashboard)/facilities/page.tsx",
       "source_location": "L45",
       "id": "facilities_page_facilityformdata",
-      "community": 1,
+      "community": 21,
       "norm_label": "facilityformdata"
     },
     {
@@ -2610,7 +2646,7 @@
       "source_file": "src/app/(dashboard)/facilities/page.tsx",
       "source_location": "L48",
       "id": "facilities_page_parsecsv",
-      "community": 1,
+      "community": 21,
       "norm_label": "parsecsv()"
     },
     {
@@ -2619,7 +2655,7 @@
       "source_file": "src/app/(dashboard)/facilities/page.tsx",
       "source_location": "L117",
       "id": "facilities_page_defaultcolumnmappings",
-      "community": 1,
+      "community": 21,
       "norm_label": "defaultcolumnmappings"
     },
     {
@@ -2628,7 +2664,7 @@
       "source_file": "src/app/(dashboard)/facilities/page.tsx",
       "source_location": "L131",
       "id": "facilities_page_facilitiespage",
-      "community": 1,
+      "community": 21,
       "norm_label": "facilitiespage()"
     },
     {
@@ -2637,7 +2673,7 @@
       "source_file": "src/app/(dashboard)/facilities/[id]/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_facilities_id_page_tsx",
-      "community": 3,
+      "community": 2,
       "norm_label": "page.tsx"
     },
     {
@@ -2646,7 +2682,7 @@
       "source_file": "src/app/(dashboard)/facilities/[id]/page.tsx",
       "source_location": "L21",
       "id": "id_page_singlefacilitymap",
-      "community": 3,
+      "community": 2,
       "norm_label": "singlefacilitymap"
     },
     {
@@ -2655,7 +2691,7 @@
       "source_file": "src/app/(dashboard)/facilities/[id]/page.tsx",
       "source_location": "L45",
       "id": "id_page_facilitydetailpage",
-      "community": 3,
+      "community": 2,
       "norm_label": "facilitydetailpage()"
     },
     {
@@ -2664,7 +2700,7 @@
       "source_file": "src/app/(dashboard)/analytics/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_analytics_page_tsx",
-      "community": 0,
+      "community": 3,
       "norm_label": "page.tsx"
     },
     {
@@ -2673,7 +2709,7 @@
       "source_file": "src/app/(dashboard)/analytics/page.tsx",
       "source_location": "L32",
       "id": "analytics_page_colors",
-      "community": 0,
+      "community": 3,
       "norm_label": "colors"
     },
     {
@@ -2682,7 +2718,7 @@
       "source_file": "src/app/(dashboard)/analytics/page.tsx",
       "source_location": "L45",
       "id": "analytics_page_customtooltip",
-      "community": 0,
+      "community": 3,
       "norm_label": "customtooltip()"
     },
     {
@@ -2691,7 +2727,7 @@
       "source_file": "src/app/(dashboard)/analytics/page.tsx",
       "source_location": "L70",
       "id": "analytics_page_analyticspage",
-      "community": 0,
+      "community": 3,
       "norm_label": "analyticspage()"
     },
     {
@@ -2700,7 +2736,7 @@
       "source_file": "src/app/(dashboard)/reports/page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_reports_page_tsx",
-      "community": 0,
+      "community": 3,
       "norm_label": "page.tsx"
     },
     {
@@ -2709,7 +2745,7 @@
       "source_file": "src/app/(dashboard)/reports/page.tsx",
       "source_location": "L22",
       "id": "reports_page_report",
-      "community": 0,
+      "community": 3,
       "norm_label": "report"
     },
     {
@@ -2718,7 +2754,7 @@
       "source_file": "src/app/(dashboard)/reports/page.tsx",
       "source_location": "L32",
       "id": "reports_page_recentdownload",
-      "community": 0,
+      "community": 3,
       "norm_label": "recentdownload"
     },
     {
@@ -2727,7 +2763,7 @@
       "source_file": "src/app/(dashboard)/reports/page.tsx",
       "source_location": "L41",
       "id": "reports_page_reports",
-      "community": 0,
+      "community": 3,
       "norm_label": "reports"
     },
     {
@@ -2736,7 +2772,7 @@
       "source_file": "src/app/(dashboard)/reports/page.tsx",
       "source_location": "L50",
       "id": "reports_page_recentdownloads",
-      "community": 0,
+      "community": 3,
       "norm_label": "recentdownloads"
     },
     {
@@ -2745,7 +2781,7 @@
       "source_file": "src/app/(dashboard)/reports/page.tsx",
       "source_location": "L57",
       "id": "reports_page_getreporticon",
-      "community": 0,
+      "community": 3,
       "norm_label": "getreporticon()"
     },
     {
@@ -2754,7 +2790,7 @@
       "source_file": "src/app/(dashboard)/reports/page.tsx",
       "source_location": "L67",
       "id": "reports_page_getcategorycolor",
-      "community": 0,
+      "community": 3,
       "norm_label": "getcategorycolor()"
     },
     {
@@ -2763,7 +2799,7 @@
       "source_file": "src/app/(dashboard)/reports/page.tsx",
       "source_location": "L77",
       "id": "reports_page_reportspage",
-      "community": 0,
+      "community": 3,
       "norm_label": "reportspage()"
     },
     {
@@ -2772,7 +2808,7 @@
       "source_file": "src/providers/index.tsx",
       "source_location": "L1",
       "id": "src_providers_index_tsx",
-      "community": 29,
+      "community": 36,
       "norm_label": "index.tsx"
     },
     {
@@ -2781,7 +2817,7 @@
       "source_file": "src/providers/ThemeProvider.tsx",
       "source_location": "L1",
       "id": "src_providers_themeprovider_tsx",
-      "community": 8,
+      "community": 7,
       "norm_label": "themeprovider.tsx"
     },
     {
@@ -2790,7 +2826,7 @@
       "source_file": "src/providers/ThemeProvider.tsx",
       "source_location": "L6",
       "id": "providers_themeprovider_themeprovider",
-      "community": 8,
+      "community": 7,
       "norm_label": "themeprovider()"
     },
     {
@@ -2799,7 +2835,7 @@
       "source_file": "src/providers/PushNotificationProvider.tsx",
       "source_location": "L1",
       "id": "src_providers_pushnotificationprovider_tsx",
-      "community": 7,
+      "community": 6,
       "norm_label": "pushnotificationprovider.tsx"
     },
     {
@@ -2808,7 +2844,7 @@
       "source_file": "src/providers/PushNotificationProvider.tsx",
       "source_location": "L9",
       "id": "providers_pushnotificationprovider_notificationpayload",
-      "community": 7,
+      "community": 6,
       "norm_label": "notificationpayload"
     },
     {
@@ -2817,7 +2853,7 @@
       "source_file": "src/providers/PushNotificationProvider.tsx",
       "source_location": "L23",
       "id": "providers_pushnotificationprovider_pushnotificationprovider",
-      "community": 7,
+      "community": 6,
       "norm_label": "pushnotificationprovider()"
     },
     {
@@ -2826,7 +2862,7 @@
       "source_file": "src/providers/QueryProvider.tsx",
       "source_location": "L1",
       "id": "src_providers_queryprovider_tsx",
-      "community": 40,
+      "community": 47,
       "norm_label": "queryprovider.tsx"
     },
     {
@@ -2835,7 +2871,7 @@
       "source_file": "src/providers/QueryProvider.tsx",
       "source_location": "L7",
       "id": "providers_queryprovider_queryprovider",
-      "community": 40,
+      "community": 47,
       "norm_label": "queryprovider()"
     },
     {
@@ -2844,7 +2880,7 @@
       "source_file": "src/components/FacilitiesMap.tsx",
       "source_location": "L1",
       "id": "src_components_facilitiesmap_tsx",
-      "community": 23,
+      "community": 29,
       "norm_label": "facilitiesmap.tsx"
     },
     {
@@ -2853,7 +2889,7 @@
       "source_file": "src/components/FacilitiesMap.tsx",
       "source_location": "L12",
       "id": "components_facilitiesmap_defaulticon",
-      "community": 23,
+      "community": 29,
       "norm_label": "defaulticon"
     },
     {
@@ -2862,7 +2898,7 @@
       "source_file": "src/components/FacilitiesMap.tsx",
       "source_location": "L23",
       "id": "components_facilitiesmap_hospitalicon",
-      "community": 23,
+      "community": 29,
       "norm_label": "hospitalicon"
     },
     {
@@ -2871,7 +2907,7 @@
       "source_file": "src/components/FacilitiesMap.tsx",
       "source_location": "L44",
       "id": "components_facilitiesmap_phuicon",
-      "community": 23,
+      "community": 29,
       "norm_label": "phuicon"
     },
     {
@@ -2880,7 +2916,7 @@
       "source_file": "src/components/FacilitiesMap.tsx",
       "source_location": "L61",
       "id": "components_facilitiesmap_facilitiesmapprops",
-      "community": 23,
+      "community": 29,
       "norm_label": "facilitiesmapprops"
     },
     {
@@ -2889,7 +2925,7 @@
       "source_file": "src/components/FacilitiesMap.tsx",
       "source_location": "L66",
       "id": "components_facilitiesmap_facilitiesmap",
-      "community": 23,
+      "community": 29,
       "norm_label": "facilitiesmap()"
     },
     {
@@ -2898,7 +2934,7 @@
       "source_file": "src/components/AmbulanceMap.tsx",
       "source_location": "L1",
       "id": "src_components_ambulancemap_tsx",
-      "community": 5,
+      "community": 4,
       "norm_label": "ambulancemap.tsx"
     },
     {
@@ -2907,7 +2943,7 @@
       "source_file": "src/components/AmbulanceMap.tsx",
       "source_location": "L12",
       "id": "components_ambulancemap_defaulticon",
-      "community": 5,
+      "community": 4,
       "norm_label": "defaulticon"
     },
     {
@@ -2916,7 +2952,7 @@
       "source_file": "src/components/AmbulanceMap.tsx",
       "source_location": "L25",
       "id": "components_ambulancemap_createstatusicon",
-      "community": 5,
+      "community": 4,
       "norm_label": "createstatusicon()"
     },
     {
@@ -2925,7 +2961,7 @@
       "source_file": "src/components/AmbulanceMap.tsx",
       "source_location": "L51",
       "id": "components_ambulancemap_availableicon",
-      "community": 5,
+      "community": 4,
       "norm_label": "availableicon"
     },
     {
@@ -2934,7 +2970,7 @@
       "source_file": "src/components/AmbulanceMap.tsx",
       "source_location": "L52",
       "id": "components_ambulancemap_onmissionicon",
-      "community": 5,
+      "community": 4,
       "norm_label": "onmissionicon"
     },
     {
@@ -2943,7 +2979,7 @@
       "source_file": "src/components/AmbulanceMap.tsx",
       "source_location": "L53",
       "id": "components_ambulancemap_maintenanceicon",
-      "community": 5,
+      "community": 4,
       "norm_label": "maintenanceicon"
     },
     {
@@ -2952,7 +2988,7 @@
       "source_file": "src/components/AmbulanceMap.tsx",
       "source_location": "L54",
       "id": "components_ambulancemap_outofserviceicon",
-      "community": 5,
+      "community": 4,
       "norm_label": "outofserviceicon"
     },
     {
@@ -2961,7 +2997,7 @@
       "source_file": "src/components/AmbulanceMap.tsx",
       "source_location": "L56",
       "id": "components_ambulancemap_ambulancemapprops",
-      "community": 5,
+      "community": 4,
       "norm_label": "ambulancemapprops"
     },
     {
@@ -2970,7 +3006,7 @@
       "source_file": "src/components/AmbulanceMap.tsx",
       "source_location": "L62",
       "id": "components_ambulancemap_ambulancemap",
-      "community": 5,
+      "community": 4,
       "norm_label": "ambulancemap()"
     },
     {
@@ -2979,7 +3015,7 @@
       "source_file": "src/components/SingleFacilityMap.tsx",
       "source_location": "L1",
       "id": "src_components_singlefacilitymap_tsx",
-      "community": 30,
+      "community": 37,
       "norm_label": "singlefacilitymap.tsx"
     },
     {
@@ -2988,7 +3024,7 @@
       "source_file": "src/components/SingleFacilityMap.tsx",
       "source_location": "L9",
       "id": "components_singlefacilitymap_singlefacilitymapprops",
-      "community": 30,
+      "community": 37,
       "norm_label": "singlefacilitymapprops"
     },
     {
@@ -2997,7 +3033,7 @@
       "source_file": "src/components/SingleFacilityMap.tsx",
       "source_location": "L18",
       "id": "components_singlefacilitymap_createfacilityicon",
-      "community": 30,
+      "community": 37,
       "norm_label": "createfacilityicon()"
     },
     {
@@ -3006,7 +3042,7 @@
       "source_file": "src/components/SingleFacilityMap.tsx",
       "source_location": "L53",
       "id": "components_singlefacilitymap_singlefacilitymap",
-      "community": 30,
+      "community": 37,
       "norm_label": "singlefacilitymap()"
     },
     {
@@ -3015,7 +3051,7 @@
       "source_file": "src/components/NotificationDropdown.tsx",
       "source_location": "L1",
       "id": "src_components_notificationdropdown_tsx",
-      "community": 7,
+      "community": 6,
       "norm_label": "notificationdropdown.tsx"
     },
     {
@@ -3024,7 +3060,7 @@
       "source_file": "src/components/NotificationDropdown.tsx",
       "source_location": "L10",
       "id": "components_notificationdropdown_notificationdropdown",
-      "community": 7,
+      "community": 6,
       "norm_label": "notificationdropdown()"
     },
     {
@@ -3033,7 +3069,7 @@
       "source_file": "src/components/maps/NationalReferralMap.tsx",
       "source_location": "L1",
       "id": "src_components_maps_nationalreferralmap_tsx",
-      "community": 18,
+      "community": 19,
       "norm_label": "nationalreferralmap.tsx"
     },
     {
@@ -3042,7 +3078,7 @@
       "source_file": "src/components/maps/NationalReferralMap.tsx",
       "source_location": "L8",
       "id": "maps_nationalreferralmap_activereferral",
-      "community": 18,
+      "community": 19,
       "norm_label": "activereferral"
     },
     {
@@ -3051,7 +3087,7 @@
       "source_file": "src/components/maps/NationalReferralMap.tsx",
       "source_location": "L17",
       "id": "maps_nationalreferralmap_ambulance",
-      "community": 18,
+      "community": 19,
       "norm_label": "ambulance"
     },
     {
@@ -3060,7 +3096,7 @@
       "source_file": "src/components/maps/NationalReferralMap.tsx",
       "source_location": "L25",
       "id": "maps_nationalreferralmap_facility",
-      "community": 18,
+      "community": 19,
       "norm_label": "facility"
     },
     {
@@ -3069,7 +3105,7 @@
       "source_file": "src/components/maps/NationalReferralMap.tsx",
       "source_location": "L34",
       "id": "maps_nationalreferralmap_nationalreferralmapprops",
-      "community": 18,
+      "community": 19,
       "norm_label": "nationalreferralmapprops"
     },
     {
@@ -3078,7 +3114,7 @@
       "source_file": "src/components/maps/NationalReferralMap.tsx",
       "source_location": "L48",
       "id": "maps_nationalreferralmap_priority_colors",
-      "community": 18,
+      "community": 19,
       "norm_label": "priority_colors"
     },
     {
@@ -3087,7 +3123,7 @@
       "source_file": "src/components/maps/NationalReferralMap.tsx",
       "source_location": "L55",
       "id": "maps_nationalreferralmap_getreadinesscolor",
-      "community": 18,
+      "community": 19,
       "norm_label": "getreadinesscolor()"
     },
     {
@@ -3096,7 +3132,7 @@
       "source_file": "src/components/maps/NationalReferralMap.tsx",
       "source_location": "L61",
       "id": "maps_nationalreferralmap_fitbounds",
-      "community": 18,
+      "community": 19,
       "norm_label": "fitbounds()"
     },
     {
@@ -3105,7 +3141,7 @@
       "source_file": "src/components/maps/NationalReferralMap.tsx",
       "source_location": "L75",
       "id": "maps_nationalreferralmap_nationalreferralmap",
-      "community": 18,
+      "community": 19,
       "norm_label": "nationalreferralmap()"
     },
     {
@@ -3114,7 +3150,7 @@
       "source_file": "src/components/maps/FacilityReadinessMap.tsx",
       "source_location": "L1",
       "id": "src_components_maps_facilityreadinessmap_tsx",
-      "community": 20,
+      "community": 25,
       "norm_label": "facilityreadinessmap.tsx"
     },
     {
@@ -3123,7 +3159,7 @@
       "source_file": "src/components/maps/FacilityReadinessMap.tsx",
       "source_location": "L7",
       "id": "maps_facilityreadinessmap_facility",
-      "community": 20,
+      "community": 25,
       "norm_label": "facility"
     },
     {
@@ -3132,7 +3168,7 @@
       "source_file": "src/components/maps/FacilityReadinessMap.tsx",
       "source_location": "L17",
       "id": "maps_facilityreadinessmap_facilityreadinessmapprops",
-      "community": 20,
+      "community": 25,
       "norm_label": "facilityreadinessmapprops"
     },
     {
@@ -3141,7 +3177,7 @@
       "source_file": "src/components/maps/FacilityReadinessMap.tsx",
       "source_location": "L23",
       "id": "maps_facilityreadinessmap_getscorecolor",
-      "community": 20,
+      "community": 25,
       "norm_label": "getscorecolor()"
     },
     {
@@ -3150,7 +3186,7 @@
       "source_file": "src/components/maps/FacilityReadinessMap.tsx",
       "source_location": "L30",
       "id": "maps_facilityreadinessmap_fitbounds",
-      "community": 20,
+      "community": 25,
       "norm_label": "fitbounds()"
     },
     {
@@ -3159,7 +3195,7 @@
       "source_file": "src/components/maps/FacilityReadinessMap.tsx",
       "source_location": "L44",
       "id": "maps_facilityreadinessmap_facilityreadinessmap",
-      "community": 20,
+      "community": 25,
       "norm_label": "facilityreadinessmap()"
     },
     {
@@ -3168,7 +3204,7 @@
       "source_file": "src/components/ui/PageTransition.tsx",
       "source_location": "L1",
       "id": "src_components_ui_pagetransition_tsx",
-      "community": 25,
+      "community": 31,
       "norm_label": "pagetransition.tsx"
     },
     {
@@ -3177,7 +3213,7 @@
       "source_file": "src/components/ui/PageTransition.tsx",
       "source_location": "L5",
       "id": "ui_pagetransition_pagetransitionprops",
-      "community": 25,
+      "community": 31,
       "norm_label": "pagetransitionprops"
     },
     {
@@ -3186,7 +3222,7 @@
       "source_file": "src/components/ui/PageTransition.tsx",
       "source_location": "L23",
       "id": "ui_pagetransition_pagetransition",
-      "community": 25,
+      "community": 31,
       "norm_label": "pagetransition()"
     },
     {
@@ -3195,7 +3231,7 @@
       "source_file": "src/components/ui/PageTransition.tsx",
       "source_location": "L39",
       "id": "ui_pagetransition_staggeredlistprops",
-      "community": 25,
+      "community": 31,
       "norm_label": "staggeredlistprops"
     },
     {
@@ -3204,7 +3240,7 @@
       "source_file": "src/components/ui/PageTransition.tsx",
       "source_location": "L45",
       "id": "ui_pagetransition_staggeredlist",
-      "community": 25,
+      "community": 31,
       "norm_label": "staggeredlist()"
     },
     {
@@ -3213,7 +3249,7 @@
       "source_file": "src/components/ui/LoadingButton.tsx",
       "source_location": "L1",
       "id": "src_components_ui_loadingbutton_tsx",
-      "community": 5,
+      "community": 2,
       "norm_label": "loadingbutton.tsx"
     },
     {
@@ -3222,7 +3258,7 @@
       "source_file": "src/components/ui/LoadingButton.tsx",
       "source_location": "L6",
       "id": "ui_loadingbutton_loadingbuttonprops",
-      "community": 5,
+      "community": 2,
       "norm_label": "loadingbuttonprops"
     },
     {
@@ -3231,7 +3267,7 @@
       "source_file": "src/components/ui/LoadingButton.tsx",
       "source_location": "L30",
       "id": "ui_loadingbutton_loadingbutton",
-      "community": 5,
+      "community": 2,
       "norm_label": "loadingbutton()"
     },
     {
@@ -3240,7 +3276,7 @@
       "source_file": "src/components/ui/SearchableSelect.tsx",
       "source_location": "L1",
       "id": "src_components_ui_searchableselect_tsx",
-      "community": 31,
+      "community": 38,
       "norm_label": "searchableselect.tsx"
     },
     {
@@ -3249,7 +3285,7 @@
       "source_file": "src/components/ui/SearchableSelect.tsx",
       "source_location": "L6",
       "id": "ui_searchableselect_selectoption",
-      "community": 31,
+      "community": 38,
       "norm_label": "selectoption"
     },
     {
@@ -3258,7 +3294,7 @@
       "source_file": "src/components/ui/SearchableSelect.tsx",
       "source_location": "L12",
       "id": "ui_searchableselect_searchableselectprops",
-      "community": 31,
+      "community": 38,
       "norm_label": "searchableselectprops"
     },
     {
@@ -3267,7 +3303,7 @@
       "source_file": "src/components/ui/SearchableSelect.tsx",
       "source_location": "L23",
       "id": "ui_searchableselect_searchableselect",
-      "community": 31,
+      "community": 38,
       "norm_label": "searchableselect()"
     },
     {
@@ -3276,7 +3312,7 @@
       "source_file": "src/components/ui/PriorityBadge.tsx",
       "source_location": "L1",
       "id": "src_components_ui_prioritybadge_tsx",
-      "community": 21,
+      "community": 26,
       "norm_label": "prioritybadge.tsx"
     },
     {
@@ -3285,7 +3321,7 @@
       "source_file": "src/components/ui/PriorityBadge.tsx",
       "source_location": "L5",
       "id": "ui_prioritybadge_priority",
-      "community": 21,
+      "community": 26,
       "norm_label": "priority"
     },
     {
@@ -3294,7 +3330,7 @@
       "source_file": "src/components/ui/PriorityBadge.tsx",
       "source_location": "L7",
       "id": "ui_prioritybadge_prioritybadgeprops",
-      "community": 21,
+      "community": 26,
       "norm_label": "prioritybadgeprops"
     },
     {
@@ -3303,7 +3339,7 @@
       "source_file": "src/components/ui/PriorityBadge.tsx",
       "source_location": "L13",
       "id": "ui_prioritybadge_priorityconfig",
-      "community": 21,
+      "community": 26,
       "norm_label": "priorityconfig"
     },
     {
@@ -3312,7 +3348,7 @@
       "source_file": "src/components/ui/PriorityBadge.tsx",
       "source_location": "L40",
       "id": "ui_prioritybadge_defaultconfig",
-      "community": 21,
+      "community": 26,
       "norm_label": "defaultconfig"
     },
     {
@@ -3321,7 +3357,7 @@
       "source_file": "src/components/ui/PriorityBadge.tsx",
       "source_location": "L50",
       "id": "ui_prioritybadge_prioritybadge",
-      "community": 21,
+      "community": 26,
       "norm_label": "prioritybadge()"
     },
     {
@@ -3330,7 +3366,7 @@
       "source_file": "src/components/ui/StatusIndicator.tsx",
       "source_location": "L1",
       "id": "src_components_ui_statusindicator_tsx",
-      "community": 26,
+      "community": 32,
       "norm_label": "statusindicator.tsx"
     },
     {
@@ -3339,7 +3375,7 @@
       "source_file": "src/components/ui/StatusIndicator.tsx",
       "source_location": "L5",
       "id": "ui_statusindicator_statustype",
-      "community": 26,
+      "community": 32,
       "norm_label": "statustype"
     },
     {
@@ -3348,7 +3384,7 @@
       "source_file": "src/components/ui/StatusIndicator.tsx",
       "source_location": "L14",
       "id": "ui_statusindicator_statusindicatorprops",
-      "community": 26,
+      "community": 32,
       "norm_label": "statusindicatorprops"
     },
     {
@@ -3357,7 +3393,7 @@
       "source_file": "src/components/ui/StatusIndicator.tsx",
       "source_location": "L20",
       "id": "ui_statusindicator_statusconfig",
-      "community": 26,
+      "community": 32,
       "norm_label": "statusconfig"
     },
     {
@@ -3366,7 +3402,7 @@
       "source_file": "src/components/ui/StatusIndicator.tsx",
       "source_location": "L68",
       "id": "ui_statusindicator_statusindicator",
-      "community": 26,
+      "community": 32,
       "norm_label": "statusindicator()"
     },
     {
@@ -3375,7 +3411,7 @@
       "source_file": "src/components/ui/StatCard.tsx",
       "source_location": "L1",
       "id": "src_components_ui_statcard_tsx",
-      "community": 34,
+      "community": 41,
       "norm_label": "statcard.tsx"
     },
     {
@@ -3384,7 +3420,7 @@
       "source_file": "src/components/ui/StatCard.tsx",
       "source_location": "L10",
       "id": "ui_statcard_statcardprops",
-      "community": 34,
+      "community": 41,
       "norm_label": "statcardprops"
     },
     {
@@ -3393,7 +3429,7 @@
       "source_file": "src/components/ui/StatCard.tsx",
       "source_location": "L21",
       "id": "ui_statcard_statcard",
-      "community": 34,
+      "community": 41,
       "norm_label": "statcard()"
     },
     {
@@ -3402,7 +3438,7 @@
       "source_file": "src/components/ui/StatusBadge.tsx",
       "source_location": "L1",
       "id": "src_components_ui_statusbadge_tsx",
-      "community": 32,
+      "community": 39,
       "norm_label": "statusbadge.tsx"
     },
     {
@@ -3411,7 +3447,7 @@
       "source_file": "src/components/ui/StatusBadge.tsx",
       "source_location": "L3",
       "id": "ui_statusbadge_referralstatus",
-      "community": 32,
+      "community": 39,
       "norm_label": "referralstatus"
     },
     {
@@ -3420,7 +3456,7 @@
       "source_file": "src/components/ui/StatusBadge.tsx",
       "source_location": "L12",
       "id": "ui_statusbadge_statusbadgeprops",
-      "community": 32,
+      "community": 39,
       "norm_label": "statusbadgeprops"
     },
     {
@@ -3429,7 +3465,7 @@
       "source_file": "src/components/ui/StatusBadge.tsx",
       "source_location": "L16",
       "id": "ui_statusbadge_statusbadge",
-      "community": 32,
+      "community": 39,
       "norm_label": "statusbadge()"
     },
     {
@@ -3438,7 +3474,7 @@
       "source_file": "src/components/ui/DataTable.tsx",
       "source_location": "L1",
       "id": "src_components_ui_datatable_tsx",
-      "community": 35,
+      "community": 42,
       "norm_label": "datatable.tsx"
     },
     {
@@ -3447,7 +3483,7 @@
       "source_file": "src/components/ui/DataTable.tsx",
       "source_location": "L16",
       "id": "ui_datatable_datatableprops",
-      "community": 35,
+      "community": 42,
       "norm_label": "datatableprops"
     },
     {
@@ -3456,7 +3492,7 @@
       "source_file": "src/components/ui/DataTable.tsx",
       "source_location": "L27",
       "id": "ui_datatable_datatable",
-      "community": 35,
+      "community": 42,
       "norm_label": "datatable()"
     },
     {
@@ -3465,7 +3501,7 @@
       "source_file": "src/components/ui/index.ts",
       "source_location": "L1",
       "id": "src_components_ui_index_ts",
-      "community": 0,
+      "community": 3,
       "norm_label": "index.ts"
     },
     {
@@ -3474,7 +3510,7 @@
       "source_file": "src/components/ui/Toast.tsx",
       "source_location": "L1",
       "id": "src_components_ui_toast_tsx",
-      "community": 8,
+      "community": 7,
       "norm_label": "toast.tsx"
     },
     {
@@ -3483,7 +3519,7 @@
       "source_file": "src/components/ui/Toast.tsx",
       "source_location": "L7",
       "id": "ui_toast_toast",
-      "community": 8,
+      "community": 7,
       "norm_label": "toast"
     },
     {
@@ -3492,7 +3528,7 @@
       "source_file": "src/components/ui/Toast.tsx",
       "source_location": "L19",
       "id": "ui_toast_icons",
-      "community": 8,
+      "community": 7,
       "norm_label": "icons"
     },
     {
@@ -3501,7 +3537,7 @@
       "source_file": "src/components/ui/Toast.tsx",
       "source_location": "L26",
       "id": "ui_toast_styles",
-      "community": 8,
+      "community": 7,
       "norm_label": "styles"
     },
     {
@@ -3510,7 +3546,7 @@
       "source_file": "src/components/ui/Toast.tsx",
       "source_location": "L49",
       "id": "ui_toast_toastitem",
-      "community": 8,
+      "community": 7,
       "norm_label": "toastitem()"
     },
     {
@@ -3519,7 +3555,7 @@
       "source_file": "src/components/ui/Toast.tsx",
       "source_location": "L174",
       "id": "ui_toast_toastcontainer",
-      "community": 8,
+      "community": 7,
       "norm_label": "toastcontainer()"
     },
     {
@@ -3528,7 +3564,7 @@
       "source_file": "src/components/ui/EmptyState.tsx",
       "source_location": "L1",
       "id": "src_components_ui_emptystate_tsx",
-      "community": 33,
+      "community": 40,
       "norm_label": "emptystate.tsx"
     },
     {
@@ -3537,7 +3573,7 @@
       "source_file": "src/components/ui/EmptyState.tsx",
       "source_location": "L7",
       "id": "ui_emptystate_emptystateaction",
-      "community": 33,
+      "community": 40,
       "norm_label": "emptystateaction"
     },
     {
@@ -3546,7 +3582,7 @@
       "source_file": "src/components/ui/EmptyState.tsx",
       "source_location": "L14",
       "id": "ui_emptystate_emptystateprops",
-      "community": 33,
+      "community": 40,
       "norm_label": "emptystateprops"
     },
     {
@@ -3555,7 +3591,7 @@
       "source_file": "src/components/ui/EmptyState.tsx",
       "source_location": "L40",
       "id": "ui_emptystate_emptystate",
-      "community": 33,
+      "community": 40,
       "norm_label": "emptystate()"
     },
     {
@@ -3564,7 +3600,7 @@
       "source_file": "src/components/ui/Skeleton.tsx",
       "source_location": "L1",
       "id": "src_components_ui_skeleton_tsx",
-      "community": 19,
+      "community": 24,
       "norm_label": "skeleton.tsx"
     },
     {
@@ -3573,7 +3609,7 @@
       "source_file": "src/components/ui/Skeleton.tsx",
       "source_location": "L5",
       "id": "ui_skeleton_skeletonprops",
-      "community": 19,
+      "community": 24,
       "norm_label": "skeletonprops"
     },
     {
@@ -3582,7 +3618,7 @@
       "source_file": "src/components/ui/Skeleton.tsx",
       "source_location": "L13",
       "id": "ui_skeleton_shimmerstyle",
-      "community": 19,
+      "community": 24,
       "norm_label": "shimmerstyle"
     },
     {
@@ -3591,7 +3627,7 @@
       "source_file": "src/components/ui/Skeleton.tsx",
       "source_location": "L19",
       "id": "ui_skeleton_skeleton",
-      "community": 19,
+      "community": 24,
       "norm_label": "skeleton()"
     },
     {
@@ -3600,7 +3636,7 @@
       "source_file": "src/components/ui/Skeleton.tsx",
       "source_location": "L40",
       "id": "ui_skeleton_tableskeleton",
-      "community": 19,
+      "community": 24,
       "norm_label": "tableskeleton()"
     },
     {
@@ -3609,7 +3645,7 @@
       "source_file": "src/components/ui/Skeleton.tsx",
       "source_location": "L80",
       "id": "ui_skeleton_statcardskeleton",
-      "community": 19,
+      "community": 24,
       "norm_label": "statcardskeleton()"
     },
     {
@@ -3618,7 +3654,7 @@
       "source_file": "src/components/ui/Skeleton.tsx",
       "source_location": "L93",
       "id": "ui_skeleton_cardskeleton",
-      "community": 19,
+      "community": 24,
       "norm_label": "cardskeleton()"
     },
     {
@@ -3627,7 +3663,7 @@
       "source_file": "src/components/referral/AssignAmbulanceModal.tsx",
       "source_location": "L1",
       "id": "src_components_referral_assignambulancemodal_tsx",
-      "community": 5,
+      "community": 2,
       "norm_label": "assignambulancemodal.tsx"
     },
     {
@@ -3636,7 +3672,7 @@
       "source_file": "src/components/referral/AssignAmbulanceModal.tsx",
       "source_location": "L12",
       "id": "referral_assignambulancemodal_assignambulancemodalprops",
-      "community": 5,
+      "community": 2,
       "norm_label": "assignambulancemodalprops"
     },
     {
@@ -3645,8 +3681,89 @@
       "source_file": "src/components/referral/AssignAmbulanceModal.tsx",
       "source_location": "L19",
       "id": "referral_assignambulancemodal_assignambulancemodal",
-      "community": 5,
+      "community": 2,
       "norm_label": "assignambulancemodal()"
+    },
+    {
+      "label": "InterventionsCard.tsx",
+      "file_type": "code",
+      "source_file": "src/components/referral/InterventionsCard.tsx",
+      "source_location": "L1",
+      "id": "src_components_referral_interventionscard_tsx",
+      "community": 0,
+      "norm_label": "interventionscard.tsx"
+    },
+    {
+      "label": "InterventionsCardProps",
+      "file_type": "code",
+      "source_file": "src/components/referral/InterventionsCard.tsx",
+      "source_location": "L5",
+      "id": "referral_interventionscard_interventionscardprops",
+      "community": 0,
+      "norm_label": "interventionscardprops"
+    },
+    {
+      "label": "InterventionsCard()",
+      "file_type": "code",
+      "source_file": "src/components/referral/InterventionsCard.tsx",
+      "source_location": "L9",
+      "id": "referral_interventionscard_interventionscard",
+      "community": 0,
+      "norm_label": "interventionscard()"
+    },
+    {
+      "label": "NEMSTransportCard.tsx",
+      "file_type": "code",
+      "source_file": "src/components/referral/NEMSTransportCard.tsx",
+      "source_location": "L1",
+      "id": "src_components_referral_nemstransportcard_tsx",
+      "community": 0,
+      "norm_label": "nemstransportcard.tsx"
+    },
+    {
+      "label": "NEMSTransportCardProps",
+      "file_type": "code",
+      "source_file": "src/components/referral/NEMSTransportCard.tsx",
+      "source_location": "L5",
+      "id": "referral_nemstransportcard_nemstransportcardprops",
+      "community": 0,
+      "norm_label": "nemstransportcardprops"
+    },
+    {
+      "label": "NEMSTransportCard()",
+      "file_type": "code",
+      "source_file": "src/components/referral/NEMSTransportCard.tsx",
+      "source_location": "L11",
+      "id": "referral_nemstransportcard_nemstransportcard",
+      "community": 0,
+      "norm_label": "nemstransportcard()"
+    },
+    {
+      "label": "ResponsePerformanceCard.tsx",
+      "file_type": "code",
+      "source_file": "src/components/referral/ResponsePerformanceCard.tsx",
+      "source_location": "L1",
+      "id": "src_components_referral_responseperformancecard_tsx",
+      "community": 0,
+      "norm_label": "responseperformancecard.tsx"
+    },
+    {
+      "label": "ResponsePerformanceCardProps",
+      "file_type": "code",
+      "source_file": "src/components/referral/ResponsePerformanceCard.tsx",
+      "source_location": "L5",
+      "id": "referral_responseperformancecard_responseperformancecardprops",
+      "community": 0,
+      "norm_label": "responseperformancecardprops"
+    },
+    {
+      "label": "ResponsePerformanceCard()",
+      "file_type": "code",
+      "source_file": "src/components/referral/ResponsePerformanceCard.tsx",
+      "source_location": "L9",
+      "id": "referral_responseperformancecard_responseperformancecard",
+      "community": 0,
+      "norm_label": "responseperformancecard()"
     },
     {
       "label": "VitalSignsCard.tsx",
@@ -3654,7 +3771,7 @@
       "source_file": "src/components/referral/VitalSignsCard.tsx",
       "source_location": "L1",
       "id": "src_components_referral_vitalsignscard_tsx",
-      "community": 4,
+      "community": 0,
       "norm_label": "vitalsignscard.tsx"
     },
     {
@@ -3663,7 +3780,7 @@
       "source_file": "src/components/referral/VitalSignsCard.tsx",
       "source_location": "L5",
       "id": "referral_vitalsignscard_vitalsignscardprops",
-      "community": 4,
+      "community": 0,
       "norm_label": "vitalsignscardprops"
     },
     {
@@ -3672,8 +3789,35 @@
       "source_file": "src/components/referral/VitalSignsCard.tsx",
       "source_location": "L10",
       "id": "referral_vitalsignscard_vitalsignscard",
-      "community": 4,
+      "community": 0,
       "norm_label": "vitalsignscard()"
+    },
+    {
+      "label": "PatientClinicalSummaryCard.tsx",
+      "file_type": "code",
+      "source_file": "src/components/referral/PatientClinicalSummaryCard.tsx",
+      "source_location": "L1",
+      "id": "src_components_referral_patientclinicalsummarycard_tsx",
+      "community": 0,
+      "norm_label": "patientclinicalsummarycard.tsx"
+    },
+    {
+      "label": "PatientClinicalSummaryCardProps",
+      "file_type": "code",
+      "source_file": "src/components/referral/PatientClinicalSummaryCard.tsx",
+      "source_location": "L5",
+      "id": "referral_patientclinicalsummarycard_patientclinicalsummarycardprops",
+      "community": 0,
+      "norm_label": "patientclinicalsummarycardprops"
+    },
+    {
+      "label": "PatientClinicalSummaryCard()",
+      "file_type": "code",
+      "source_file": "src/components/referral/PatientClinicalSummaryCard.tsx",
+      "source_location": "L9",
+      "id": "referral_patientclinicalsummarycard_patientclinicalsummarycard",
+      "community": 0,
+      "norm_label": "patientclinicalsummarycard()"
     },
     {
       "label": "FacilityTransferVisualizer.tsx",
@@ -3681,7 +3825,7 @@
       "source_file": "src/components/referral/FacilityTransferVisualizer.tsx",
       "source_location": "L1",
       "id": "src_components_referral_facilitytransfervisualizer_tsx",
-      "community": 4,
+      "community": 0,
       "norm_label": "facilitytransfervisualizer.tsx"
     },
     {
@@ -3690,7 +3834,7 @@
       "source_file": "src/components/referral/FacilityTransferVisualizer.tsx",
       "source_location": "L5",
       "id": "referral_facilitytransfervisualizer_facilitytransfervisualizerprops",
-      "community": 4,
+      "community": 0,
       "norm_label": "facilitytransfervisualizerprops"
     },
     {
@@ -3699,8 +3843,35 @@
       "source_file": "src/components/referral/FacilityTransferVisualizer.tsx",
       "source_location": "L9",
       "id": "referral_facilitytransfervisualizer_facilitytransfervisualizer",
-      "community": 4,
+      "community": 0,
       "norm_label": "facilitytransfervisualizer()"
+    },
+    {
+      "label": "ReceivingFacilityReadinessCard.tsx",
+      "file_type": "code",
+      "source_file": "src/components/referral/ReceivingFacilityReadinessCard.tsx",
+      "source_location": "L1",
+      "id": "src_components_referral_receivingfacilityreadinesscard_tsx",
+      "community": 0,
+      "norm_label": "receivingfacilityreadinesscard.tsx"
+    },
+    {
+      "label": "ReceivingFacilityReadinessCardProps",
+      "file_type": "code",
+      "source_file": "src/components/referral/ReceivingFacilityReadinessCard.tsx",
+      "source_location": "L6",
+      "id": "referral_receivingfacilityreadinesscard_receivingfacilityreadinesscardprops",
+      "community": 0,
+      "norm_label": "receivingfacilityreadinesscardprops"
+    },
+    {
+      "label": "ReceivingFacilityReadinessCard()",
+      "file_type": "code",
+      "source_file": "src/components/referral/ReceivingFacilityReadinessCard.tsx",
+      "source_location": "L11",
+      "id": "referral_receivingfacilityreadinesscard_receivingfacilityreadinesscard",
+      "community": 0,
+      "norm_label": "receivingfacilityreadinesscard()"
     },
     {
       "label": "ReferralLifecycleStepper.tsx",
@@ -3708,43 +3879,25 @@
       "source_file": "src/components/referral/ReferralLifecycleStepper.tsx",
       "source_location": "L1",
       "id": "src_components_referral_referrallifecyclestepper_tsx",
-      "community": 4,
+      "community": 0,
       "norm_label": "referrallifecyclestepper.tsx"
     },
     {
       "label": "ReferralLifecycleStepperProps",
       "file_type": "code",
       "source_file": "src/components/referral/ReferralLifecycleStepper.tsx",
-      "source_location": "L5",
+      "source_location": "L6",
       "id": "referral_referrallifecyclestepper_referrallifecyclestepperprops",
-      "community": 4,
+      "community": 0,
       "norm_label": "referrallifecyclestepperprops"
-    },
-    {
-      "label": "STAGES",
-      "file_type": "code",
-      "source_file": "src/components/referral/ReferralLifecycleStepper.tsx",
-      "source_location": "L13",
-      "id": "referral_referrallifecyclestepper_stages",
-      "community": 4,
-      "norm_label": "stages"
-    },
-    {
-      "label": "getStageIndex()",
-      "file_type": "code",
-      "source_file": "src/components/referral/ReferralLifecycleStepper.tsx",
-      "source_location": "L22",
-      "id": "referral_referrallifecyclestepper_getstageindex",
-      "community": 4,
-      "norm_label": "getstageindex()"
     },
     {
       "label": "ReferralLifecycleStepper()",
       "file_type": "code",
       "source_file": "src/components/referral/ReferralLifecycleStepper.tsx",
-      "source_location": "L36",
+      "source_location": "L19",
       "id": "referral_referrallifecyclestepper_referrallifecyclestepper",
-      "community": 4,
+      "community": 0,
       "norm_label": "referrallifecyclestepper()"
     },
     {
@@ -3753,7 +3906,7 @@
       "source_file": "src/components/auth/index.ts",
       "source_location": "L1",
       "id": "src_components_auth_index_ts",
-      "community": 0,
+      "community": 3,
       "norm_label": "index.ts"
     },
     {
@@ -3762,7 +3915,7 @@
       "source_file": "src/components/auth/RouteGuard.tsx",
       "source_location": "L1",
       "id": "src_components_auth_routeguard_tsx",
-      "community": 2,
+      "community": 1,
       "norm_label": "routeguard.tsx"
     },
     {
@@ -3771,7 +3924,7 @@
       "source_file": "src/components/auth/RouteGuard.tsx",
       "source_location": "L8",
       "id": "auth_routeguard_routeguardprops",
-      "community": 2,
+      "community": 1,
       "norm_label": "routeguardprops"
     },
     {
@@ -3780,7 +3933,7 @@
       "source_file": "src/components/auth/RouteGuard.tsx",
       "source_location": "L12",
       "id": "auth_routeguard_routeguard",
-      "community": 2,
+      "community": 1,
       "norm_label": "routeguard()"
     },
     {
@@ -3789,7 +3942,7 @@
       "source_file": "src/components/layout/Header.tsx",
       "source_location": "L1",
       "id": "src_components_layout_header_tsx",
-      "community": 7,
+      "community": 6,
       "norm_label": "header.tsx"
     },
     {
@@ -3798,7 +3951,7 @@
       "source_file": "src/components/layout/Header.tsx",
       "source_location": "L21",
       "id": "layout_header_header",
-      "community": 7,
+      "community": 6,
       "norm_label": "header()"
     },
     {
@@ -3807,7 +3960,7 @@
       "source_file": "src/components/layout/Sidebar.tsx",
       "source_location": "L1",
       "id": "src_components_layout_sidebar_tsx",
-      "community": 2,
+      "community": 1,
       "norm_label": "sidebar.tsx"
     },
     {
@@ -3816,7 +3969,7 @@
       "source_file": "src/components/layout/Sidebar.tsx",
       "source_location": "L31",
       "id": "layout_sidebar_navitem",
-      "community": 2,
+      "community": 1,
       "norm_label": "navitem"
     },
     {
@@ -3825,7 +3978,7 @@
       "source_file": "src/components/layout/Sidebar.tsx",
       "source_location": "L38",
       "id": "layout_sidebar_navsection",
-      "community": 2,
+      "community": 1,
       "norm_label": "navsection"
     },
     {
@@ -3834,7 +3987,7 @@
       "source_file": "src/components/layout/Sidebar.tsx",
       "source_location": "L43",
       "id": "layout_sidebar_navsections",
-      "community": 2,
+      "community": 1,
       "norm_label": "navsections"
     },
     {
@@ -3843,7 +3996,7 @@
       "source_file": "src/components/layout/Sidebar.tsx",
       "source_location": "L87",
       "id": "layout_sidebar_sidebar",
-      "community": 2,
+      "community": 1,
       "norm_label": "sidebar()"
     },
     {
@@ -3852,7 +4005,7 @@
       "source_file": "src/components/layout/index.ts",
       "source_location": "L1",
       "id": "src_components_layout_index_ts",
-      "community": 0,
+      "community": 3,
       "norm_label": "index.ts"
     },
     {
@@ -3861,7 +4014,7 @@
       "source_file": "src/lib/validation.ts",
       "source_location": "L1",
       "id": "src_lib_validation_ts",
-      "community": 22,
+      "community": 27,
       "norm_label": "validation.ts"
     },
     {
@@ -3870,7 +4023,7 @@
       "source_file": "src/lib/validation.ts",
       "source_location": "L10",
       "id": "lib_validation_phoneschema",
-      "community": 22,
+      "community": 27,
       "norm_label": "phoneschema"
     },
     {
@@ -3879,7 +4032,7 @@
       "source_file": "src/lib/validation.ts",
       "source_location": "L15",
       "id": "lib_validation_optionalphoneschema",
-      "community": 22,
+      "community": 27,
       "norm_label": "optionalphoneschema"
     },
     {
@@ -3888,7 +4041,7 @@
       "source_file": "src/lib/validation.ts",
       "source_location": "L24",
       "id": "lib_validation_formatphonedisplay",
-      "community": 22,
+      "community": 27,
       "norm_label": "formatphonedisplay()"
     },
     {
@@ -3897,7 +4050,7 @@
       "source_file": "src/lib/validation.ts",
       "source_location": "L35",
       "id": "lib_validation_normalizephone",
-      "community": 22,
+      "community": 27,
       "norm_label": "normalizephone()"
     },
     {
@@ -3906,7 +4059,7 @@
       "source_file": "src/lib/validation.ts",
       "source_location": "L51",
       "id": "lib_validation_isvalidphone",
-      "community": 22,
+      "community": 27,
       "norm_label": "isvalidphone()"
     },
     {
@@ -3915,7 +4068,7 @@
       "source_file": "src/lib/firebase.ts",
       "source_location": "L1",
       "id": "src_lib_firebase_ts",
-      "community": 7,
+      "community": 6,
       "norm_label": "firebase.ts"
     },
     {
@@ -3924,7 +4077,7 @@
       "source_file": "src/lib/firebase.ts",
       "source_location": "L4",
       "id": "lib_firebase_firebaseconfig",
-      "community": 7,
+      "community": 6,
       "norm_label": "firebaseconfig"
     },
     {
@@ -3933,7 +4086,7 @@
       "source_file": "src/lib/firebase.ts",
       "source_location": "L17",
       "id": "lib_firebase_initializefirebase",
-      "community": 7,
+      "community": 6,
       "norm_label": "initializefirebase()"
     },
     {
@@ -3942,7 +4095,7 @@
       "source_file": "src/lib/firebase.ts",
       "source_location": "L43",
       "id": "lib_firebase_getfcmtoken",
-      "community": 7,
+      "community": 6,
       "norm_label": "getfcmtoken()"
     },
     {
@@ -3951,7 +4104,7 @@
       "source_file": "src/lib/firebase.ts",
       "source_location": "L81",
       "id": "lib_firebase_onforegroundmessage",
-      "community": 7,
+      "community": 6,
       "norm_label": "onforegroundmessage()"
     },
     {
@@ -3960,7 +4113,7 @@
       "source_file": "src/lib/permissions.ts",
       "source_location": "L1",
       "id": "src_lib_permissions_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "permissions.ts"
     },
     {
@@ -3969,7 +4122,7 @@
       "source_file": "src/lib/permissions.ts",
       "source_location": "L19",
       "id": "lib_permissions_permissions",
-      "community": 2,
+      "community": 1,
       "norm_label": "permissions"
     },
     {
@@ -3978,7 +4131,7 @@
       "source_file": "src/lib/permissions.ts",
       "source_location": "L76",
       "id": "lib_permissions_permissionkey",
-      "community": 2,
+      "community": 1,
       "norm_label": "permissionkey"
     },
     {
@@ -3987,7 +4140,7 @@
       "source_file": "src/lib/permissions.ts",
       "source_location": "L81",
       "id": "lib_permissions_haspermission",
-      "community": 2,
+      "community": 1,
       "norm_label": "haspermission()"
     },
     {
@@ -3996,7 +4149,7 @@
       "source_file": "src/lib/permissions.ts",
       "source_location": "L89",
       "id": "lib_permissions_hasanypermission",
-      "community": 2,
+      "community": 1,
       "norm_label": "hasanypermission()"
     },
     {
@@ -4005,7 +4158,7 @@
       "source_file": "src/lib/permissions.ts",
       "source_location": "L97",
       "id": "lib_permissions_getuserpermissions",
-      "community": 2,
+      "community": 1,
       "norm_label": "getuserpermissions()"
     },
     {
@@ -4014,7 +4167,7 @@
       "source_file": "src/lib/permissions.ts",
       "source_location": "L106",
       "id": "lib_permissions_route_permissions",
-      "community": 2,
+      "community": 1,
       "norm_label": "route_permissions"
     },
     {
@@ -4023,7 +4176,7 @@
       "source_file": "src/lib/permissions.ts",
       "source_location": "L134",
       "id": "lib_permissions_canaccessroute",
-      "community": 2,
+      "community": 1,
       "norm_label": "canaccessroute()"
     },
     {
@@ -4032,7 +4185,7 @@
       "source_file": "src/lib/referral-auth.ts",
       "source_location": "L1",
       "id": "src_lib_referral_auth_ts",
-      "community": 4,
+      "community": 13,
       "norm_label": "referral-auth.ts"
     },
     {
@@ -4041,7 +4194,7 @@
       "source_file": "src/lib/referral-auth.ts",
       "source_location": "L19",
       "id": "lib_referral_auth_canmodifyreferral",
-      "community": 4,
+      "community": 0,
       "norm_label": "canmodifyreferral()"
     },
     {
@@ -4050,7 +4203,7 @@
       "source_file": "src/lib/referral-auth.ts",
       "source_location": "L47",
       "id": "lib_referral_auth_cancreatereferral",
-      "community": 4,
+      "community": 13,
       "norm_label": "cancreatereferral()"
     },
     {
@@ -4059,7 +4212,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L1",
       "id": "src_lib_hooks_use_referrals_ts",
-      "community": 11,
+      "community": 10,
       "norm_label": "use-referrals.ts"
     },
     {
@@ -4068,7 +4221,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L11",
       "id": "hooks_use_referrals_referralkeys",
-      "community": 11,
+      "community": 10,
       "norm_label": "referralkeys"
     },
     {
@@ -4077,7 +4230,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L25",
       "id": "hooks_use_referrals_usereferrals",
-      "community": 11,
+      "community": 10,
       "norm_label": "usereferrals()"
     },
     {
@@ -4086,7 +4239,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L33",
       "id": "hooks_use_referrals_usependingreferrals",
-      "community": 11,
+      "community": 10,
       "norm_label": "usependingreferrals()"
     },
     {
@@ -4095,7 +4248,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L42",
       "id": "hooks_use_referrals_useincomingreferrals",
-      "community": 11,
+      "community": 10,
       "norm_label": "useincomingreferrals()"
     },
     {
@@ -4104,7 +4257,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L50",
       "id": "hooks_use_referrals_useoutgoingreferrals",
-      "community": 11,
+      "community": 10,
       "norm_label": "useoutgoingreferrals()"
     },
     {
@@ -4113,7 +4266,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L58",
       "id": "hooks_use_referrals_usereferral",
-      "community": 11,
+      "community": 10,
       "norm_label": "usereferral()"
     },
     {
@@ -4122,7 +4275,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L67",
       "id": "hooks_use_referrals_usereferraltimeline",
-      "community": 11,
+      "community": 10,
       "norm_label": "usereferraltimeline()"
     },
     {
@@ -4131,7 +4284,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L76",
       "id": "hooks_use_referrals_usepatientreferrals",
-      "community": 11,
+      "community": 10,
       "norm_label": "usepatientreferrals()"
     },
     {
@@ -4140,7 +4293,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L85",
       "id": "hooks_use_referrals_usecreatereferral",
-      "community": 11,
+      "community": 10,
       "norm_label": "usecreatereferral()"
     },
     {
@@ -4149,7 +4302,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L99",
       "id": "hooks_use_referrals_useacceptreferral",
-      "community": 11,
+      "community": 10,
       "norm_label": "useacceptreferral()"
     },
     {
@@ -4158,7 +4311,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L113",
       "id": "hooks_use_referrals_userejectreferral",
-      "community": 11,
+      "community": 10,
       "norm_label": "userejectreferral()"
     },
     {
@@ -4167,7 +4320,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L128",
       "id": "hooks_use_referrals_usecompletereferral",
-      "community": 11,
+      "community": 10,
       "norm_label": "usecompletereferral()"
     },
     {
@@ -4176,7 +4329,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L142",
       "id": "hooks_use_referrals_usemarkreferralarrived",
-      "community": 11,
+      "community": 10,
       "norm_label": "usemarkreferralarrived()"
     },
     {
@@ -4185,7 +4338,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L155",
       "id": "hooks_use_referrals_useaddreferralnote",
-      "community": 11,
+      "community": 10,
       "norm_label": "useaddreferralnote()"
     },
     {
@@ -4194,7 +4347,7 @@
       "source_file": "src/lib/hooks/use-referrals.ts",
       "source_location": "L168",
       "id": "hooks_use_referrals_useclinicianreview",
-      "community": 11,
+      "community": 10,
       "norm_label": "useclinicianreview()"
     },
     {
@@ -4203,7 +4356,7 @@
       "source_file": "src/lib/hooks/index.ts",
       "source_location": "L1",
       "id": "src_lib_hooks_index_ts",
-      "community": 42,
+      "community": 49,
       "norm_label": "index.ts"
     },
     {
@@ -4212,7 +4365,7 @@
       "source_file": "src/lib/api/patient-report.ts",
       "source_location": "L1",
       "id": "src_lib_api_patient_report_ts",
-      "community": 1,
+      "community": 11,
       "norm_label": "patient-report.ts"
     },
     {
@@ -4221,7 +4374,7 @@
       "source_file": "src/lib/api/patient-report.ts",
       "source_location": "L11",
       "id": "api_patient_report_patientreportservice",
-      "community": 1,
+      "community": 11,
       "norm_label": "patientreportservice"
     },
     {
@@ -4230,7 +4383,7 @@
       "source_file": "src/lib/api/readiness.ts",
       "source_location": "L1",
       "id": "src_lib_api_readiness_ts",
-      "community": 1,
+      "community": 20,
       "norm_label": "readiness.ts"
     },
     {
@@ -4239,7 +4392,7 @@
       "source_file": "src/lib/api/readiness.ts",
       "source_location": "L13",
       "id": "api_readiness_readinessservice",
-      "community": 1,
+      "community": 20,
       "norm_label": "readinessservice"
     },
     {
@@ -4248,7 +4401,7 @@
       "source_file": "src/lib/api/analytics.ts",
       "source_location": "L1",
       "id": "src_lib_api_analytics_ts",
-      "community": 0,
+      "community": 3,
       "norm_label": "analytics.ts"
     },
     {
@@ -4257,7 +4410,7 @@
       "source_file": "src/lib/api/analytics.ts",
       "source_location": "L15",
       "id": "api_analytics_analyticsservice",
-      "community": 0,
+      "community": 3,
       "norm_label": "analyticsservice"
     },
     {
@@ -4266,7 +4419,7 @@
       "source_file": "src/lib/api/notifications.ts",
       "source_location": "L1",
       "id": "src_lib_api_notifications_ts",
-      "community": 7,
+      "community": 6,
       "norm_label": "notifications.ts"
     },
     {
@@ -4275,7 +4428,7 @@
       "source_file": "src/lib/api/notifications.ts",
       "source_location": "L3",
       "id": "api_notifications_subscribedevicerequest",
-      "community": 7,
+      "community": 6,
       "norm_label": "subscribedevicerequest"
     },
     {
@@ -4284,7 +4437,7 @@
       "source_file": "src/lib/api/notifications.ts",
       "source_location": "L8",
       "id": "api_notifications_notification",
-      "community": 7,
+      "community": 6,
       "norm_label": "notification"
     },
     {
@@ -4293,7 +4446,7 @@
       "source_file": "src/lib/api/notifications.ts",
       "source_location": "L23",
       "id": "api_notifications_notificationlistresponse",
-      "community": 7,
+      "community": 6,
       "norm_label": "notificationlistresponse"
     },
     {
@@ -4302,7 +4455,7 @@
       "source_file": "src/lib/api/notifications.ts",
       "source_location": "L33",
       "id": "api_notifications_unreadcountresponse",
-      "community": 7,
+      "community": 6,
       "norm_label": "unreadcountresponse"
     },
     {
@@ -4311,7 +4464,7 @@
       "source_file": "src/lib/api/notifications.ts",
       "source_location": "L38",
       "id": "api_notifications_subscribedevice",
-      "community": 7,
+      "community": 6,
       "norm_label": "subscribedevice()"
     },
     {
@@ -4320,7 +4473,7 @@
       "source_file": "src/lib/api/notifications.ts",
       "source_location": "L43",
       "id": "api_notifications_getnotifications",
-      "community": 7,
+      "community": 6,
       "norm_label": "getnotifications()"
     },
     {
@@ -4329,7 +4482,7 @@
       "source_file": "src/lib/api/notifications.ts",
       "source_location": "L56",
       "id": "api_notifications_getunreadcount",
-      "community": 7,
+      "community": 6,
       "norm_label": "getunreadcount()"
     },
     {
@@ -4338,7 +4491,7 @@
       "source_file": "src/lib/api/notifications.ts",
       "source_location": "L63",
       "id": "api_notifications_markasread",
-      "community": 7,
+      "community": 6,
       "norm_label": "markasread()"
     },
     {
@@ -4347,7 +4500,7 @@
       "source_file": "src/lib/api/notifications.ts",
       "source_location": "L68",
       "id": "api_notifications_markallasread",
-      "community": 7,
+      "community": 6,
       "norm_label": "markallasread()"
     },
     {
@@ -4356,7 +4509,7 @@
       "source_file": "src/lib/api/districts.ts",
       "source_location": "L1",
       "id": "src_lib_api_districts_ts",
-      "community": 1,
+      "community": 21,
       "norm_label": "districts.ts"
     },
     {
@@ -4365,7 +4518,7 @@
       "source_file": "src/lib/api/districts.ts",
       "source_location": "L4",
       "id": "api_districts_district",
-      "community": 1,
+      "community": 21,
       "norm_label": "district"
     },
     {
@@ -4374,7 +4527,7 @@
       "source_file": "src/lib/api/districts.ts",
       "source_location": "L16",
       "id": "api_districts_districtservice",
-      "community": 1,
+      "community": 21,
       "norm_label": "districtservice"
     },
     {
@@ -4383,7 +4536,7 @@
       "source_file": "src/lib/api/patients.ts",
       "source_location": "L1",
       "id": "src_lib_api_patients_ts",
-      "community": 1,
+      "community": 20,
       "norm_label": "patients.ts"
     },
     {
@@ -4392,7 +4545,7 @@
       "source_file": "src/lib/api/patients.ts",
       "source_location": "L13",
       "id": "api_patients_patientservice",
-      "community": 1,
+      "community": 20,
       "norm_label": "patientservice"
     },
     {
@@ -4401,7 +4554,7 @@
       "source_file": "src/lib/api/facilities.ts",
       "source_location": "L1",
       "id": "src_lib_api_facilities_ts",
-      "community": 1,
+      "community": 20,
       "norm_label": "facilities.ts"
     },
     {
@@ -4410,7 +4563,7 @@
       "source_file": "src/lib/api/facilities.ts",
       "source_location": "L16",
       "id": "api_facilities_facilityservice",
-      "community": 1,
+      "community": 20,
       "norm_label": "facilityservice"
     },
     {
@@ -4419,7 +4572,7 @@
       "source_file": "src/lib/api/ambulances.ts",
       "source_location": "L1",
       "id": "src_lib_api_ambulances_ts",
-      "community": 5,
+      "community": 4,
       "norm_label": "ambulances.ts"
     },
     {
@@ -4428,61 +4581,70 @@
       "source_file": "src/lib/api/ambulances.ts",
       "source_location": "L4",
       "id": "api_ambulances_ambulancestatus",
-      "community": 5,
+      "community": 4,
       "norm_label": "ambulancestatus"
+    },
+    {
+      "label": "CrewMember",
+      "file_type": "code",
+      "source_file": "src/lib/api/ambulances.ts",
+      "source_location": "L6",
+      "id": "api_ambulances_crewmember",
+      "community": 4,
+      "norm_label": "crewmember"
     },
     {
       "label": "Ambulance",
       "file_type": "code",
       "source_file": "src/lib/api/ambulances.ts",
-      "source_location": "L6",
+      "source_location": "L14",
       "id": "api_ambulances_ambulance",
-      "community": 5,
+      "community": 2,
       "norm_label": "ambulance"
     },
     {
       "label": "AmbulanceStats",
       "file_type": "code",
       "source_file": "src/lib/api/ambulances.ts",
-      "source_location": "L25",
+      "source_location": "L34",
       "id": "api_ambulances_ambulancestats",
-      "community": 5,
+      "community": 4,
       "norm_label": "ambulancestats"
     },
     {
       "label": "CreateAmbulanceRequest",
       "file_type": "code",
       "source_file": "src/lib/api/ambulances.ts",
-      "source_location": "L34",
+      "source_location": "L43",
       "id": "api_ambulances_createambulancerequest",
-      "community": 5,
+      "community": 4,
       "norm_label": "createambulancerequest"
     },
     {
       "label": "UpdateAmbulanceRequest",
       "file_type": "code",
       "source_file": "src/lib/api/ambulances.ts",
-      "source_location": "L45",
+      "source_location": "L54",
       "id": "api_ambulances_updateambulancerequest",
-      "community": 5,
+      "community": 4,
       "norm_label": "updateambulancerequest"
     },
     {
       "label": "AmbulanceListQuery",
       "file_type": "code",
       "source_file": "src/lib/api/ambulances.ts",
-      "source_location": "L55",
+      "source_location": "L64",
       "id": "api_ambulances_ambulancelistquery",
-      "community": 5,
+      "community": 4,
       "norm_label": "ambulancelistquery"
     },
     {
       "label": "ambulanceService",
       "file_type": "code",
       "source_file": "src/lib/api/ambulances.ts",
-      "source_location": "L62",
+      "source_location": "L71",
       "id": "api_ambulances_ambulanceservice",
-      "community": 5,
+      "community": 4,
       "norm_label": "ambulanceservice"
     },
     {
@@ -4491,7 +4653,7 @@
       "source_file": "src/lib/api/client.ts",
       "source_location": "L1",
       "id": "src_lib_api_client_ts",
-      "community": 1,
+      "community": 12,
       "norm_label": "client.ts"
     },
     {
@@ -4500,7 +4662,7 @@
       "source_file": "src/lib/api/client.ts",
       "source_location": "L8",
       "id": "api_client_apiclient",
-      "community": 1,
+      "community": 12,
       "norm_label": "apiclient"
     },
     {
@@ -4509,7 +4671,7 @@
       "source_file": "src/lib/api/client.ts",
       "source_location": "L21",
       "id": "api_client_getaccesstoken",
-      "community": 1,
+      "community": 12,
       "norm_label": "getaccesstoken()"
     },
     {
@@ -4518,7 +4680,7 @@
       "source_file": "src/lib/api/client.ts",
       "source_location": "L26",
       "id": "api_client_getrefreshtoken",
-      "community": 1,
+      "community": 12,
       "norm_label": "getrefreshtoken()"
     },
     {
@@ -4527,7 +4689,7 @@
       "source_file": "src/lib/api/client.ts",
       "source_location": "L31",
       "id": "api_client_settokens",
-      "community": 1,
+      "community": 12,
       "norm_label": "settokens()"
     },
     {
@@ -4536,7 +4698,7 @@
       "source_file": "src/lib/api/client.ts",
       "source_location": "L37",
       "id": "api_client_cleartokens",
-      "community": 1,
+      "community": 12,
       "norm_label": "cleartokens()"
     },
     {
@@ -4545,7 +4707,7 @@
       "source_file": "src/lib/api/client.ts",
       "source_location": "L46",
       "id": "api_client_token",
-      "community": 1,
+      "community": 12,
       "norm_label": "token"
     },
     {
@@ -4554,7 +4716,7 @@
       "source_file": "src/lib/api/client.ts",
       "source_location": "L57",
       "id": "api_client_refreshsubscribers",
-      "community": 1,
+      "community": 12,
       "norm_label": "refreshsubscribers"
     },
     {
@@ -4563,7 +4725,7 @@
       "source_file": "src/lib/api/client.ts",
       "source_location": "L59",
       "id": "api_client_subscribetokenrefresh",
-      "community": 1,
+      "community": 12,
       "norm_label": "subscribetokenrefresh()"
     },
     {
@@ -4572,7 +4734,7 @@
       "source_file": "src/lib/api/client.ts",
       "source_location": "L63",
       "id": "api_client_ontokenrefreshed",
-      "community": 1,
+      "community": 12,
       "norm_label": "ontokenrefreshed()"
     },
     {
@@ -4581,7 +4743,7 @@
       "source_file": "src/lib/api/client.ts",
       "source_location": "L72",
       "id": "api_client_originalrequest",
-      "community": 1,
+      "community": 12,
       "norm_label": "originalrequest"
     },
     {
@@ -4590,7 +4752,7 @@
       "source_file": "src/lib/api/client.ts",
       "source_location": "L91",
       "id": "api_client_refreshtoken",
-      "community": 1,
+      "community": 12,
       "norm_label": "refreshtoken"
     },
     {
@@ -4599,7 +4761,7 @@
       "source_file": "src/lib/api/users.ts",
       "source_location": "L1",
       "id": "src_lib_api_users_ts",
-      "community": 1,
+      "community": 20,
       "norm_label": "users.ts"
     },
     {
@@ -4608,7 +4770,7 @@
       "source_file": "src/lib/api/users.ts",
       "source_location": "L13",
       "id": "api_users_userservice",
-      "community": 1,
+      "community": 20,
       "norm_label": "userservice"
     },
     {
@@ -4617,7 +4779,7 @@
       "source_file": "src/lib/api/index.ts",
       "source_location": "L1",
       "id": "src_lib_api_index_ts",
-      "community": 3,
+      "community": 2,
       "norm_label": "index.ts"
     },
     {
@@ -4626,7 +4788,7 @@
       "source_file": "src/lib/api/referrals.ts",
       "source_location": "L1",
       "id": "src_lib_api_referrals_ts",
-      "community": 5,
+      "community": 2,
       "norm_label": "referrals.ts"
     },
     {
@@ -4635,7 +4797,7 @@
       "source_file": "src/lib/api/referrals.ts",
       "source_location": "L17",
       "id": "api_referrals_referralservice",
-      "community": 5,
+      "community": 2,
       "norm_label": "referralservice"
     },
     {
@@ -4644,7 +4806,7 @@
       "source_file": "src/lib/api/nems.ts",
       "source_location": "L1",
       "id": "src_lib_api_nems_ts",
-      "community": 1,
+      "community": 11,
       "norm_label": "nems.ts"
     },
     {
@@ -4653,7 +4815,7 @@
       "source_file": "src/lib/api/nems.ts",
       "source_location": "L17",
       "id": "api_nems_nemsservice",
-      "community": 1,
+      "community": 11,
       "norm_label": "nemsservice"
     },
     {
@@ -4662,7 +4824,7 @@
       "source_file": "src/lib/api/nems.ts",
       "source_location": "L73",
       "id": "api_nems_callcentreservice",
-      "community": 1,
+      "community": 11,
       "norm_label": "callcentreservice"
     },
     {
@@ -4671,7 +4833,7 @@
       "source_file": "src/lib/api/auth.ts",
       "source_location": "L1",
       "id": "src_lib_api_auth_ts",
-      "community": 1,
+      "community": 12,
       "norm_label": "auth.ts"
     },
     {
@@ -4680,7 +4842,7 @@
       "source_file": "src/lib/api/auth.ts",
       "source_location": "L14",
       "id": "api_auth_authservice",
-      "community": 1,
+      "community": 12,
       "norm_label": "authservice"
     },
     {
@@ -4689,7 +4851,7 @@
       "source_file": "src/store/patientReportFormStore.ts",
       "source_location": "L1",
       "id": "src_store_patientreportformstore_ts",
-      "community": 1,
+      "community": 11,
       "norm_label": "patientreportformstore.ts"
     },
     {
@@ -4698,7 +4860,7 @@
       "source_file": "src/store/patientReportFormStore.ts",
       "source_location": "L17",
       "id": "store_patientreportformstore_form_steps",
-      "community": 1,
+      "community": 11,
       "norm_label": "form_steps"
     },
     {
@@ -4707,7 +4869,7 @@
       "source_file": "src/store/patientReportFormStore.ts",
       "source_location": "L31",
       "id": "store_patientreportformstore_formstep",
-      "community": 1,
+      "community": 11,
       "norm_label": "formstep"
     },
     {
@@ -4716,7 +4878,7 @@
       "source_file": "src/store/patientReportFormStore.ts",
       "source_location": "L34",
       "id": "store_patientreportformstore_defaulttimeline",
-      "community": 1,
+      "community": 11,
       "norm_label": "defaulttimeline"
     },
     {
@@ -4725,7 +4887,7 @@
       "source_file": "src/store/patientReportFormStore.ts",
       "source_location": "L43",
       "id": "store_patientreportformstore_defaultformdata",
-      "community": 1,
+      "community": 11,
       "norm_label": "defaultformdata"
     },
     {
@@ -4734,7 +4896,7 @@
       "source_file": "src/store/patientReportFormStore.ts",
       "source_location": "L82",
       "id": "store_patientreportformstore_patientreportformstate",
-      "community": 1,
+      "community": 11,
       "norm_label": "patientreportformstate"
     },
     {
@@ -4743,7 +4905,7 @@
       "source_file": "src/store/patientReportFormStore.ts",
       "source_location": "L126",
       "id": "store_patientreportformstore_usepatientreportformstore",
-      "community": 1,
+      "community": 11,
       "norm_label": "usepatientreportformstore"
     },
     {
@@ -4752,7 +4914,7 @@
       "source_file": "src/store/authStore.ts",
       "source_location": "L1",
       "id": "src_store_authstore_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "authstore.ts"
     },
     {
@@ -4761,7 +4923,7 @@
       "source_file": "src/store/authStore.ts",
       "source_location": "L5",
       "id": "store_authstore_authstate",
-      "community": 2,
+      "community": 1,
       "norm_label": "authstate"
     },
     {
@@ -4770,7 +4932,7 @@
       "source_file": "src/store/authStore.ts",
       "source_location": "L16",
       "id": "store_authstore_useauthstore",
-      "community": 2,
+      "community": 1,
       "norm_label": "useauthstore"
     },
     {
@@ -4779,7 +4941,7 @@
       "source_file": "src/store/authStore.ts",
       "source_location": "L48",
       "id": "store_authstore_useuser",
-      "community": 2,
+      "community": 1,
       "norm_label": "useuser()"
     },
     {
@@ -4788,7 +4950,7 @@
       "source_file": "src/store/authStore.ts",
       "source_location": "L49",
       "id": "store_authstore_useisauthenticated",
-      "community": 2,
+      "community": 1,
       "norm_label": "useisauthenticated()"
     },
     {
@@ -4797,7 +4959,7 @@
       "source_file": "src/store/authStore.ts",
       "source_location": "L50",
       "id": "store_authstore_useusertype",
-      "community": 2,
+      "community": 1,
       "norm_label": "useusertype()"
     },
     {
@@ -4806,7 +4968,7 @@
       "source_file": "src/store/authStore.ts",
       "source_location": "L51",
       "id": "store_authstore_usefacility",
-      "community": 2,
+      "community": 1,
       "norm_label": "usefacility()"
     },
     {
@@ -4815,7 +4977,7 @@
       "source_file": "src/store/uiStore.ts",
       "source_location": "L1",
       "id": "src_store_uistore_ts",
-      "community": 8,
+      "community": 7,
       "norm_label": "uistore.ts"
     },
     {
@@ -4824,7 +4986,7 @@
       "source_file": "src/store/uiStore.ts",
       "source_location": "L3",
       "id": "store_uistore_toast",
-      "community": 8,
+      "community": 7,
       "norm_label": "toast"
     },
     {
@@ -4833,7 +4995,7 @@
       "source_file": "src/store/uiStore.ts",
       "source_location": "L15",
       "id": "store_uistore_uistate",
-      "community": 8,
+      "community": 7,
       "norm_label": "uistate"
     },
     {
@@ -4842,7 +5004,7 @@
       "source_file": "src/store/uiStore.ts",
       "source_location": "L34",
       "id": "store_uistore_useuistore",
-      "community": 8,
+      "community": 7,
       "norm_label": "useuistore"
     },
     {
@@ -4851,7 +5013,7 @@
       "source_file": "src/store/uiStore.ts",
       "source_location": "L80",
       "id": "store_uistore_usesidebarcollapsed",
-      "community": 8,
+      "community": 7,
       "norm_label": "usesidebarcollapsed()"
     },
     {
@@ -4860,7 +5022,7 @@
       "source_file": "src/store/uiStore.ts",
       "source_location": "L81",
       "id": "store_uistore_usemobilesidebaropen",
-      "community": 8,
+      "community": 7,
       "norm_label": "usemobilesidebaropen()"
     },
     {
@@ -4869,7 +5031,7 @@
       "source_file": "src/store/uiStore.ts",
       "source_location": "L82",
       "id": "store_uistore_usetheme",
-      "community": 8,
+      "community": 7,
       "norm_label": "usetheme()"
     },
     {
@@ -4878,7 +5040,7 @@
       "source_file": "src/store/uiStore.ts",
       "source_location": "L83",
       "id": "store_uistore_useisloading",
-      "community": 8,
+      "community": 7,
       "norm_label": "useisloading()"
     },
     {
@@ -4887,7 +5049,7 @@
       "source_file": "src/store/uiStore.ts",
       "source_location": "L86",
       "id": "store_uistore_usetoast",
-      "community": 8,
+      "community": 7,
       "norm_label": "usetoast()"
     },
     {
@@ -4896,7 +5058,7 @@
       "source_file": "src/store/index.ts",
       "source_location": "L1",
       "id": "src_store_index_ts",
-      "community": 2,
+      "community": 1,
       "norm_label": "index.ts"
     },
     {
@@ -4905,7 +5067,7 @@
       "source_file": "README.md",
       "source_location": "L1",
       "id": "readme_md",
-      "community": 27,
+      "community": 34,
       "norm_label": "readme.md"
     },
     {
@@ -4914,7 +5076,7 @@
       "source_file": "README.md",
       "source_location": "L3",
       "id": "swift_rms_client_readme_getting_started",
-      "community": 27,
+      "community": 34,
       "norm_label": "getting started"
     },
     {
@@ -4923,7 +5085,7 @@
       "source_file": "README.md",
       "source_location": "L7",
       "id": "swift_rms_client_readme_codeblock_1",
-      "community": 27,
+      "community": 34,
       "norm_label": "code:bash (npm run dev)"
     },
     {
@@ -4932,7 +5094,7 @@
       "source_file": "README.md",
       "source_location": "L23",
       "id": "swift_rms_client_readme_learn_more",
-      "community": 27,
+      "community": 34,
       "norm_label": "learn more"
     },
     {
@@ -4941,35 +5103,44 @@
       "source_file": "README.md",
       "source_location": "L32",
       "id": "swift_rms_client_readme_deploy_on_vercel",
-      "community": 27,
+      "community": 34,
       "norm_label": "deploy on vercel"
-    },
-    {
-      "label": "PriorityBadge()",
-      "file_type": "code",
-      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
-      "source_location": "L37",
-      "community": 4,
-      "norm_label": "prioritybadge()",
-      "id": "id_page_prioritybadge"
-    },
-    {
-      "label": "StatusBadge()",
-      "file_type": "code",
-      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
-      "source_location": "L75",
-      "community": 4,
-      "norm_label": "statusbadge()",
-      "id": "id_page_statusbadge"
     },
     {
       "label": "ColourCodeBadge()",
       "file_type": "code",
       "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
-      "source_location": "L88",
-      "community": 4,
+      "source_location": "L92",
+      "community": 0,
       "norm_label": "colourcodebadge()",
       "id": "id_page_colourcodebadge"
+    },
+    {
+      "label": "PatientReportSummary",
+      "file_type": "code",
+      "source_file": "src/types/referral.ts",
+      "source_location": "L228",
+      "community": 0,
+      "norm_label": "patientreportsummary",
+      "id": "types_referral_patientreportsummary"
+    },
+    {
+      "label": "STAGES",
+      "file_type": "code",
+      "source_file": "src/components/referral/ReferralLifecycleStepper.tsx",
+      "source_location": "L16",
+      "community": 0,
+      "norm_label": "stages",
+      "id": "referral_referrallifecyclestepper_stages"
+    },
+    {
+      "label": "getStageIndex()",
+      "file_type": "code",
+      "source_file": "src/components/referral/ReferralLifecycleStepper.tsx",
+      "source_location": "L22",
+      "community": 0,
+      "norm_label": "getstageindex()",
+      "id": "referral_referrallifecyclestepper_getstageindex"
     }
   ],
   "links": [
@@ -5307,11 +5478,55 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/InterventionsCard.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_interventionscard_tsx",
+      "target": "src_types_referral_ts"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/NEMSTransportCard.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_nemstransportcard_tsx",
+      "target": "src_types_referral_ts"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/ResponsePerformanceCard.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_responseperformancecard_tsx",
+      "target": "src_types_referral_ts"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/components/referral/VitalSignsCard.tsx",
       "source_location": "L3",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_components_referral_vitalsignscard_tsx",
+      "target": "src_types_referral_ts"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/PatientClinicalSummaryCard.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_patientclinicalsummarycard_tsx",
       "target": "src_types_referral_ts"
     },
     {
@@ -5329,12 +5544,66 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/ReferralLifecycleStepper.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_referrallifecyclestepper_tsx",
+      "target": "src_types_referral_ts"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/lib/referral-auth.ts",
       "source_location": "L1",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_lib_referral_auth_ts",
       "target": "src_types_referral_ts"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/types/referral.ts",
+      "source_location": "L228",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_types_referral_ts",
+      "target": "types_referral_patientreportsummary"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/InterventionsCard.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_interventionscard_tsx",
+      "target": "types_referral_referral"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/NEMSTransportCard.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_nemstransportcard_tsx",
+      "target": "types_referral_referral"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/ResponsePerformanceCard.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_responseperformancecard_tsx",
+      "target": "types_referral_referral"
     },
     {
       "relation": "imports",
@@ -5345,6 +5614,17 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_components_referral_vitalsignscard_tsx",
+      "target": "types_referral_referral"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/PatientClinicalSummaryCard.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_patientclinicalsummarycard_tsx",
       "target": "types_referral_referral"
     },
     {
@@ -5379,6 +5659,17 @@
       "confidence_score": 1.0,
       "source": "src_components_referral_vitalsignscard_tsx",
       "target": "types_referral_vitalsigns"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/ReferralLifecycleStepper.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_referrallifecyclestepper_tsx",
+      "target": "types_referral_nemsrequestsummary"
     },
     {
       "relation": "contains",
@@ -6784,6 +7075,17 @@
       "target": "src_types_index_ts"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/ReceivingFacilityReadinessCard.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_receivingfacilityreadinesscard_tsx",
+      "target": "src_types_index_ts"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/types/nems.ts",
@@ -7860,14 +8162,26 @@
       "target": "referral_assignambulancemodal_assignambulancemodal"
     },
     {
-      "relation": "contains",
+      "relation": "imports_from",
+      "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
-      "source_location": "L58",
+      "source_location": "L16",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_app_dashboard_referrals_id_page_tsx",
-      "target": "id_page_referraldetailpage"
+      "target": "src_components_referral_receivingfacilityreadinesscard_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_referrals_id_page_tsx",
+      "target": "referral_receivingfacilityreadinesscard_receivingfacilityreadinesscard"
     },
     {
       "relation": "imports_from",
@@ -7896,22 +8210,22 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_app_dashboard_referrals_id_page_tsx",
-      "target": "src_components_referral_vitalsignscard_tsx"
+      "target": "src_components_referral_patientclinicalsummarycard_tsx"
     },
     {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_app_dashboard_referrals_id_page_tsx",
-      "target": "referral_vitalsignscard_vitalsignscard"
+      "target": "referral_patientclinicalsummarycard_patientclinicalsummarycard"
     },
     {
       "relation": "imports_from",
@@ -7934,6 +8248,50 @@
       "confidence_score": 1.0,
       "source": "src_app_dashboard_referrals_id_page_tsx",
       "target": "referral_referrallifecyclestepper_referrallifecyclestepper"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_referrals_id_page_tsx",
+      "target": "src_components_referral_responseperformancecard_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_referrals_id_page_tsx",
+      "target": "referral_responseperformancecard_responseperformancecard"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_referrals_id_page_tsx",
+      "target": "src_components_referral_nemstransportcard_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_referrals_id_page_tsx",
+      "target": "referral_nemstransportcard_nemstransportcard"
     },
     {
       "relation": "contains",
@@ -7959,11 +8317,65 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
+      "source_location": "L58",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_referrals_id_page_tsx",
+      "target": "id_page_referraldetailpage"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_referrals_id_page_tsx",
+      "target": "src_components_referral_interventionscard_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_referrals_id_page_tsx",
+      "target": "referral_interventionscard_interventionscard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
       "source_location": "L88",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_app_dashboard_referrals_id_page_tsx",
       "target": "id_page_colourcodebadge"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_referrals_id_page_tsx",
+      "target": "src_components_referral_vitalsignscard_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/referrals/[id]/page.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_referrals_id_page_tsx",
+      "target": "referral_vitalsignscard_vitalsignscard"
     },
     {
       "relation": "calls",
@@ -8308,6 +8720,17 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_app_dashboard_ambulances_page_tsx",
+      "target": "api_ambulances_updateambulancerequest"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/ambulances/page.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_ambulances_page_tsx",
       "target": "api_ambulances_ambulancestatus"
     },
     {
@@ -8339,6 +8762,26 @@
       "confidence_score": 1.0,
       "source": "src_app_dashboard_ambulances_page_tsx",
       "target": "ambulances_page_ambulanceformdata"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/ambulances/page.tsx",
+      "source_location": "L49",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_ambulances_page_tsx",
+      "target": "ambulances_page_editambulanceschema"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/(dashboard)/ambulances/page.tsx",
+      "source_location": "L56",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_app_dashboard_ambulances_page_tsx",
+      "target": "ambulances_page_editambulanceformdata"
     },
     {
       "relation": "contains",
@@ -10667,6 +11110,66 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/InterventionsCard.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_interventionscard_tsx",
+      "target": "referral_interventionscard_interventionscardprops"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/InterventionsCard.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_interventionscard_tsx",
+      "target": "referral_interventionscard_interventionscard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/NEMSTransportCard.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_nemstransportcard_tsx",
+      "target": "referral_nemstransportcard_nemstransportcardprops"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/NEMSTransportCard.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_nemstransportcard_tsx",
+      "target": "referral_nemstransportcard_nemstransportcard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/ResponsePerformanceCard.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_responseperformancecard_tsx",
+      "target": "referral_responseperformancecard_responseperformancecardprops"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/ResponsePerformanceCard.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_responseperformancecard_tsx",
+      "target": "referral_responseperformancecard_responseperformancecard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/components/referral/VitalSignsCard.tsx",
       "source_location": "L5",
       "weight": 1.0,
@@ -10683,6 +11186,26 @@
       "confidence_score": 1.0,
       "source": "src_components_referral_vitalsignscard_tsx",
       "target": "referral_vitalsignscard_vitalsignscard"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/PatientClinicalSummaryCard.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_patientclinicalsummarycard_tsx",
+      "target": "referral_patientclinicalsummarycard_patientclinicalsummarycardprops"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/PatientClinicalSummaryCard.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_patientclinicalsummarycard_tsx",
+      "target": "referral_patientclinicalsummarycard_patientclinicalsummarycard"
     },
     {
       "relation": "contains",
@@ -10705,6 +11228,37 @@
       "target": "referral_facilitytransfervisualizer_facilitytransfervisualizer"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/ReceivingFacilityReadinessCard.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_receivingfacilityreadinesscard_tsx",
+      "target": "src_lib_api_index_ts"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/ReceivingFacilityReadinessCard.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_receivingfacilityreadinesscard_tsx",
+      "target": "referral_receivingfacilityreadinesscard_receivingfacilityreadinesscardprops"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/ReceivingFacilityReadinessCard.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_receivingfacilityreadinesscard_tsx",
+      "target": "referral_receivingfacilityreadinesscard_receivingfacilityreadinesscard"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/referral/ReferralLifecycleStepper.tsx",
@@ -10713,6 +11267,16 @@
       "confidence_score": 1.0,
       "source": "src_components_referral_referrallifecyclestepper_tsx",
       "target": "referral_referrallifecyclestepper_referrallifecyclestepperprops"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/referral/ReferralLifecycleStepper.tsx",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_components_referral_referrallifecyclestepper_tsx",
+      "target": "referral_referrallifecyclestepper_referrallifecyclestepper"
     },
     {
       "relation": "contains",
@@ -10733,16 +11297,6 @@
       "confidence_score": 1.0,
       "source": "src_components_referral_referrallifecyclestepper_tsx",
       "target": "referral_referrallifecyclestepper_getstageindex"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/components/referral/ReferralLifecycleStepper.tsx",
-      "source_location": "L36",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_components_referral_referrallifecyclestepper_tsx",
-      "target": "referral_referrallifecyclestepper_referrallifecyclestepper"
     },
     {
       "relation": "calls",
@@ -11630,6 +12184,16 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "src_lib_api_ambulances_ts",
+      "target": "api_ambulances_crewmember"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/api/ambulances.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_lib_api_ambulances_ts",
       "target": "api_ambulances_ambulance"
     },
     {
@@ -12249,5 +12813,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "5b052aa8c91f727f3427bc915a6be7d33f91d711"
+  "built_at_commit": "d333eaedcd627879e8c979a0e6f3064bab6659eb"
 }
