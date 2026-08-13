@@ -1,0 +1,175 @@
+/* NEMS call-centre dashboard content — rendered inside the standard dashboard shell. */
+
+.nems-dash {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* KPI row --------------------------------------------------------------- */
+.nems-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.nems-kpi {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+}
+.nems-kpi > div { min-width: 0; }
+.nems-kpi__label { display: block; overflow: hidden; color: var(--text-secondary); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.nems-kpi__value { display: block; margin-top: 6px; color: var(--text-primary); font-size: 26px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+.nems-kpi__hint { display: block; margin-top: 4px; color: var(--text-tertiary); font-size: 11px; }
+.nems-kpi__hint.is-up { color: var(--success); }
+.nems-kpi__hint.is-down { color: var(--danger); }
+.nems-kpi__icon { display: grid; width: 36px; height: 36px; flex: 0 0 auto; place-items: center; border-radius: var(--radius-md); }
+.nems-kpi--blue .nems-kpi__icon { background: var(--info-subtle); color: var(--info); }
+.nems-kpi--red .nems-kpi__icon { background: var(--danger-subtle); color: var(--danger); }
+.nems-kpi--amber .nems-kpi__icon { background: var(--warning-subtle); color: var(--warning); }
+.nems-kpi--violet .nems-kpi__icon { background: var(--accent-subtle); color: var(--accent-light); }
+.nems-kpi--teal .nems-kpi__icon { background: var(--info-subtle); color: var(--info); }
+.nems-kpi--green .nems-kpi__icon { background: var(--success-subtle); color: var(--success); }
+
+/* Card scaffolding ------------------------------------------------------- */
+.nems-grid { display: grid; gap: var(--space-4); }
+.nems-grid--charts { grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.1fr) minmax(0, 1.15fr); }
+.nems-grid--lists { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.nems-card { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+.nems-card__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-4) var(--space-4) var(--space-3); }
+.nems-card__head h2 { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--text-primary); font-size: 13px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; }
+.nems-card__head h2 em { color: var(--text-tertiary); font-size: 11px; font-style: normal; font-weight: 400; text-transform: none; }
+.nems-card__head h2 b { display: grid; min-width: 18px; height: 18px; place-items: center; padding: 0 5px; border-radius: 999px; background: var(--danger-subtle); color: var(--danger); font-size: 11px; }
+.nems-card__meta { color: var(--text-tertiary); font-size: 11px; }
+.nems-card__link { display: inline-flex; align-items: center; gap: 2px; color: var(--accent-light); font-size: 12px; font-weight: 500; text-decoration: none; white-space: nowrap; }
+.nems-card__link:hover { text-decoration: underline; }
+.nems-card__body { display: flex; flex: 1; flex-direction: column; padding: 0 var(--space-4) var(--space-4); }
+.nems-card__body--flush { padding: 0; }
+
+.nems-empty { margin: var(--space-4) 0; color: var(--text-tertiary); font-size: 13px; text-align: center; }
+.nems-chart-placeholder,
+.nems-map__placeholder { display: grid; height: 196px; place-items: center; color: var(--text-tertiary); font-size: 12px; }
+
+/* Call volume donut ------------------------------------------------------ */
+.nems-volume { gap: var(--space-3); }
+.nems-donut { position: relative; }
+.nems-donut__centre { position: absolute; top: 50%; left: 50%; text-align: center; transform: translate(-50%, -50%); pointer-events: none; }
+.nems-donut__centre strong { display: block; color: var(--text-primary); font-size: 24px; font-weight: 700; line-height: 1.1; }
+.nems-donut__centre span { display: block; margin-top: 2px; color: var(--text-tertiary); font-size: 11px; }
+.nems-legend { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.nems-legend li { display: grid; grid-template-columns: 8px 1fr auto auto; align-items: center; gap: 8px; }
+.nems-legend i { width: 8px; height: 8px; border-radius: 2px; }
+.nems-legend span { overflow: hidden; color: var(--text-secondary); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.nems-legend b { color: var(--text-primary); font-size: 12px; font-weight: 600; }
+.nems-legend em { min-width: 34px; color: var(--text-tertiary); font-size: 11px; font-style: normal; text-align: right; }
+
+/* Missions map ----------------------------------------------------------- */
+.nems-map { position: relative; z-index: 0; height: 208px; overflow: hidden; background: var(--bg-elevated); }
+.nems-map .leaflet-container { height: 100%; width: 100%; background: var(--bg-elevated); font-family: inherit; }
+.nems-map__legend { display: flex; flex-wrap: wrap; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-top: 1px solid var(--border-subtle); }
+.nems-map__legend span { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); font-size: 11px; }
+.nems-map__legend i { width: 8px; height: 8px; border-radius: 50%; }
+.nems-mission-cluster span {
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, .85);
+  border-radius: 50%;
+  background: var(--cluster);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+}
+
+/* Active calls ----------------------------------------------------------- */
+.nems-call-list,
+.nems-mission-list,
+.nems-fleet { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+
+.nems-call-list li { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); padding: var(--space-3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--glass-bg); }
+.nems-call-list__mark { display: grid; place-items: center; gap: 2px; color: var(--text-tertiary); }
+.nems-call-list__mark.is-red { color: var(--danger); }
+.nems-call-list__mark.is-yellow { color: var(--warning); }
+.nems-call-list__mark.is-green { color: var(--success); }
+.nems-call-list__mark time { font-size: 10px; font-variant-numeric: tabular-nums; }
+.nems-call-list strong { display: flex; align-items: center; gap: 6px; overflow: hidden; color: var(--text-primary); font-size: 13px; font-weight: 600; text-transform: capitalize; }
+.nems-call-list span { display: block; overflow: hidden; margin-top: 3px; color: var(--text-secondary); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.nems-call-list__meta { color: var(--text-tertiary) !important; font-size: 11px !important; }
+.nems-open-call { flex: 0 0 auto; padding: 6px 12px; border-radius: var(--radius-sm); background: var(--accent); color: #fff; font-size: 12px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.nems-open-call:hover { background: var(--accent-dark); }
+
+.nems-tag { padding: 2px 6px; border-radius: 999px; font-size: 10px; font-style: normal; font-weight: 700; letter-spacing: .04em; }
+.nems-tag.is-red { background: var(--danger-subtle); color: var(--danger); }
+.nems-tag.is-yellow { background: var(--warning-subtle); color: var(--warning); }
+.nems-tag.is-green { background: var(--success-subtle); color: var(--success); }
+
+.nems-footer-link { display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin-top: auto; padding-top: var(--space-4); color: var(--accent-light); font-size: 12px; font-weight: 500; text-decoration: none; }
+.nems-footer-link:hover { text-decoration: underline; }
+
+/* Fleet ------------------------------------------------------------------ */
+.nems-fleet li { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); }
+.nems-fleet__icon { display: grid; width: 32px; height: 32px; place-items: center; border-radius: var(--radius-md); }
+.nems-fleet__icon.is-red { background: var(--danger-subtle); color: var(--danger); }
+.nems-fleet__icon.is-amber { background: var(--warning-subtle); color: var(--warning); }
+.nems-fleet__icon.is-violet { background: var(--accent-subtle); color: var(--accent-light); }
+.nems-fleet__icon.is-green { background: var(--success-subtle); color: var(--success); }
+.nems-fleet strong { display: flex; align-items: baseline; gap: 8px; color: var(--text-primary); font-size: 13px; font-weight: 500; }
+.nems-fleet strong b { color: var(--text-primary); font-size: 17px; font-weight: 700; }
+.nems-fleet > li > div > span { display: block; margin-top: 2px; color: var(--text-tertiary); font-size: 11px; }
+.nems-fleet em { font-style: normal; font-weight: 600; }
+.nems-fleet em.is-red { color: var(--danger); }
+.nems-fleet em.is-yellow { color: var(--warning); }
+.nems-fleet em.is-green { color: var(--success); }
+.nems-fleet__share { color: var(--text-tertiary); font-size: 12px; font-weight: 500; }
+.nems-fleet__total { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: var(--space-4); border-top: 1px solid var(--border-subtle); }
+.nems-fleet__total span { color: var(--text-secondary); font-size: 12px; }
+.nems-fleet__total strong { color: var(--text-primary); font-size: 18px; font-weight: 700; }
+
+/* Recent missions -------------------------------------------------------- */
+.nems-mission-list li { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto; align-items: start; gap: var(--space-3); }
+.nems-mission-list > li > i { width: 8px; height: 8px; margin-top: 5px; border-radius: 50%; }
+.nems-mission-list i.is-red { background: var(--danger); }
+.nems-mission-list i.is-yellow { background: var(--warning); }
+.nems-mission-list i.is-green { background: var(--success); }
+.nems-mission-list strong { display: block; overflow: hidden; color: var(--text-primary); font-size: 12px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.nems-mission-list span { display: block; overflow: hidden; margin-top: 2px; color: var(--text-secondary); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; text-transform: capitalize; }
+.nems-mission-list__route { color: var(--text-tertiary) !important; font-size: 11px !important; text-transform: none !important; }
+.nems-mission-list__meta { display: grid; flex: 0 0 auto; justify-items: end; gap: 4px; }
+.nems-mission-list__meta time { color: var(--text-tertiary); font-size: 11px; }
+
+/* Reminders -------------------------------------------------------------- */
+.nems-announce { display: grid; grid-template-columns: auto 1fr 1fr auto; align-items: center; gap: var(--space-4); }
+.nems-announce__title { display: inline-flex; align-items: center; gap: 8px; color: var(--text-primary); font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.nems-announce__title svg { color: var(--warning); }
+.nems-announce p { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--text-secondary); font-size: 12px; line-height: 1.45; }
+.nems-announce p svg { flex: 0 0 auto; color: var(--text-tertiary); }
+.nems-announce > span { color: var(--text-tertiary); font-size: 11px; white-space: nowrap; }
+
+/* Responsive ------------------------------------------------------------- */
+@media (max-width: 1400px) {
+  .nems-kpi-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 1200px) {
+  .nems-grid--charts,
+  .nems-grid--lists { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nems-grid--charts > :last-child,
+  .nems-grid--lists > :last-child { grid-column: 1 / -1; }
+  .nems-announce { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .nems-kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nems-grid--charts,
+  .nems-grid--lists { grid-template-columns: minmax(0, 1fr); }
+  .nems-grid--charts > :last-child,
+  .nems-grid--lists > :last-child { grid-column: 1; }
+  .nems-kpi__value { font-size: 22px; }
+}
