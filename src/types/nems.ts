@@ -93,7 +93,7 @@ export interface Call {
   callerFacility?: { id?: string; name?: string; facilityCode?: string } | string;
   operator?: { id: string; firstName: string; lastName: string };
   callType: CallType;
-  emergencyNature?: string;
+  emergencyNature?: EmergencyNature;
   emergencyLocation?: EmergencyLocation;
   patientInfo?: PatientInfo;
   vitalSigns?: Record<string, unknown>;
@@ -123,6 +123,15 @@ export type CallType =
   | 'EMERGENCY';
 
 export type CallStatus = 'ACTIVE' | 'HELD' | 'DISPATCHED' | 'COMPLETED' | 'TRANSFERRED';
+
+export type EmergencyNature =
+  | 'OBSTETRIC'
+  | 'PEDIATRIC'
+  | 'TRAUMA'
+  | 'CARDIAC'
+  | 'RESPIRATORY'
+  | 'GENERAL'
+  | 'OTHER';
 
 export interface EmergencyLocation {
   address?: string;
@@ -161,7 +170,7 @@ export interface CreateCallRequest {
   callerName?: string;
   callerFacilityId?: string;
   callType: CallType;
-  emergencyNature?: string;
+  emergencyNature?: EmergencyNature;
   emergencyLocation?: EmergencyLocation;
   patientInfo?: PatientInfo;
   vitalSigns?: Record<string, unknown>;

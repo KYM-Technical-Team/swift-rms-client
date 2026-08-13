@@ -46,6 +46,7 @@ import type {
   Call,
   CallType,
   CreateCallRequest,
+  EmergencyNature,
   PatientInfo,
   TriageResult,
 } from '@/types';
@@ -191,7 +192,8 @@ interface NewCallDialogProps {
 function NewCallDialog({ open, submitting, onClose, onSubmit }: NewCallDialogProps) {
   const [phone, setPhone] = useState('');
   const [name, setName] = useState('');
-  const [nature, setNature] = useState('');
+  const [nature, setNature] = useState<EmergencyNature>('GENERAL');
+  const [presentingProblem, setPresentingProblem] = useState('');
   const [location, setLocation] = useState('');
   const [callType, setCallType] = useState<CallType>('EMERGENCY');
 
@@ -203,8 +205,9 @@ function NewCallDialog({ open, submitting, onClose, onSubmit }: NewCallDialogPro
       callerPhone: phone.trim(),
       callerName: name.trim() || undefined,
       callType,
-      emergencyNature: nature.trim() || undefined,
+      emergencyNature: nature,
       emergencyLocation: { address: location.trim() || undefined },
+      patientInfo: { symptoms: presentingProblem.trim() || undefined },
       hazardsPresent: false,
       languageUsed: 'English',
     });
@@ -240,8 +243,20 @@ function NewCallDialog({ open, submitting, onClose, onSubmit }: NewCallDialogPro
             </select>
           </label>
           <label className="cc-field">
-            <span>Emergency nature</span>
-            <input value={nature} onChange={(event) => setNature(event.target.value)} placeholder="Heavy bleeding, road accident…" />
+            <span>Emergency category</span>
+            <select value={nature} onChange={(event) => setNature(event.target.value as EmergencyNature)}>
+              <option value="OBSTETRIC">Obstetric</option>
+              <option value="PEDIATRIC">Paediatric</option>
+              <option value="TRAUMA">Trauma</option>
+              <option value="CARDIAC">Cardiac</option>
+              <option value="RESPIRATORY">Respiratory</option>
+              <option value="GENERAL">General</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </label>
+          <label className="cc-field">
+            <span>Presenting problem</span>
+            <input value={presentingProblem} onChange={(event) => setPresentingProblem(event.target.value)} placeholder="Heavy bleeding, road accident…" />
           </label>
           <label className="cc-field cc-dialog__wide">
             <span>Caller location</span>
