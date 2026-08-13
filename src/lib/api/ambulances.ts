@@ -14,6 +14,7 @@ export interface CrewMember {
 export interface Ambulance {
   id: string;
   ambulanceId: string;
+  version: number;
   facility?: {
     id: string;
     name: string;
@@ -80,12 +81,28 @@ export const ambulanceService = {
   },
 
   create: async (data: CreateAmbulanceRequest): Promise<Ambulance> => {
-    const response = await apiClient.post<ApiResponse<Ambulance>>('/ambulances', data);
-    return response.data.data!;
+    const { crewMemberIds, ...ambulance } = data;
+    const response = await apiClient.post<ApiResponse<Ambulance>>('/ambulances', ambulance);
+    const created = response.data.data!;
+    return crewMemberIds?.length
+      ? ambulanceService.assignCrew(created.id, created.version, crewMemberIds)
+      : created;
   },
 
   update: async (id: string, data: UpdateAmbulanceRequest): Promise<Ambulance> => {
-    const response = await apiClient.put<ApiResponse<Ambulance>>(`/ambulances/${id}`, data);
+    const { crewMemberIds, ...ambulance } = data;
+    const response = await apiClient.put<ApiResponse<Ambulance>>(`/ambulances/${id}`, ambulance);
+    const updated = response.data.data!;
+    return crewMemberIds !== undefined
+      ? ambulanceService.assignCrew(updated.id, updated.version, crewMemberIds)
+      : updated;
+  },
+
+  assignCrew: async (id: string, version: number, crewMemberIds: string[]): Promise<Ambulance> => {
+    const response = await apiClient.post<ApiResponse<Ambulance>>(`/ambulances/${id}/crew`, {
+      version,
+      crewMemberIds,
+    });
     return response.data.data!;
   },
 
