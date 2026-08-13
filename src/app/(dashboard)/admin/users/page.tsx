@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -12,15 +12,12 @@ import {
   getSortedRowModel,
   createColumnHelper,
   flexRender,
-  type ColumnDef,
   type SortingState,
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 import { userService, facilityService, ambulanceService } from '@/lib/api';
-import type { CreateUserRequest } from '@/types/user';
 import { UserType } from '@/types';
 import { 
-  Users, 
   Plus,
   Search,
   ArrowUpDown,
@@ -32,7 +29,8 @@ import {
   Check,
   X,
   Edit,
-  Trash2
+  Trash2,
+  MapPin
 } from 'lucide-react';
 
 const userSchema = z.object({
@@ -43,8 +41,17 @@ const userSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
   userType: z.string().min(1, 'Role is required'),
   facilityId: z.string().optional(),
+  districtId: z.string().optional(),
   ambulanceId: z.string().optional().or(z.literal('')),
   crewRole: z.string().optional(),
+}).superRefine((data, ctx) => {
+  if (data.userType === 'DISTRICT_HEALTH' && !data.districtId) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['districtId'],
+      message: 'District is required for District Health users',
+    });
+  }
 });
 
 type UserFormData = z.infer<typeof userSchema>;
@@ -62,8 +69,16 @@ interface User {
     id: string;
     name: string;
   };
+  districtId?: string;
+  district?: {
+    id: string;
+    name: string;
+    code: string;
+  };
   createdAt: string;
 }
+
+const columnHelper = createColumnHelper<User>();
 
 function RoleBadge({ role }: { role: string }) {
   const colors: Record<string, { bg: string; color: string; border: string }> = {
@@ -119,20 +134,29 @@ export default function AdminUsersPage() {
     queryFn: () => ambulanceService.list({ limit: 200 }),
   });
 
-  const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<UserFormData>({
+  const { data: districts = [] } = useQuery({
+    queryKey: ['districts'],
+    queryFn: () => facilityService.getDistricts(),
+  });
+
+  const { register, handleSubmit, setValue, control, reset, formState: { errors } } = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: UserFormData) => userService.create({
-      ...data,
-      phone: `+232${data.phone}`,
-      email: data.email || undefined,
-      facilityId: data.facilityId || undefined,
-      ambulanceId: data.ambulanceId || undefined,
-      crewRole: data.userType === 'AMBULANCE_CREW' ? data.crewRole || undefined : undefined,
-      userType: data.userType as UserType,
-    }),
+    mutationFn: (data: UserFormData) => {
+      const isDistrictHealthUser = data.userType === 'DISTRICT_HEALTH';
+      return userService.create({
+        ...data,
+        phone: `+232${data.phone}`,
+        email: data.email || undefined,
+        facilityId: isDistrictHealthUser ? undefined : data.facilityId || undefined,
+        districtId: isDistrictHealthUser ? data.districtId || undefined : undefined,
+        ambulanceId: data.ambulanceId || undefined,
+        crewRole: data.userType === 'AMBULANCE_CREW' ? data.crewRole || undefined : undefined,
+        userType: data.userType as UserType,
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
       setShowAddModal(false);
@@ -156,13 +180,11 @@ export default function AdminUsersPage() {
     'NEMS'
   ];
 
-  const selectedFacilityId = watch('facilityId');
-  const selectedUserType = watch('userType');
+  const selectedFacilityId = useWatch({ control, name: 'facilityId' });
+  const selectedUserType = useWatch({ control, name: 'userType' });
 
   // Define columns
-  const columnHelper = createColumnHelper<User>();
-  
-  const columns = useMemo<ColumnDef<User, any>[]>(() => [
+  const columns = useMemo(() => [
     columnHelper.accessor(row => `${row.firstName} ${row.lastName}`, {
       id: 'name',
       header: 'User',
@@ -193,9 +215,18 @@ export default function AdminUsersPage() {
       filterFn: 'equalsString',
     }),
     columnHelper.accessor('facility', {
-      header: 'Facility',
+      header: 'Assignment',
       cell: info => {
         const facility = info.getValue();
+        const district = info.row.original.district;
+        if (district) {
+          return (
+            <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
+              <MapPin size={12} />
+              {district.name}
+            </span>
+          );
+        }
         return facility ? (
           <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
             <Building2 size={12} />
@@ -539,7 +570,7 @@ export default function AdminUsersPage() {
                       <label className="form-label">Assigned Ambulance (Optional)</label>
                       <select className="form-input" {...register('ambulanceId')}>
                         <option value="">-- Select Ambulance --</option>
-                        {ambulances.map((amb: any) => (
+                        {ambulances.map((amb) => (
                           <option key={amb.id} value={amb.id}>
                             {amb.ambulanceId}
                           </option>
@@ -550,47 +581,62 @@ export default function AdminUsersPage() {
                   </>
                 )}
 
-                <div className="form-group">
-                  <label className="form-label">Facility (Optional)</label>
-                  <div className="search-box">
-                    <Search size={16} className="search-box-icon" />
-                    <input 
-                      type="text" 
-                      className="search-box-input" 
-                      placeholder="Search facility..." 
-                      value={facilitySearch}
-                      onChange={(e) => setFacilitySearch(e.target.value)}
-                    />
-                  </div>
-                  {facilities.length > 0 && (
-                    <div style={{
-                      marginTop: 'var(--space-2)',
-                      border: '1px solid var(--border)',
-                      borderRadius: 'var(--radius-md)',
-                      maxHeight: 200,
-                      overflow: 'auto'
-                    }}>
-                      {facilities.map((facility: any) => (
-                        <div 
-                          key={facility.id}
-                          onClick={() => {
-                            setValue('facilityId', facility.id);
-                            setFacilitySearch(facility.name);
-                          }}
-                          style={{
-                            padding: 'var(--space-3)',
-                            cursor: 'pointer',
-                            background: selectedFacilityId === facility.id ? 'var(--accent)' : 'transparent',
-                          }}
-                          className="hover-bg"
-                        >
-                          <div className="font-medium">{facility.name}</div>
-                          <div className="text-sm text-muted">{facility.type}</div>
-                        </div>
+                {selectedUserType === 'DISTRICT_HEALTH' ? (
+                  <div className="form-group">
+                    <label className="form-label">District *</label>
+                    <select className={`form-input ${errors.districtId ? 'error' : ''}`} {...register('districtId')}>
+                      <option value="">Select district...</option>
+                      {districts.map((district) => (
+                        <option key={district.id} value={district.id}>
+                          {district.name}
+                        </option>
                       ))}
+                    </select>
+                    {errors.districtId && <span className="form-error">{errors.districtId.message}</span>}
+                  </div>
+                ) : (
+                  <div className="form-group">
+                    <label className="form-label">Facility (Optional)</label>
+                    <div className="search-box">
+                      <Search size={16} className="search-box-icon" />
+                      <input
+                        type="text"
+                        className="search-box-input"
+                        placeholder="Search facility..."
+                        value={facilitySearch}
+                        onChange={(e) => setFacilitySearch(e.target.value)}
+                      />
                     </div>
-                  )}
-                </div>
+                    {facilities.length > 0 && (
+                      <div style={{
+                        marginTop: 'var(--space-2)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 'var(--radius-md)',
+                        maxHeight: 200,
+                        overflow: 'auto'
+                      }}>
+                        {facilities.map((facility) => (
+                          <div
+                            key={facility.id}
+                            onClick={() => {
+                              setValue('facilityId', facility.id);
+                              setFacilitySearch(facility.name);
+                            }}
+                            style={{
+                              padding: 'var(--space-3)',
+                              cursor: 'pointer',
+                              background: selectedFacilityId === facility.id ? 'var(--accent)' : 'transparent',
+                            }}
+                            className="hover-bg"
+                          >
+                            <div className="font-medium">{facility.name}</div>
+                            <div className="text-sm text-muted">{facility.type}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {createMutation.isError && (
                   <div className="auth-error">

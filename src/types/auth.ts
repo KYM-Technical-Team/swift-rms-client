@@ -1,7 +1,7 @@
 // Authentication types
 
 import { UserType, UserStatus } from './common';
-import { FacilitySummary } from './facility';
+import { DistrictSummary, FacilitySummary } from './facility';
 
 export interface LoginRequest {
   phone?: string;
@@ -34,6 +34,7 @@ export interface RegisterRequest {
   password: string;
   userType: UserType;
   facilityId?: string;
+  districtId?: string;
   ambulanceId?: string;
 }
 
@@ -59,6 +60,8 @@ export interface UserResponse {
   phone: string;
   userType: UserType;
   status: UserStatus;
+  districtId?: string;
+  district?: DistrictSummary;
   facility?: FacilitySummary;
   ambulanceId?: string;
   avatarUrl?: string;

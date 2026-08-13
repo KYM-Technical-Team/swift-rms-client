@@ -7,6 +7,10 @@ export interface FacilitySummary {
   name: string;
   code: string;
   type: FacilityType;
+  facilityCode?: string;
+  facilityType?: FacilityType;
+  districtId?: string;
+  district?: DistrictSummary;
 }
 
 export interface Facility {

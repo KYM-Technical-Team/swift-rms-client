@@ -1,7 +1,7 @@
 // User types
 
 import { UserType, UserStatus } from './common';
-import { FacilitySummary } from './facility';
+import { DistrictSummary, FacilitySummary } from './facility';
 
 export interface CreateUserRequest {
   firstName: string;
@@ -11,6 +11,7 @@ export interface CreateUserRequest {
   password: string;
   userType: UserType;
   facilityId?: string;
+  districtId?: string;
   ambulanceId?: string;
   crewRole?: string;
 }
@@ -22,6 +23,7 @@ export interface UpdateUserRequest {
   userType?: UserType;
   status?: UserStatus;
   facilityId?: string;
+  districtId?: string;
   ambulanceId?: string;
   crewRole?: string;
   avatarUrl?: string;
@@ -54,6 +56,8 @@ export interface User {
   phone: string;
   userType: UserType;
   status: UserStatus;
+  districtId?: string;
+  district?: DistrictSummary;
   facility?: FacilitySummary;
   avatarUrl?: string;
   createdAt: string;

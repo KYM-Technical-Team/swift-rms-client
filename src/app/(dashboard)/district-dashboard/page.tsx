@@ -75,6 +75,14 @@ type FacilityWithDistrict = {
   };
 };
 
+type UserWithDistrict = {
+  districtId?: string;
+  district?: {
+    id?: string;
+    name?: string;
+  };
+};
+
 type ChartPayloadEntry = {
   dataKey?: string;
   color?: string;
@@ -353,9 +361,10 @@ export default function DistrictDashboardPage() {
   const user = useAuthStore((state) => state.user);
   const [period, setPeriod] = useState<PeriodOption>('30d');
 
+  const userDistrict = user as UserWithDistrict | null;
   const userFacility = user?.facility as FacilityWithDistrict | undefined;
-  const districtId = userFacility?.districtId || userFacility?.district?.id || '';
-  const districtName = userFacility?.district?.name || 'Your District';
+  const districtId = userDistrict?.districtId || userDistrict?.district?.id || userFacility?.districtId || userFacility?.district?.id || '';
+  const districtName = userDistrict?.district?.name || userFacility?.district?.name || 'Your District';
 
   const analyticsQuery = useMemo<AnalyticsQuery>(() => {
     const now = new Date();
