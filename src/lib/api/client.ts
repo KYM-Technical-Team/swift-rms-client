@@ -2,7 +2,8 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'ax
 import { ApiResponse, ApiError } from '@/types';
 
 // const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/v1' || "https://swfit-rms-server.onrender.com/api/v1";
-const BASE_URL = "https://swfit-rms-server-xc56.onrender.com/api/v1";
+const BASE_URL = "https://swfit-rms-server-6gii.onrender.com/api/v1";
+
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
