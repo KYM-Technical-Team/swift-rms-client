@@ -2,30 +2,20 @@
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import {
   Activity,
   AlertTriangle,
   Ambulance,
   ArrowRight,
   Baby,
-  BarChart3,
   Bell,
-  Building2,
   Car,
   Check,
-  ChevronDown,
   ChevronLeft,
-  CircleDot,
-  Clock3,
+  Clock,
   Droplet,
-  FileText,
   Flame,
-  Headphones,
   HeartPulse,
-  History,
-  LayoutDashboard,
   MapPin,
   MapPinOff,
   Mic,
@@ -39,11 +29,7 @@ import {
   Plus,
   Radio,
   RefreshCw,
-  Settings,
-  ShieldAlert,
   ShieldCheck,
-  Stethoscope,
-  User,
   Users,
   Wind,
   X,
@@ -63,7 +49,6 @@ import type {
   PatientInfo,
   TriageResult,
 } from '@/types';
-import { CallNotifications } from './CallNotifications';
 import {
   useActiveFacilities,
   useAmbulanceRanking,
@@ -88,49 +73,11 @@ const problemTiles: { id: string; icon: typeof Baby }[] = [
   { id: 'paediatric', icon: Users },
   { id: 'breathing', icon: Wind },
   { id: 'chest-pain', icon: HeartPulse },
-  { id: 'consciousness', icon: CircleDot },
+  { id: 'consciousness', icon: Activity },
   { id: 'road-accident', icon: Car },
   { id: 'bleeding', icon: Droplet },
   { id: 'burns', icon: Flame },
   { id: 'seizures', icon: Zap },
-];
-
-const navGroups = [
-  {
-    label: 'Main',
-    links: [
-      { label: 'Dashboard', href: '/', icon: LayoutDashboard },
-      { label: 'Active Calls', href: '/call-centre', icon: PhoneCall, badge: 'active' as const },
-      { label: 'Call Queue', href: '/call-centre?view=queue', icon: Users, badge: 'queue' as const },
-      { label: 'Recent Calls', href: '/call-centre?view=recent', icon: History },
-      { label: 'Call History', href: '/call-centre?view=history', icon: Clock3 },
-    ],
-  },
-  {
-    label: 'Operations',
-    links: [
-      { label: 'Triage', href: '/triage', icon: Stethoscope },
-      { label: 'Ambulances', href: '/ambulances', icon: Ambulance },
-      { label: 'Facilities', href: '/facilities', icon: Building2 },
-      { label: 'Missions', href: '/ambulances', icon: Radio },
-      { label: 'Drivers & Paramedics', href: '/admin/users', icon: Users },
-    ],
-  },
-  {
-    label: 'Reports',
-    links: [
-      { label: 'Reports', href: '/reports', icon: FileText },
-      { label: 'Analytics', href: '/analytics', icon: BarChart3 },
-      { label: 'Performance', href: '/district-dashboard', icon: Activity },
-    ],
-  },
-  {
-    label: 'Admin',
-    links: [
-      { label: 'Users', href: '/admin/users', icon: User },
-      { label: 'Settings', href: '/admin/settings', icon: Settings },
-    ],
-  },
 ];
 
 function errorMessage(error: unknown) {
@@ -271,18 +218,18 @@ function NewCallDialog({ open, submitting, onClose, onSubmit }: NewCallDialogPro
             <span className="cc-eyebrow">Call intake</span>
             <h2 id="new-call-title">Start a new call</h2>
           </div>
-          <button className="cc-icon-button" type="button" onClick={onClose} aria-label="Close call intake"><X size={18} /></button>
+          <button className="btn btn-ghost cc-icon-button" type="button" onClick={onClose} aria-label="Close call intake"><X size={18} /></button>
         </div>
         <form onSubmit={submit} className="cc-dialog__form">
-          <label>
+          <label className="cc-field">
             <span>Caller phone</span>
             <input value={phone} onChange={(event) => setPhone(event.target.value)} required autoFocus placeholder="+232 76 123 456" />
           </label>
-          <label>
+          <label className="cc-field">
             <span>Caller name</span>
             <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Name or organisation" />
           </label>
-          <label>
+          <label className="cc-field">
             <span>Call type</span>
             <select value={callType} onChange={(event) => setCallType(event.target.value as CallType)}>
               <option value="EMERGENCY">Emergency</option>
@@ -292,17 +239,17 @@ function NewCallDialog({ open, submitting, onClose, onSubmit }: NewCallDialogPro
               <option value="INQUIRY">Inquiry</option>
             </select>
           </label>
-          <label>
+          <label className="cc-field">
             <span>Emergency nature</span>
             <input value={nature} onChange={(event) => setNature(event.target.value)} placeholder="Heavy bleeding, road accident…" />
           </label>
-          <label className="cc-dialog__wide">
+          <label className="cc-field cc-dialog__wide">
             <span>Caller location</span>
             <input value={location} onChange={(event) => setLocation(event.target.value)} placeholder="Facility, street, community or landmark" />
           </label>
           <div className="cc-dialog__actions cc-dialog__wide">
-            <button type="button" className="cc-button cc-button--secondary" onClick={onClose}>Cancel</button>
-            <button type="submit" className="cc-button cc-button--primary" disabled={submitting || !phone.trim()}>
+            <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
+            <button type="submit" className="btn btn-primary" disabled={submitting || !phone.trim()}>
               {submitting ? <RefreshCw className="cc-spin" size={16} /> : <PhoneCall size={16} />} Start call
             </button>
           </div>
@@ -315,7 +262,6 @@ function NewCallDialog({ open, submitting, onClose, onSubmit }: NewCallDialogPro
 export default function CallCentrePage() {
   const operator = useUser();
   const toast = useToast();
-  const pathname = usePathname();
 
   // ---- server state -----------------------------------------------------
   const callsQuery = useCalls();
@@ -501,7 +447,7 @@ export default function CallCentrePage() {
   const status = !selectedCall ? { label: 'No active call', tone: 'idle' }
     : onHold ? { label: 'On hold', tone: 'held' }
     : selectedCall.callStatus === 'DISPATCHED' ? { label: 'Dispatched', tone: 'dispatched' }
-    : callClosed ? { label: selectedCall.callStatus === 'COMPLETED' ? 'Completed' : 'Transferred', tone: selectedCall.callStatus.toLowerCase() }
+    : callClosed ? { label: selectedCall.callStatus === 'COMPLETED' ? 'Completed' : 'Transferred', tone: 'closed' }
     : answered > 0 ? { label: 'Triage in progress', tone: 'active' }
     : { label: 'Call connected', tone: 'active' };
 
@@ -514,7 +460,6 @@ export default function CallCentrePage() {
   const firstIncomplete = steps.findIndex((step) => !step.done);
   const currentStep = firstIncomplete === -1 ? steps.length - 1 : firstIncomplete;
 
-  // The checklist is the "what do I do next" answer that the console was missing.
   const dispatchChecklist = [
     { label: 'Confirm colour code', done: Boolean(selectedColour), hint: `Currently ${colour.toLowerCase()}` },
     { label: 'Select an ambulance', done: Boolean(selectedAmbulanceId), hint: rankings.length ? `${rankings.filter((item) => item.eligible).length} eligible nearby` : 'Awaiting ranking' },
@@ -532,83 +477,92 @@ export default function CallCentrePage() {
     { label: 'Doctors', value: `${readiness.doctorsOnDuty ?? 0}`, ok: (readiness.doctorsOnDuty ?? 0) > 0, note: (readiness.doctorsOnDuty ?? 0) > 0 ? 'On duty' : 'None' },
   ] : [];
 
+  const refreshAll = () => {
+    void callsQuery.refetch();
+    void dashboardQuery.refetch();
+    if (activeCallId) { void eventsQuery.refetch(); void rankingQuery.refetch(); }
+  };
+
   return (
-    <div className="cc-shell">
-      <header className="cc-topbar">
-        <div className="cc-brand">
-          <div className="cc-brand__mark"><ShieldAlert size={20} /></div>
-          <div><strong>NEMS Call Centre</strong><span>Sierra Leone</span></div>
+    <div className="cc-page">
+      {/* ── Page header ─────────────────────────────────────────────── */}
+      <div className="cc-page__header">
+        <div>
+          <h1>Call Centre</h1>
+          <p>Triage emergency calls and dispatch ambulances across Sierra Leone</p>
         </div>
-        <div className="cc-call-strip">
-          <div>
-            <span>Active call</span>
-            <strong className={`cc-live ${selectedCall && !callClosed ? '' : 'is-idle'}`}>
-              <i />{formatDuration(callSeconds)}
-            </strong>
-          </div>
-          <div><span>Call ID</span><strong>{selectedCall ? `#${selectedCall.id.slice(0, 10).toUpperCase()}` : '—'}</strong></div>
-          <div className="cc-hide-md"><span>Date &amp; time</span><strong>{new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(now))}</strong></div>
-          <div className="cc-hide-md"><span>Operator</span><strong>{operatorName}</strong></div>
-          <div><span>Status</span><strong className={`cc-status cc-status--${status.tone}`}>{status.label}</strong></div>
-        </div>
-        <div className="cc-operator">
-          <button
-            type="button"
-            className={`cc-icon-button cc-icon-button--dark ${muted ? 'is-active' : ''}`}
-            onClick={() => setMuted((value) => !value)}
-            aria-pressed={muted}
-            aria-label={muted ? 'Unmute call audio' : 'Mute call audio'}
-          >
-            <Headphones size={17} />
+        <div className="cc-page__actions">
+          <button className="btn btn-secondary" onClick={refreshAll} disabled={callsQuery.isFetching}>
+            <RefreshCw size={16} className={callsQuery.isFetching ? 'cc-spin' : ''} /> Refresh
           </button>
-          <CallNotifications />
-          <div className="cc-avatar">{operator ? `${operator.firstName[0]}${operator.lastName[0]}` : 'OP'}</div>
-          <div className="cc-operator__name"><strong>{operatorName}</strong><span>Operator</span></div>
-          <ChevronDown size={15} />
+          <button className="btn btn-primary" onClick={() => setNewCallOpen(true)}>
+            <Plus size={16} /> New Call
+          </button>
         </div>
-      </header>
+      </div>
 
-      <aside className="cc-sidebar">
-        <nav aria-label="Call centre navigation">
-          {navGroups.map((group) => (
-            <div className="cc-nav-group" key={group.label}>
-              <span className="cc-nav-label">{group.label}</span>
-              {group.links.map((link) => {
-                const Icon = link.icon;
-                const badge = link.badge === 'active' ? activeCalls.length : link.badge === 'queue' ? queuedCalls.length : 0;
-                const active = link.href === '/call-centre' && pathname === '/call-centre';
-                return (
-                  <Link className={`cc-nav-link ${active ? 'is-active' : ''}`} href={link.href} key={link.label}>
-                    <Icon size={17} /><span>{link.label}</span>
-                    {badge > 0 && <b>{badge}</b>}
-                  </Link>
-                );
-              })}
-            </div>
-          ))}
-        </nav>
-        <a className="cc-emergency-line" href="tel:112">
-          <Phone size={18} />
-          <span>Emergency lines<strong>112 / 117</strong></span>
-        </a>
-      </aside>
+      {/* ── KPI row ─────────────────────────────────────────────────── */}
+      <div className="stats-grid cc-stats">
+        <div className="stat-card">
+          <div className="stat-header"><div className="stat-icon stat-icon-error"><PhoneCall size={20} /></div></div>
+          <div className="stat-label">Active Calls</div>
+          <div className="stat-value">{dashboard?.activeCalls ?? activeCalls.length}</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-header"><div className="stat-icon stat-icon-warning"><Users size={20} /></div></div>
+          <div className="stat-label">Calls in Queue</div>
+          <div className="stat-value">{queuedCalls.length}</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-header"><div className="stat-icon stat-icon-success"><Ambulance size={20} /></div></div>
+          <div className="stat-label">Ambulances Available</div>
+          <div className="stat-value">{dashboard ? `${dashboard.ambulancesAvailable} / ${dashboard.ambulancesAvailable + dashboard.ambulancesOnMission}` : '—'}</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-header"><div className="stat-icon stat-icon-info"><Clock size={20} /></div></div>
+          <div className="stat-label">Average Response</div>
+          <div className="stat-value">{dashboard?.todayStats?.averageResponseTime || '—'}</div>
+        </div>
+      </div>
 
-      <main className="cc-workspace">
-        {loadError && (
-          <div className="cc-load-error" role="alert">
-            <AlertTriangle size={18} />
-            <div><strong>Live call data is unavailable</strong><span>{loadError}</span></div>
-            <button onClick={() => void callsQuery.refetch()}>Try again</button>
-          </div>
-        )}
+      {/* ── Live call bar ───────────────────────────────────────────── */}
+      <div className="card cc-callbar">
+        <div className="cc-callbar__item">
+          <span>Active call</span>
+          <strong className={`cc-live ${selectedCall && !callClosed ? '' : 'is-idle'}`}><i />{formatDuration(callSeconds)}</strong>
+        </div>
+        <div className="cc-callbar__item">
+          <span>Call ID</span>
+          <strong>{selectedCall ? `#${selectedCall.id.slice(0, 10).toUpperCase()}` : '—'}</strong>
+        </div>
+        <div className="cc-callbar__item">
+          <span>Operator</span>
+          <strong>{operatorName}</strong>
+        </div>
+        <div className="cc-callbar__item">
+          <span>Status</span>
+          <strong><em className={`cc-status is-${status.tone}`}>{status.label}</em></strong>
+        </div>
+        <div className="cc-callbar__item">
+          <span>Today’s missions</span>
+          <strong>{dashboard?.todayStats?.completedMissions ?? 0}</strong>
+        </div>
+      </div>
 
-        {/* ---- Column 1: the call --------------------------------------- */}
-        <div className="cc-col cc-col--call">
-          <section className="cc-card">
-            <div className="cc-card__head">
-              <h2>Call controls</h2>
-              <button className="cc-text-button" type="button" onClick={() => setNewCallOpen(true)}><Plus size={14} /> New call</button>
-            </div>
+      {loadError && (
+        <div className="cc-alert" role="alert">
+          <AlertTriangle size={18} />
+          <div><strong>Live call data is unavailable</strong><span>{loadError}</span></div>
+          <button className="btn btn-secondary btn-sm" onClick={() => void callsQuery.refetch()}>Try again</button>
+        </div>
+      )}
+
+      {/* ── Console ─────────────────────────────────────────────────── */}
+      <div className="cc-console">
+        {/* Column 1 — the call */}
+        <div className="cc-col">
+          <section className="card cc-card">
+            <div className="cc-card__head"><h2>Call controls</h2></div>
             <div className="cc-card__body">
               <button className="cc-end-call" disabled={!selectedCall || callClosed || commandBusy === 'complete'} onClick={() => runCommand('complete', { reason: 'Call completed by operator' })}>
                 {commandBusy === 'complete' ? <RefreshCw size={17} className="cc-spin" /> : <PhoneOff size={17} />} End call
@@ -625,22 +579,10 @@ export default function CallCentrePage() {
                   {commandBusy === 'hold' || commandBusy === 'resume' ? <RefreshCw size={18} className="cc-spin" /> : <Pause size={18} />}
                   {onHold ? 'Resume' : 'Hold'}
                 </button>
-                <button
-                  type="button"
-                  className={muted ? 'is-active' : ''}
-                  disabled={!selectedCall || callClosed}
-                  aria-pressed={muted}
-                  onClick={() => setMuted((value) => !value)}
-                >
+                <button type="button" className={muted ? 'is-active' : ''} disabled={!selectedCall || callClosed} aria-pressed={muted} onClick={() => setMuted((value) => !value)}>
                   {muted ? <MicOff size={18} /> : <Mic size={18} />}{muted ? 'Unmute' : 'Mute'}
                 </button>
-                <button
-                  type="button"
-                  className={transferOpen ? 'is-active' : ''}
-                  disabled={!selectedCall || callClosed}
-                  aria-expanded={transferOpen}
-                  onClick={() => setTransferOpen((value) => !value)}
-                >
+                <button type="button" className={transferOpen ? 'is-active' : ''} disabled={!selectedCall || callClosed} aria-expanded={transferOpen} onClick={() => setTransferOpen((value) => !value)}>
                   <PhoneForwarded size={18} />Transfer
                 </button>
               </div>
@@ -651,7 +593,7 @@ export default function CallCentrePage() {
                     <option value="">{operatorsQuery.isLoading ? 'Loading operators…' : 'Select operator'}</option>
                     {(operatorsQuery.data ?? []).map((item) => <option value={item.id} key={item.id}>{item.firstName} {item.lastName}</option>)}
                   </select>
-                  <button disabled={!transferTarget || commandBusy === 'transfer'} onClick={() => runCommand('transfer', { targetOperatorId: transferTarget, reason: 'Operator transfer' })}>
+                  <button className="btn btn-secondary btn-sm" disabled={!transferTarget || commandBusy === 'transfer'} onClick={() => runCommand('transfer', { targetOperatorId: transferTarget, reason: 'Operator transfer' })}>
                     {commandBusy === 'transfer' ? <RefreshCw size={13} className="cc-spin" /> : 'Send'}
                   </button>
                 </div>
@@ -670,7 +612,7 @@ export default function CallCentrePage() {
               {conferenceOpen && (
                 <div className="cc-inline-action">
                   <input value={conferenceMember} onChange={(event) => setConferenceMember(event.target.value)} placeholder="Clinician or facility" aria-label="Conference participant" />
-                  <button disabled={!conferenceMember.trim() || commandBusy === 'conference'} onClick={() => runCommand('conference', { participant: conferenceMember.trim() })}>
+                  <button className="btn btn-secondary btn-sm" disabled={!conferenceMember.trim() || commandBusy === 'conference'} onClick={() => runCommand('conference', { participant: conferenceMember.trim() })}>
                     {commandBusy === 'conference' ? <RefreshCw size={13} className="cc-spin" /> : 'Add'}
                   </button>
                 </div>
@@ -690,7 +632,7 @@ export default function CallCentrePage() {
             </div>
           </section>
 
-          <section className="cc-card">
+          <section className="card cc-card">
             <div className="cc-card__head"><h2>Caller information</h2></div>
             <div className="cc-card__body">
               {callsQuery.isLoading ? <Skeleton rows={3} /> : !selectedCall ? (
@@ -698,12 +640,12 @@ export default function CallCentrePage() {
                   <PhoneCall size={26} />
                   <strong>No call selected</strong>
                   <span>Start a new call to begin triage.</span>
-                  <button type="button" onClick={() => setNewCallOpen(true)}>Start a new call</button>
+                  <button className="btn btn-secondary btn-sm" type="button" onClick={() => setNewCallOpen(true)}>Start a new call</button>
                 </div>
               ) : (
                 <>
                   <div className="cc-person">
-                    <div className="cc-avatar cc-avatar--blue">{(selectedCall.callerName || 'CL').slice(0, 2).toUpperCase()}</div>
+                    <div className="cc-avatar cc-avatar--caller">{(selectedCall.callerName || 'CL').slice(0, 2).toUpperCase()}</div>
                     <div>
                       <strong>{selectedCall.callerName || 'Unnamed caller'}</strong>
                       <span>{callerFacilityName || selectedCall.callType.replace(/_/g, ' ').toLowerCase()}</span>
@@ -733,7 +675,7 @@ export default function CallCentrePage() {
             </div>
           </section>
 
-          <section className="cc-card">
+          <section className="card cc-card">
             <div className="cc-card__head">
               <h2>Patient</h2>
               <button className="cc-text-button" type="button" onClick={() => setPatientFormOpen((value) => !value)} aria-expanded={patientFormOpen}>
@@ -774,7 +716,7 @@ export default function CallCentrePage() {
             </div>
           </section>
 
-          <section className="cc-card">
+          <section className="card cc-card">
             <div className="cc-card__head">
               <h2>Call notes</h2>
               <button className="cc-text-button" type="button" disabled={!selectedCall || callClosed} onClick={() => setNoteOpen((value) => !value)}>
@@ -786,8 +728,8 @@ export default function CallCentrePage() {
                 <div className="cc-note-compose">
                   <textarea value={noteDraft} onChange={(event) => setNoteDraft(event.target.value)} placeholder="Document call details and actions…" autoFocus />
                   <div>
-                    <button type="button" className="cc-button cc-button--secondary" onClick={() => { setNoteOpen(false); setNoteDraft(''); }}>Cancel</button>
-                    <button type="button" className="cc-button cc-button--primary" disabled={!noteDraft.trim() || commandBusy === 'notes'} onClick={() => runCommand('notes', { note: noteDraft.trim() })}>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => { setNoteOpen(false); setNoteDraft(''); }}>Cancel</button>
+                    <button type="button" className="btn btn-primary btn-sm" disabled={!noteDraft.trim() || commandBusy === 'notes'} onClick={() => runCommand('notes', { note: noteDraft.trim() })}>
                       {commandBusy === 'notes' && <RefreshCw size={14} className="cc-spin" />} Save note
                     </button>
                   </div>
@@ -807,9 +749,9 @@ export default function CallCentrePage() {
           </section>
         </div>
 
-        {/* ---- Column 2: triage ------------------------------------------ */}
-        <div className="cc-col cc-col--triage">
-          <section className="cc-card cc-card--fill">
+        {/* Column 2 — triage */}
+        <div className="cc-col">
+          <section className="card cc-card">
             <div className="cc-steps">
               {steps.map((step, index) => (
                 <div className={`cc-step ${step.done ? 'is-complete' : ''} ${index === currentStep ? 'is-active' : ''}`} key={step.label}>
@@ -820,9 +762,9 @@ export default function CallCentrePage() {
             </div>
 
             <div className="cc-protocols">
-              <div className="cc-card__head cc-card__head--plain">
+              <div className="cc-subhead">
                 <h3>Select problem type</h3>
-                {isOtherProtocol && <span className="cc-card__meta">{protocol.name}</span>}
+                {isOtherProtocol && <span>{protocol.name}</span>}
               </div>
               <div className="cc-protocol-grid">
                 {problemTiles.map((tile) => {
@@ -863,7 +805,7 @@ export default function CallCentrePage() {
                 </div>
                 <div className="cc-question-bar__right">
                   <span className={`cc-recommend is-${recommendation.toLowerCase()}`}>Recommends {recommendation}</span>
-                  {answered > 0 && <button type="button" onClick={() => { setAnswers({}); setSelectedColour(undefined); }}>Clear</button>}
+                  {answered > 0 && <button className="cc-text-button" type="button" onClick={() => { setAnswers({}); setSelectedColour(undefined); }}>Clear</button>}
                 </div>
               </div>
               <div className="cc-progress" role="progressbar" aria-valuenow={answered} aria-valuemin={0} aria-valuemax={totalQuestions} aria-label="Triage questions answered">
@@ -908,16 +850,11 @@ export default function CallCentrePage() {
             </div>
 
             <div className="cc-triage-footer">
-              <button
-                className="cc-button cc-button--secondary"
-                type="button"
-                disabled={answered === 0}
-                onClick={() => { setAnswers({}); setSelectedColour(undefined); }}
-              >
+              <button className="btn btn-secondary" type="button" disabled={answered === 0} onClick={() => { setAnswers({}); setSelectedColour(undefined); }}>
                 <ChevronLeft size={16} /> Start over
               </button>
               <button
-                className={`cc-button cc-button--confirm is-${colour.toLowerCase()}`}
+                className={`cc-confirm is-${colour.toLowerCase()}`}
                 type="button"
                 disabled={!selectedCall}
                 onClick={() => { setSelectedColour(colour); setCriteriaOpen(true); }}
@@ -928,9 +865,9 @@ export default function CallCentrePage() {
           </section>
         </div>
 
-        {/* ---- Column 3: result, dispatch, context ----------------------- */}
-        <div className="cc-col cc-col--dispatch">
-          <section className="cc-card">
+        {/* Column 3 — result, dispatch, context */}
+        <div className="cc-col">
+          <section className="card cc-card">
             <div className="cc-card__head"><h2>Triage result</h2></div>
             <div className="cc-card__body">
               <div className={`cc-result is-${colour.toLowerCase()}`}>
@@ -972,10 +909,10 @@ export default function CallCentrePage() {
             </div>
           </section>
 
-          <section className="cc-card">
+          <section className="card cc-card">
             <div className="cc-card__head">
               <h2>Caller location</h2>
-              <strong className={`cc-badge ${coordinates ? 'is-ready' : 'is-warning'}`}>{coordinates ? 'GPS fix' : 'No GPS'}</strong>
+              <span className={`badge ${coordinates ? 'badge-success' : 'badge-warning'}`}>{coordinates ? 'GPS fix' : 'No GPS'}</span>
             </div>
             <div className="cc-card__body">
               <p className="cc-location-text">
@@ -996,16 +933,16 @@ export default function CallCentrePage() {
             </div>
           </section>
 
-          <section className="cc-card">
+          <section className="card cc-card">
             <div className="cc-card__head">
               <h2>Nearest ambulances</h2>
               <div className="cc-heading-actions">
                 {rankings.length > 3 && (
-                  <button type="button" onClick={() => setShowAllAmbulances((value) => !value)}>
+                  <button className="cc-text-button" type="button" onClick={() => setShowAllAmbulances((value) => !value)}>
                     {showAllAmbulances ? 'Top 3' : `All ${rankings.length}`}
                   </button>
                 )}
-                <button type="button" onClick={() => void rankingQuery.refetch()} disabled={!selectedCall || rankingQuery.isFetching} aria-label="Refresh ambulance ranking">
+                <button className="cc-text-button" type="button" onClick={() => void rankingQuery.refetch()} disabled={!selectedCall || rankingQuery.isFetching} aria-label="Refresh ambulance ranking">
                   <RefreshCw size={14} className={rankingQuery.isFetching ? 'cc-spin' : ''} />
                 </button>
               </div>
@@ -1042,11 +979,11 @@ export default function CallCentrePage() {
             </div>
           </section>
 
-          <section className="cc-card">
+          <section className="card cc-card">
             <div className="cc-card__head">
               <h2>Facilities</h2>
               {receivingFacility && (
-                <strong className={`cc-badge ${readiness ? 'is-ready' : 'is-muted'}`}>{readiness ? 'Readiness reported' : 'No report'}</strong>
+                <span className={`badge ${readiness ? 'badge-success' : 'badge-neutral'}`}>{readiness ? 'Readiness reported' : 'No report'}</span>
               )}
             </div>
             <div className="cc-card__body">
@@ -1076,12 +1013,12 @@ export default function CallCentrePage() {
               ) : <p className="cc-empty-copy">{readinessQuery.isLoading ? 'Checking facility readiness…' : 'No readiness report submitted by this facility.'}</p>)}
 
               {receivingFacility?.phone && (
-                <a className="cc-ghost-button" href={`tel:${receivingFacility.phone}`}><Phone size={15} /> Call receiving facility</a>
+                <a className="btn btn-secondary cc-full-button" href={`tel:${receivingFacility.phone}`}><Phone size={15} /> Call receiving facility</a>
               )}
             </div>
           </section>
 
-          <section className={`cc-card cc-card--dispatch ${canDispatch ? 'is-ready' : ''}`}>
+          <section className={`card cc-card cc-card--dispatch ${canDispatch ? 'is-ready' : ''}`}>
             <div className="cc-card__head">
               <h2>Dispatch</h2>
               <span className="cc-card__meta">{checklistDone} of {dispatchChecklist.length} ready</span>
@@ -1090,7 +1027,7 @@ export default function CallCentrePage() {
               {dispatched ? (
                 <div className="cc-dispatched" role="status">
                   <Check size={18} />
-                  <div><strong>Ambulance dispatched</strong><span>The mission is live — track it under Missions.</span></div>
+                  <div><strong>Ambulance dispatched</strong><span>The mission is live — track it under Ambulances.</span></div>
                 </div>
               ) : (
                 <ol className="cc-checklist">
@@ -1103,18 +1040,14 @@ export default function CallCentrePage() {
                 </ol>
               )}
 
-              <button
-                className={`cc-dispatch-button is-${colour.toLowerCase()}`}
-                disabled={!canDispatch || dispatched}
-                onClick={dispatch}
-              >
+              <button className={`cc-dispatch-button is-${colour.toLowerCase()}`} disabled={!canDispatch || dispatched} onClick={dispatch}>
                 {triageAndDispatch.isPending ? <RefreshCw size={17} className="cc-spin" /> : <Radio size={17} />}
                 {dispatched ? 'Already dispatched' : 'Dispatch ambulance'}
               </button>
             </div>
           </section>
 
-          <section className="cc-card">
+          <section className="card cc-card">
             <div className="cc-card__head"><h2>Patient summary</h2></div>
             <div className="cc-card__body">
               <dl className="cc-summary-list">
@@ -1150,7 +1083,7 @@ export default function CallCentrePage() {
             </div>
           </section>
 
-          <section className="cc-card">
+          <section className="card cc-card">
             <div className="cc-card__head"><h2>Call timeline</h2></div>
             <div className="cc-card__body">
               <div className="cc-timeline">
@@ -1174,19 +1107,7 @@ export default function CallCentrePage() {
             </div>
           </section>
         </div>
-      </main>
-
-      <footer className="cc-statusbar">
-        <div><PhoneCall size={19} /><span>Active calls<strong>{dashboard?.activeCalls ?? activeCalls.length}</strong></span></div>
-        <div><Users size={19} /><span>Calls in queue<strong>{queuedCalls.length}</strong></span></div>
-        <div><Ambulance size={19} /><span>Ambulances available<strong>{dashboard ? `${dashboard.ambulancesAvailable} / ${dashboard.ambulancesAvailable + dashboard.ambulancesOnMission}` : '—'}</strong></span></div>
-        <div className="cc-hide-md"><Clock3 size={19} /><span>Average response<strong>{dashboard?.todayStats?.averageResponseTime || '—'}</strong></span></div>
-        <div className="cc-hide-md"><FileText size={19} /><span>Today’s missions<strong>{dashboard?.todayStats?.completedMissions ?? 0}</strong></span></div>
-        <div><CircleDot size={19} /><span>System status<strong className={loadError ? 'is-warning' : ''}>{loadError ? 'Live data unavailable' : 'All systems operational'}</strong></span></div>
-        <button onClick={() => { void callsQuery.refetch(); void dashboardQuery.refetch(); }} disabled={callsQuery.isFetching} aria-label="Refresh console">
-          <RefreshCw size={17} className={callsQuery.isFetching ? 'cc-spin' : ''} />
-        </button>
-      </footer>
+      </div>
 
       <NewCallDialog open={newCallOpen} submitting={logCall.isPending} onClose={() => setNewCallOpen(false)} onSubmit={createCall} />
     </div>

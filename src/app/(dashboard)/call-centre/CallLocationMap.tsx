@@ -54,7 +54,8 @@ export default function CallLocationMap({
       attributionControl={false}
       style={{ height: '100%', width: '100%' }}
     >
-      <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
+      {/* Dark basemap to match the RMS dashboard chrome. */}
+      <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
       <Circle
         center={[latitude, longitude]}
         radius={accuracyMetres}
