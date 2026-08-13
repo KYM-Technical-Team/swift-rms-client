@@ -125,7 +125,7 @@ function facilityLabel(value?: Call['callerFacility']) {
 
 function facilityCode(value?: Call['callerFacility']) {
   if (!value || typeof value === 'string') return undefined;
-  return value.facilityCode;
+  return value.facilityCode || value.code;
 }
 
 /** A question with no colour mapping captures data rather than branching the protocol. */
@@ -367,7 +367,7 @@ export default function CallCentrePage() {
 
   const runCommand = (
     action: 'hold' | 'resume' | 'transfer' | 'conference' | 'notes' | 'complete',
-    payload: { reason?: string; participant?: string; note?: string; targetOperatorId?: string } = {},
+    payload: { reason?: string; participant?: string; note?: string; targetOperatorId?: string; members?: string[] } = {},
   ) => {
     if (!selectedCall) return;
     command.mutate(
@@ -422,7 +422,7 @@ export default function CallCentrePage() {
           colourCode: colour,
           triageResult,
           patientInfo,
-          notes: selectedCall.notes,
+          notes: selectedCall.notes?.slice(-2000),
         },
       },
       {
@@ -626,8 +626,8 @@ export default function CallCentrePage() {
 
               {conferenceOpen && (
                 <div className="cc-inline-action">
-                  <input value={conferenceMember} onChange={(event) => setConferenceMember(event.target.value)} placeholder="Clinician or facility" aria-label="Conference participant" />
-                  <button className="btn btn-secondary btn-sm" disabled={!conferenceMember.trim() || commandBusy === 'conference'} onClick={() => runCommand('conference', { participant: conferenceMember.trim() })}>
+                  <input maxLength={120} disabled={conferenceMembers.length >= 10} value={conferenceMember} onChange={(event) => setConferenceMember(event.target.value)} placeholder={conferenceMembers.length >= 10 ? 'Participant limit reached' : 'Clinician or facility'} aria-label="Conference participant" />
+                  <button className="btn btn-secondary btn-sm" disabled={!conferenceMember.trim() || conferenceMembers.length >= 10 || commandBusy === 'conference'} onClick={() => runCommand('conference', { members: [...new Set([...conferenceMembers, conferenceMember.trim()])].slice(0, 10) })}>
                     {commandBusy === 'conference' ? <RefreshCw size={13} className="cc-spin" /> : 'Add'}
                   </button>
                 </div>
@@ -741,7 +741,7 @@ export default function CallCentrePage() {
             <div className="cc-card__body">
               {noteOpen && (
                 <div className="cc-note-compose">
-                  <textarea value={noteDraft} onChange={(event) => setNoteDraft(event.target.value)} placeholder="Document call details and actions…" autoFocus />
+                  <textarea maxLength={2000} value={noteDraft} onChange={(event) => setNoteDraft(event.target.value)} placeholder="Document call details and actions…" autoFocus />
                   <div>
                     <button type="button" className="btn btn-secondary btn-sm" onClick={() => { setNoteOpen(false); setNoteDraft(''); }}>Cancel</button>
                     <button type="button" className="btn btn-primary btn-sm" disabled={!noteDraft.trim() || commandBusy === 'notes'} onClick={() => runCommand('notes', { note: noteDraft.trim() })}>
@@ -1069,7 +1069,7 @@ export default function CallCentrePage() {
                 <div><dt>Name</dt><dd>{patientInfo.name || 'Not recorded'}</dd></div>
                 <div><dt>Age / gender</dt><dd>{patientInfo.age ? `${patientInfo.age} years` : '—'} / {patientInfo.gender || '—'}</dd></div>
                 <div><dt>Status</dt><dd className={`cc-text-${colour.toLowerCase()}`}>● {colourPriority(colour) === 'CRITICAL' ? 'Critical' : colourPriority(colour) === 'HIGH' ? 'Urgent' : 'Stable'}</dd></div>
-                <div><dt>Symptoms</dt><dd className="cc-wrap">{selectedCall?.emergencyNature || patientInfo.symptoms || 'Not recorded'}</dd></div>
+                <div><dt>Symptoms</dt><dd className="cc-wrap">{patientInfo.symptoms || selectedCall?.emergencyNature || 'Not recorded'}</dd></div>
               </dl>
 
               <span className="cc-eyebrow cc-eyebrow--spaced">Vitals (reported)</span>

@@ -18,6 +18,7 @@ import {
   LogVitalsRequest,
   ApiResponse,
   PaginationMeta,
+  User,
 } from '@/types';
 
 export const nemsService = {
@@ -77,6 +78,11 @@ export const nemsService = {
 };
 
 export const callCentreService = {
+  listOperators: async (): Promise<User[]> => {
+    const response = await apiClient.get<ApiResponse<User[]>>('/call-centre/operators');
+    return response.data.data || [];
+  },
+
   listCalls: async (query?: CallListQuery): Promise<{ data: Call[]; meta?: PaginationMeta }> => {
     const response = await apiClient.get<ApiResponse<Call[]>>('/call-centre/calls', { params: query });
     return { data: response.data.data || [], meta: response.data.meta };

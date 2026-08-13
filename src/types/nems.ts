@@ -90,7 +90,7 @@ export interface Call {
   id: string;
   callerPhone: string;
   callerName?: string;
-  callerFacility?: { id?: string; name?: string; facilityCode?: string } | string;
+  callerFacility?: { id?: string; name?: string; facilityCode?: string; code?: string } | string;
   operator?: { id: string; firstName: string; lastName: string };
   callType: CallType;
   emergencyNature?: EmergencyNature;

@@ -5,7 +5,6 @@ import {
   callCentreService,
   facilityService,
   readinessService,
-  userService,
 } from '@/lib/api';
 import type {
   Call,
@@ -92,10 +91,10 @@ export function useFacilityReadiness(facilityId?: string) {
 /** Only fetched when the operator opens the transfer control. */
 export function useNemsOperators(enabled: boolean, excludeId?: string) {
   return useQuery({
-    queryKey: ['users', 'nems-operators'],
+    queryKey: [...callKeys.root, 'operators', excludeId ?? 'none'],
     queryFn: async () => {
-      const result = await userService.list({ userType: 'NEMS', limit: 50 });
-      return result.data.filter((item) => item.id !== excludeId);
+      const operators = await callCentreService.listOperators();
+      return operators.filter((item) => item.id !== excludeId);
     },
     enabled,
     staleTime: 5 * 60 * 1000,
