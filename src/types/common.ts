@@ -84,11 +84,15 @@ export type ReadinessLevel = 'CRITICAL' | 'LOW' | 'ADEQUATE';
 export type NEMSRequestStatus =
   | 'REQUESTED'
   | 'DISPATCHED'
+  | 'DEPARTED_STANDBY'
   | 'EN_ROUTE_PICKUP'
   | 'AT_PICKUP'
-  | 'EN_ROUTE_DROP'
-  | 'AT_DROP'
+  | 'PATIENT_LOADED'
+  | 'EN_ROUTE_DROPOFF'
+  | 'AT_DROPOFF'
+  | 'HANDED_OVER'
   | 'COMPLETED'
-  | 'CANCELLED';
+  | 'CANCELLED'
+  | 'RETURNED_STANDBY';
 
 export type AmbulanceStatus = 'AVAILABLE' | 'EN_ROUTE' | 'ON_MISSION' | 'OFFLINE' | 'MAINTENANCE';

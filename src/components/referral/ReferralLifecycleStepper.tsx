@@ -40,67 +40,145 @@ export function ReferralLifecycleStepper({
     return new Date(dateStr).toLocaleDateString([], { day: '2-digit', month: 'short', year: 'numeric' });
   };
 
-  // Define clinical steps for vertical stepper matching screenshot journey
+  const formatStepDateTime = (dateStr?: string) => {
+    if (!dateStr) return '';
+    return `${formatDate(dateStr)}, ${formatTime(dateStr)}`;
+  };
+
+  const missionStatusOrder = [
+    'REQUESTED',
+    'DISPATCHED',
+    'EN_ROUTE_PICKUP',
+    'AT_PICKUP',
+    'PATIENT_LOADED',
+    'EN_ROUTE_DROPOFF',
+    'AT_DROPOFF',
+    'HANDED_OVER',
+    'COMPLETED',
+    'RETURNED_STANDBY',
+  ];
+
+  const missionHasReached = (missionStatus: string | undefined, target: string) => {
+    if (!missionStatus) return false;
+    return missionStatusOrder.indexOf(missionStatus) >= missionStatusOrder.indexOf(target);
+  };
+
+  const referralHasReached = (target: ReferralStatus | string) => {
+    const order = ['PENDING', 'ACCEPTED', 'IN_TRANSIT', 'ARRIVED', 'CLINICIAN_REVIEWED', 'COMPLETED'];
+    return order.indexOf(status) >= order.indexOf(target);
+  };
+
   const getVerticalSteps = () => {
     const isPending = status === 'PENDING';
-    const isAccepted = status === 'ACCEPTED' || status === 'DISPATCHED' || status === 'IN_TRANSIT' || status === 'ARRIVED' || status === 'COMPLETED';
-    const isDispatched = status === 'DISPATCHED' || status === 'IN_TRANSIT' || status === 'ARRIVED' || status === 'COMPLETED';
-    const isPickedUp = status === 'IN_TRANSIT' || status === 'ARRIVED' || status === 'COMPLETED';
-    const isArrived = status === 'ARRIVED' || status === 'COMPLETED';
-    const isCompleted = status === 'COMPLETED';
+    const missionStatus = nemsRequest?.status;
+    const hasMission = !!nemsRequest;
+    const isAccepted = !!acceptedAt || referralHasReached('ACCEPTED');
+    const isArrived = !!arrivedAt || referralHasReached('ARRIVED');
+    const isClinicianReviewed = !!seenByClinicianAt || referralHasReached('CLINICIAN_REVIEWED');
+    const isCompleted = !!completedAt || referralHasReached('COMPLETED');
 
     const triageLabel = priority 
-      ? (priority === 'CRITICAL' ? '🔴 RED - Critical' : priority === 'HIGH' ? '🟠 ORANGE - High' : priority === 'MEDIUM' ? '🟡 YELLOW - Medium' : '🟢 GREEN - Low')
+      ? (priority === 'CRITICAL' ? 'RED - Critical' : priority === 'HIGH' ? 'YELLOW - Urgent' : priority === 'MEDIUM' ? 'YELLOW - Medium' : 'GREEN - Low')
       : 'Initiated';
 
-    return [
+    const baseSteps = [
       {
         label: 'Referral Initiated',
         status: 'completed',
-        time: `${formatDate(createdAt)}, ${formatTime(createdAt)}`,
+        time: formatStepDateTime(createdAt),
         note: sendingFacilityName || 'Origin Facility'
       },
       {
         label: 'NEMS Triage',
         status: 'completed',
-        time: `${formatDate(createdAt)}, ${formatTime(createdAt)}`,
+        time: formatStepDateTime(createdAt),
         note: triageLabel
       },
       {
         label: 'Facility Review',
         status: isPending ? 'current' : 'completed',
-        time: isPending ? 'In progress' : acceptedAt ? `${formatDate(acceptedAt)}, ${formatTime(acceptedAt)}` : '',
+        time: isPending ? 'In progress' : formatStepDateTime(acceptedAt),
         note: isPending ? 'Action required' : ''
       },
       {
         label: 'Accepted',
         status: isAccepted ? 'completed' : 'pending',
-        time: isAccepted && acceptedAt ? `${formatDate(acceptedAt)}, ${formatTime(acceptedAt)}` : '',
+        time: isAccepted ? formatStepDateTime(acceptedAt) : '',
         note: isAccepted ? '' : 'Pending'
       },
+    ];
+
+    if (!hasMission) {
+      return [
+        ...baseSteps,
+        {
+          label: 'Arrived at Facility',
+          status: isArrived ? 'completed' : isAccepted ? 'current' : 'pending',
+          time: isArrived ? formatStepDateTime(arrivedAt) : '',
+          note: isArrived ? '' : 'Pending'
+        },
+        {
+          label: 'Seen by Clinician',
+          status: isClinicianReviewed ? 'completed' : isArrived ? 'current' : 'pending',
+          time: isClinicianReviewed ? formatStepDateTime(seenByClinicianAt) : '',
+          note: isClinicianReviewed ? '' : 'Pending'
+        },
+        {
+          label: 'Referral Complete',
+          status: isCompleted ? 'completed' : isClinicianReviewed ? 'current' : 'pending',
+          time: isCompleted ? formatStepDateTime(completedAt) : '',
+          note: isCompleted ? '' : 'Pending'
+        },
+      ];
+    }
+
+    const missionStep = (label: string, reachedStatus: string, timestamp?: string, note?: string) => {
+      const completed = !!timestamp || missionHasReached(missionStatus, reachedStatus);
+      const current = missionStatus === reachedStatus && !timestamp;
+      return {
+        label,
+        status: completed ? 'completed' : current ? 'current' : 'pending',
+        time: timestamp ? formatStepDateTime(timestamp) : '',
+        note: completed ? note || '' : current ? 'In progress' : 'Pending',
+      };
+    };
+
+    return [
+      ...baseSteps,
       {
         label: 'Ambulance Assigned',
-        status: isDispatched ? 'completed' : 'pending',
-        time: isDispatched && nemsRequest?.dispatchedAt ? `${formatDate(nemsRequest.dispatchedAt)}, ${formatTime(nemsRequest.dispatchedAt)}` : '',
-        note: isDispatched ? (nemsRequest?.ambulanceId ? `Ambulance: ${nemsRequest.ambulanceId}` : 'Ambulance assigned') : 'Pending'
+        status: nemsRequest?.dispatchedAt || missionHasReached(missionStatus, 'DISPATCHED') ? 'completed' : 'pending',
+        time: formatStepDateTime(nemsRequest?.dispatchedAt),
+        note: nemsRequest?.ambulanceId ? `Ambulance: ${nemsRequest.ambulanceId}` : 'Pending'
       },
       {
-        label: 'Patient Picked Up',
-        status: isPickedUp ? 'completed' : 'pending',
-        time: '',
-        note: isPickedUp ? 'Picked up' : 'Pending'
+        label: 'Crew Accepted Mission',
+        status: nemsRequest?.acknowledgedAt ? 'completed' : missionStatus === 'DISPATCHED' ? 'current' : 'pending',
+        time: formatStepDateTime(nemsRequest?.acknowledgedAt),
+        note: nemsRequest?.currentOwnerName || (nemsRequest?.acknowledgedAt ? 'Crew acknowledged' : 'Pending')
       },
-      {
-        label: 'Arrived at Facility',
-        status: isArrived ? 'completed' : 'pending',
-        time: isArrived && arrivedAt ? `${formatDate(arrivedAt)}, ${formatTime(arrivedAt)}` : '',
-        note: isArrived ? '' : 'Pending'
-      },
+      missionStep('Departed Standby', 'EN_ROUTE_PICKUP', nemsRequest?.departedStandbyAt || nemsRequest?.enrouteToPickupAt),
+      missionStep('Arrived at Pickup', 'AT_PICKUP', nemsRequest?.arrivedAtPickupAt),
+      missionStep('Patient Loaded', 'PATIENT_LOADED', nemsRequest?.patientLoadedAt),
+      missionStep('Departed Pickup', 'EN_ROUTE_DROPOFF', nemsRequest?.departedPickupAt || nemsRequest?.enrouteToDropoffAt),
+      missionStep('Arrived at Facility', 'AT_DROPOFF', nemsRequest?.arrivedAtDropoffAt),
       {
         label: 'Handover Complete',
-        status: isCompleted ? 'completed' : 'pending',
-        time: isCompleted && completedAt ? `${formatDate(completedAt)}, ${formatTime(completedAt)}` : '',
-        note: isCompleted ? '' : 'Pending'
+        status: nemsRequest?.patientHandedOverAt || missionHasReached(missionStatus, 'HANDED_OVER') ? 'completed' : missionStatus === 'AT_DROPOFF' ? 'current' : 'pending',
+        time: formatStepDateTime(nemsRequest?.patientHandedOverAt),
+        note: nemsRequest?.patientReportId ? 'Patient report submitted' : nemsRequest?.patientHandedOverAt ? 'Receiving team handover' : 'Pending'
+      },
+      {
+        label: 'Mission Completed',
+        status: nemsRequest?.completedAt || missionHasReached(missionStatus, 'COMPLETED') ? 'completed' : missionStatus === 'HANDED_OVER' ? 'current' : 'pending',
+        time: formatStepDateTime(nemsRequest?.completedAt),
+        note: nemsRequest?.completedAt ? '' : 'Pending'
+      },
+      {
+        label: 'Returned to Standby',
+        status: nemsRequest?.returnedToStandbyAt || missionHasReached(missionStatus, 'RETURNED_STANDBY') ? 'completed' : missionStatus === 'COMPLETED' ? 'current' : 'pending',
+        time: formatStepDateTime(nemsRequest?.returnedToStandbyAt),
+        note: nemsRequest?.returnedToStandbyAt ? '' : 'Pending'
       }
     ];
   };

@@ -30,11 +30,19 @@ export interface Referral {
   nemsRequest?: NEMSRequestSummary;
   rejectionReason?: string;
   redirectReason?: string;
-  createdBy: UserSummary;
+  createdBy?: UserSummary;
+  referringUser?: UserSummary;
+  receivingUser?: UserSummary;
   acceptedBy?: UserSummary;
   acceptedAt?: string;
   arrivedAt?: string;
   completedAt?: string;
+  responseDeadline?: string;
+  currentOwner?: string;
+  nemsRequired?: boolean;
+  timeline?: TimelineEntry[];
+  patientReports?: PatientReportSummary[];
+  rcTracker?: RCTrackerSummary;
   // ETA and timing fields
   expectedArrival?: string;
   actualArrival?: string;
@@ -87,10 +95,48 @@ export interface UserSummary {
 
 export interface NEMSRequestSummary {
   id: string;
+  missionId?: string;
   status: string;
+  version?: number;
+  currentOwnerId?: string;
+  currentOwnerName?: string;
+  acknowledgedAt?: string;
   ambulanceId?: string;
+  callReceivedAt?: string;
   dispatchedAt?: string;
+  departedStandbyAt?: string;
+  enrouteToPickupAt?: string;
+  arrivedAtPickupAt?: string;
+  patientLoadedAt?: string;
+  departedPickupAt?: string;
+  enrouteToDropoffAt?: string;
+  arrivedAtDropoffAt?: string;
+  patientHandedOverAt?: string;
+  completedAt?: string;
+  returnedToStandbyAt?: string;
   estimatedArrival?: string;
+  estimatedArrivalAtPickup?: string;
+  estimatedArrivalAtDropoff?: string;
+  patientReportId?: string;
+  crewLeadName?: string;
+  crewLeadPhone?: string;
+  crewMembers?: string[];
+  crewNotes?: string;
+}
+
+export interface PatientReportSummary {
+  id: string;
+  missionDate?: string;
+  patientCondition?: string;
+  patientOutcome?: string;
+  createdAt?: string;
+}
+
+export interface RCTrackerSummary {
+  id: string;
+  referralResponse?: string;
+  patientOutcome?: string;
+  createdAt?: string;
 }
 
 export interface CreateReferralRequest {
@@ -121,9 +167,11 @@ export interface CreateReferralRequest {
 }
 
 export interface UpdateReferralRequest {
+  action?: 'ACCEPT' | 'REJECT' | 'REDIRECT' | 'CANCEL' | 'CONFIRM_ARRIVAL' | 'RECORD_OUTCOME' | 'UPDATE_STATUS';
   status?: ReferralStatus;
   priority?: Priority;
   receivingFacilityId?: string;
+  newReceivingFacilityId?: string;
   rejectionReason?: string;
   redirectReason?: string;
   outcome?: Outcome;

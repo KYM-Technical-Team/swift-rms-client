@@ -1379,6 +1379,64 @@ a:hover {
   background: var(--border-default);
 }
 
+/* Referral Detail */
+.referral-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 330px);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.referral-action-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) repeat(3, minmax(150px, 170px));
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.referral-primary-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.82fr);
+  gap: var(--space-4);
+}
+
+.referral-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+@media (max-width: 1200px) {
+  .referral-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .referral-detail-layout > aside {
+    position: static !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .referral-detail-layout > aside > :first-child {
+    grid-row: span 2;
+  }
+}
+
+@media (max-width: 980px) {
+  .referral-action-grid,
+  .referral-primary-grid,
+  .referral-metrics-grid,
+  .referral-detail-layout > aside {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .referral-action-grid .btn {
+    width: 100%;
+  }
+}
+
 /* ============================================
    ACCESSIBILITY - REDUCED MOTION
    ============================================ */

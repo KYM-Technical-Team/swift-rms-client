@@ -75,7 +75,8 @@ export const referralService = {
 
   redirect: async (id: string, newFacilityId: string, reason: string): Promise<Referral> => {
     return referralService.update(id, { 
-      receivingFacilityId: newFacilityId, 
+      action: 'REDIRECT',
+      newReceivingFacilityId: newFacilityId,
       redirectReason: reason 
     });
   },
