@@ -8,41 +8,47 @@ import {
   Activity,
   AlertTriangle,
   Ambulance,
+  ArrowRight,
   Baby,
   BarChart3,
+  Bell,
   Building2,
+  Car,
   Check,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   CircleDot,
   Clock3,
+  Droplet,
   FileText,
   Flame,
+  Headphones,
   HeartPulse,
   History,
-  Inbox,
   LayoutDashboard,
   MapPin,
   MapPinOff,
   Mic,
   MicOff,
+  MoreHorizontal,
   Pause,
   Phone,
   PhoneCall,
+  PhoneForwarded,
   PhoneOff,
   Plus,
   Radio,
   RefreshCw,
-  Search,
   Settings,
   ShieldAlert,
+  ShieldCheck,
   Stethoscope,
   User,
   Users,
+  Wind,
   X,
+  Zap,
 } from 'lucide-react';
-import { callCentreService, facilityService } from '@/lib/api';
+import { callCentreService, facilityService, readinessService, userService } from '@/lib/api';
 import { useToast, useUser } from '@/store';
 import {
   protocolById,
@@ -61,6 +67,8 @@ import type {
   TriageResult,
 } from '@/types';
 import type { Facility } from '@/types/facility';
+import type { FacilityReadiness } from '@/types/readiness';
+import type { User as SystemUser } from '@/types/user';
 import { CallNotifications } from './CallNotifications';
 import './call-centre.css';
 
@@ -69,35 +77,37 @@ const CallLocationMap = dynamic(() => import('./CallLocationMap'), {
   loading: () => <div className="cc-skeleton cc-skeleton--map" />,
 });
 
-const iconByProtocol = {
-  obstetric: Baby,
-  paediatric: Users,
-  breathing: Activity,
-  chest: HeartPulse,
-  consciousness: CircleDot,
-  trauma: ShieldAlert,
-  burns: Flame,
-  other: Stethoscope,
-};
-
-type QueueFilterId = 'all' | 'active' | 'held' | 'dispatched' | 'closed';
-
-const queueFilters: { id: QueueFilterId; label: string; short: string; icon: typeof Inbox; match: (call: Call) => boolean }[] = [
-  { id: 'all', label: 'All calls', short: 'All', icon: Inbox, match: () => true },
-  { id: 'active', label: 'Active calls', short: 'Active', icon: PhoneCall, match: (call) => call.callStatus === 'ACTIVE' },
-  { id: 'held', label: 'On hold', short: 'Hold', icon: Pause, match: (call) => call.callStatus === 'HELD' },
-  { id: 'dispatched', label: 'Dispatched', short: 'Sent', icon: Radio, match: (call) => call.callStatus === 'DISPATCHED' },
-  { id: 'closed', label: 'Closed', short: 'Closed', icon: History, match: (call) => call.callStatus === 'COMPLETED' || call.callStatus === 'TRANSFERRED' },
+/** Problem tiles, in the order shown on the console. */
+const problemTiles: { id: string; icon: typeof Baby }[] = [
+  { id: 'obstetric', icon: Baby },
+  { id: 'paediatric', icon: Users },
+  { id: 'breathing', icon: Wind },
+  { id: 'chest-pain', icon: HeartPulse },
+  { id: 'consciousness', icon: CircleDot },
+  { id: 'road-accident', icon: Car },
+  { id: 'bleeding', icon: Droplet },
+  { id: 'burns', icon: Flame },
+  { id: 'seizures', icon: Zap },
 ];
 
 const navGroups = [
   {
-    label: 'Operations',
+    label: 'Main',
     links: [
       { label: 'Dashboard', href: '/', icon: LayoutDashboard },
+      { label: 'Active Calls', href: '/call-centre', icon: PhoneCall, badge: 'active' as const },
+      { label: 'Call Queue', href: '/call-centre?view=queue', icon: Users, badge: 'queue' as const },
+      { label: 'Recent Calls', href: '/call-centre?view=recent', icon: History },
+      { label: 'Call History', href: '/call-centre?view=history', icon: Clock3 },
+    ],
+  },
+  {
+    label: 'Operations',
+    links: [
       { label: 'Triage', href: '/triage', icon: Stethoscope },
       { label: 'Ambulances', href: '/ambulances', icon: Ambulance },
       { label: 'Facilities', href: '/facilities', icon: Building2 },
+      { label: 'Missions', href: '/ambulances', icon: Radio },
       { label: 'Drivers & Paramedics', href: '/admin/users', icon: Users },
     ],
   },
@@ -118,8 +128,6 @@ const navGroups = [
   },
 ];
 
-const QUEUE_STORAGE_KEY = 'cc:queue-collapsed';
-
 function errorMessage(error: unknown) {
   if (error && typeof error === 'object' && 'message' in error) return String(error.message);
   return 'The operation could not be completed.';
@@ -139,37 +147,89 @@ function formatDuration(seconds: number) {
     : `${minutes.toString().padStart(2, '0')}:${remaining.toString().padStart(2, '0')}`;
 }
 
+function formatClock(value?: string) {
+  if (!value) return '--:--';
+  return new Date(value).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+}
+
 function colourPriority(colour: TriageColour) {
   if (colour === 'RED') return 'CRITICAL' as const;
   if (colour === 'YELLOW') return 'HIGH' as const;
   return 'LOW' as const;
 }
 
-function facilityName(value?: Call['callerFacility']) {
-  if (!value) return 'Location not linked';
+function colourHeadline(colour: TriageColour) {
+  if (colour === 'RED') return { title: 'LIFE-THREATENING', copy: 'Immediate ambulance dispatch required' };
+  if (colour === 'YELLOW') return { title: 'URGENT', copy: 'Prompt clinical response required' };
+  return { title: 'NON-CRITICAL', copy: 'Assess transport need and provide advice' };
+}
+
+function facilityLabel(value?: Call['callerFacility']) {
+  if (!value) return undefined;
   if (typeof value === 'string') return value;
-  return value.name || 'Facility linked';
+  return value.name;
 }
 
-function callLabel(call: Call) {
-  return call.callerName?.trim() || call.callerPhone || 'Unknown caller';
+function facilityCode(value?: Call['callerFacility']) {
+  if (!value || typeof value === 'string') return undefined;
+  return value.facilityCode;
 }
 
-function callSubtitle(call: Call) {
+/** A question with no colour mapping is a data-capture question, not a yes/no branch. */
+function isFreeText(question: { yesColour?: TriageColour; noColour?: TriageColour }) {
+  return !question.yesColour && !question.noColour;
+}
+
+interface ParsedNote {
+  time?: string;
+  text: string;
+}
+
+function parseNotes(notes?: string): ParsedNote[] {
+  if (!notes?.trim()) return [];
+  return notes
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const match = line.match(/^\[?(\d{1,2}:\d{2})\]?\s*[-–—]?\s*(.*)$/);
+      return match ? { time: match[1], text: match[2] } : { text: line };
+    });
+}
+
+const vitalFields: { keys: string[]; label: string; unit: string; abnormal?: (value: number) => boolean }[] = [
+  { keys: ['pulse', 'heartRate'], label: 'Pulse', unit: 'bpm', abnormal: (value) => value < 50 || value > 110 },
+  { keys: ['respiratoryRate', 'respRate'], label: 'Resp. Rate', unit: '/min', abnormal: (value) => value < 10 || value > 24 },
+  { keys: ['oxygenSaturation', 'spo2', 'SpO2'], label: 'SpO₂', unit: '%', abnormal: (value) => value < 94 },
+  { keys: ['temperature', 'temp'], label: 'Temp.', unit: '°C', abnormal: (value) => value < 35.5 || value > 37.8 },
+];
+
+function readVital(vitals: Record<string, unknown> | undefined, keys: string[]) {
+  if (!vitals) return undefined;
+  for (const key of keys) {
+    const value = vitals[key];
+    if (value !== undefined && value !== null && value !== '') return value;
+  }
+  return undefined;
+}
+
+function bloodPressure(vitals?: Record<string, unknown>) {
+  const direct = readVital(vitals, ['bloodPressure', 'bp']);
+  if (typeof direct === 'string' && direct.trim()) return direct;
+  const systolic = readVital(vitals, ['bloodPressureSystolic', 'systolic']);
+  const diastolic = readVital(vitals, ['bloodPressureDiastolic', 'diastolic']);
+  if (systolic && diastolic) return `${systolic}/${diastolic}`;
+  return undefined;
+}
+
+function bpAbnormal(value: string) {
+  const systolic = Number(value.split('/')[0]);
+  return Number.isFinite(systolic) && (systolic < 90 || systolic > 160);
+}
+
+function Skeleton({ rows = 3 }: { rows?: number }) {
   return (
-    call.emergencyNature?.trim()
-    || call.emergencyLocation?.address?.trim()
-    || call.callType.replace(/_/g, ' ').toLowerCase()
-  );
-}
-
-function scrollToId(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-function Skeleton({ rows = 3, className = '' }: { rows?: number; className?: string }) {
-  return (
-    <div className={`cc-skeleton-stack ${className}`} aria-hidden="true">
+    <div className="cc-skeleton-stack" aria-hidden="true">
       {Array.from({ length: rows }, (_, index) => <div className="cc-skeleton cc-skeleton--row" key={index} />)}
     </div>
   );
@@ -266,6 +326,8 @@ export default function CallCentrePage() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [events, setEvents] = useState<CallEvent[]>([]);
   const [rankings, setRankings] = useState<AmbulanceRank[]>([]);
+  const [readiness, setReadiness] = useState<FacilityReadiness>();
+  const [operators, setOperators] = useState<SystemUser[]>([]);
   const [callDetailLoading, setCallDetailLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -279,17 +341,20 @@ export default function CallCentrePage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [selectedColour, setSelectedColour] = useState<TriageColour>();
   const [patientInfo, setPatientInfo] = useState<PatientInfo>({});
-  const [notes, setNotes] = useState('');
   const [pickupFacilityId, setPickupFacilityId] = useState('');
   const [dropoffFacilityId, setDropoffFacilityId] = useState('');
   const [selectedAmbulanceId, setSelectedAmbulanceId] = useState('');
   const [conferenceOpen, setConferenceOpen] = useState(false);
   const [conferenceMember, setConferenceMember] = useState('');
+  const [transferOpen, setTransferOpen] = useState(false);
+  const [transferTarget, setTransferTarget] = useState('');
   const [muted, setMuted] = useState(false);
-  const [queueFilter, setQueueFilter] = useState<QueueFilterId>('active');
-  const [queueSearch, setQueueSearch] = useState('');
-  const [queueCollapsed, setQueueCollapsed] = useState(false);
+  const [noteDraft, setNoteDraft] = useState('');
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [criteriaOpen, setCriteriaOpen] = useState(false);
   const [showAllAmbulances, setShowAllAmbulances] = useState(false);
+  const [showAllProtocols, setShowAllProtocols] = useState(false);
+  const [patientDetailsOpen, setPatientDetailsOpen] = useState(false);
 
   const selectedCall = calls.find((call) => call.id === selectedCallId) || calls[0];
   const activeCallId = selectedCall?.id;
@@ -299,22 +364,8 @@ export default function CallCentrePage() {
   const protocol = protocolById[protocolId] || triageProtocols[0];
   const recommendation = useMemo(() => recommendColour(protocol, answers), [protocol, answers]);
   const colour = selectedColour || recommendation;
-  const activeCalls = calls.filter((call) => call.callStatus === 'ACTIVE' || call.callStatus === 'HELD');
-
-  const filterCounts = useMemo(
-    () => Object.fromEntries(queueFilters.map((filter) => [filter.id, calls.filter(filter.match).length])) as Record<QueueFilterId, number>,
-    [calls],
-  );
-
-  const queueCalls = useMemo(() => {
-    const matcher = queueFilters.find((filter) => filter.id === queueFilter) || queueFilters[0];
-    const term = queueSearch.trim().toLowerCase();
-    return calls
-      .filter(matcher.match)
-      .filter((call) => !term || [call.callerName, call.callerPhone, call.emergencyNature, call.emergencyLocation?.address]
-        .some((value) => value?.toLowerCase().includes(term)))
-      .sort((a, b) => new Date(b.callStartedAt).getTime() - new Date(a.callStartedAt).getTime());
-  }, [calls, queueFilter, queueSearch]);
+  const activeCalls = calls.filter((call) => call.callStatus === 'ACTIVE');
+  const queuedCalls = calls.filter((call) => call.callStatus === 'HELD');
 
   const loadConsole = useCallback(async (quiet = false) => {
     if (quiet) setRefreshing(true);
@@ -346,36 +397,30 @@ export default function CallCentrePage() {
     return () => window.clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    const stored = window.localStorage.getItem(QUEUE_STORAGE_KEY);
-    if (stored) setQueueCollapsed(stored === '1');
-  }, []);
-
-  const toggleQueue = () => setQueueCollapsed((value) => {
-    window.localStorage.setItem(QUEUE_STORAGE_KEY, value ? '0' : '1');
-    return !value;
-  });
-
   // Keyed on the call id only: a background refresh replaces every call object, and
-  // re-running this on identity change would discard notes the operator is typing.
+  // re-running this on identity change would discard edits the operator is making.
   useEffect(() => {
     const call = selectedCallRef.current;
+    setNoteDraft('');
+    setNoteOpen(false);
+    setCriteriaOpen(false);
+    setPatientDetailsOpen(false);
+    setShowAllAmbulances(false);
+    setConferenceOpen(false);
+    setTransferOpen(false);
+    setMuted(false);
+
     if (!call) {
       setEvents([]);
       setRankings([]);
-      setNotes('');
       setPatientInfo({});
       setSelectedColour(undefined);
       setAnswers({});
       return;
     }
 
-    setNotes(call.notes || '');
     setPatientInfo(call.patientInfo || {});
     setSelectedColour(call.triageResult?.colourCode);
-    setShowAllAmbulances(false);
-    setConferenceOpen(false);
-    setMuted(false);
     if (call.triageResult?.protocolId) setProtocolId(call.triageResult.protocolId);
     if (call.triageResult?.answers) {
       setAnswers(Object.fromEntries(call.triageResult.answers.map((answer) => [answer.questionId, answer.answer])));
@@ -400,6 +445,30 @@ export default function CallCentrePage() {
     return () => { cancelled = true; };
   }, [activeCallId]);
 
+  // Readiness for the proposed receiving facility drives the capability tiles.
+  useEffect(() => {
+    if (!dropoffFacilityId) {
+      setReadiness(undefined);
+      return;
+    }
+    let cancelled = false;
+    readinessService.getLatest(dropoffFacilityId)
+      .then((result) => { if (!cancelled) setReadiness(result); })
+      .catch(() => { if (!cancelled) setReadiness(undefined); });
+    return () => { cancelled = true; };
+  }, [dropoffFacilityId]);
+
+  const openTransfer = async () => {
+    setTransferOpen((value) => !value);
+    if (operators.length) return;
+    try {
+      const result = await userService.list({ userType: 'NEMS', limit: 50 });
+      setOperators(result.data.filter((item) => item.id !== operator?.id));
+    } catch {
+      setOperators([]);
+    }
+  };
+
   const updateSelectedCall = (updated: Call) => {
     setCalls((current) => current.map((call) => call.id === updated.id ? updated : call));
     setSelectedCallId(updated.id);
@@ -422,8 +491,8 @@ export default function CallCentrePage() {
   };
 
   const runCommand = async (
-    command: 'hold' | 'resume' | 'conference' | 'notes' | 'complete',
-    payload: { reason?: string; participant?: string; note?: string } = {},
+    command: 'hold' | 'resume' | 'transfer' | 'conference' | 'notes' | 'complete',
+    payload: { reason?: string; participant?: string; note?: string; targetOperatorId?: string } = {},
   ) => {
     if (!selectedCall) return;
     setBusyAction(command);
@@ -436,6 +505,15 @@ export default function CallCentrePage() {
       if (command === 'conference') {
         setConferenceMember('');
         setConferenceOpen(false);
+      }
+      if (command === 'transfer') {
+        setTransferTarget('');
+        setTransferOpen(false);
+      }
+      if (command === 'notes') {
+        setNoteDraft('');
+        setNoteOpen(false);
+        callCentreService.listEvents(selectedCall.id).then(setEvents).catch(() => undefined);
       }
       toast.success('Call updated', `${command.charAt(0).toUpperCase()}${command.slice(1)} completed.`);
       void loadConsole(true);
@@ -485,7 +563,7 @@ export default function CallCentrePage() {
         colourCode: colour,
         triageResult,
         patientInfo,
-        notes,
+        notes: selectedCall.notes,
       });
       toast.success('Ambulance dispatched', 'The mission was created and the selected ambulance was reserved.');
       await loadConsole(true);
@@ -498,25 +576,51 @@ export default function CallCentrePage() {
   };
 
   const operatorName = operator ? `${operator.firstName} ${operator.lastName}` : 'Call operator';
-  const callerLocation = selectedCall?.emergencyLocation?.address || facilityName(selectedCall?.callerFacility);
+  const callerFacilityName = facilityLabel(selectedCall?.callerFacility);
+  const callerAddress = selectedCall?.emergencyLocation?.address;
+  const callerLocation = callerAddress || callerFacilityName || 'Location not linked';
   const answered = protocol.questions.filter((question) => answers[question.id]).length;
   const callSeconds = selectedCall ? elapsedSeconds(selectedCall.callStartedAt, now, selectedCall.callEndedAt) : 0;
   const onHold = selectedCall?.callStatus === 'HELD';
   const callClosed = selectedCall?.callStatus === 'COMPLETED' || selectedCall?.callStatus === 'TRANSFERRED';
+  const dispatched = selectedCall?.callStatus === 'DISPATCHED' || Boolean(selectedCall?.missionId);
   const coordinates = selectedCall?.emergencyLocation?.latitude != null && selectedCall?.emergencyLocation?.longitude != null
     ? { latitude: selectedCall.emergencyLocation.latitude, longitude: selectedCall.emergencyLocation.longitude }
     : undefined;
   const conferenceMembers = selectedCall?.conferenceMembers || [];
   const visibleRankings = showAllAmbulances ? rankings : rankings.slice(0, 3);
+  const noteEntries = parseNotes(selectedCall?.notes);
+  const headline = colourHeadline(colour);
+  const receivingFacility = facilities.find((facility) => facility.id === dropoffFacilityId);
+  const vitals = selectedCall?.vitalSigns;
+  const bp = bloodPressure(vitals);
+  const bloodGroup = readVital(vitals, ['bloodGroup', 'bloodType']);
+  const allergies = readVital(vitals, ['allergies']);
+  const isOtherProtocol = !problemTiles.some((tile) => tile.id === protocolId);
+
+  const status = !selectedCall ? { label: 'NO ACTIVE CALL', tone: 'idle' }
+    : onHold ? { label: 'ON HOLD', tone: 'held' }
+    : selectedCall.callStatus === 'DISPATCHED' ? { label: 'DISPATCHED', tone: 'dispatched' }
+    : callClosed ? { label: selectedCall.callStatus, tone: selectedCall.callStatus.toLowerCase() }
+    : answered > 0 ? { label: 'TRIAGE IN PROGRESS', tone: 'active' }
+    : { label: 'CALL CONNECTED', tone: 'active' };
 
   const steps = [
-    { label: 'Caller details', done: Boolean(selectedCall), target: 'cc-caller' },
-    { label: 'Problem type', done: Boolean(selectedCall), target: 'cc-protocols' },
-    { label: 'Triage questions', done: answered > 0 && answered === protocol.questions.length, target: 'cc-questions' },
-    { label: 'Colour code', done: Boolean(selectedColour), target: 'dispatch-panel' },
+    { label: 'Caller Details', done: Boolean(selectedCall) },
+    { label: 'Problem Type', done: Boolean(selectedCall) },
+    { label: 'Triage Questions', done: answered > 0 && answered === protocol.questions.length },
+    { label: 'Colour Code', done: Boolean(selectedColour) },
   ];
-  const activeStep = steps.findIndex((step) => !step.done);
-  const currentStep = activeStep === -1 ? steps.length - 1 : activeStep;
+  const firstIncomplete = steps.findIndex((step) => !step.done);
+  const currentStep = firstIncomplete === -1 ? steps.length - 1 : firstIncomplete;
+
+  const readinessTiles = readiness ? [
+    { label: 'Beds', value: `${readiness.bedCapacityAvailable ?? 0}`, ok: (readiness.bedCapacityAvailable ?? 0) > 0, note: (readiness.bedCapacityAvailable ?? 0) > 0 ? 'Available' : 'Full' },
+    { label: `Blood${bloodGroup ? ` (${bloodGroup})` : ''}`, value: `${readiness.bloodUnitsOPositive ?? 0}`, ok: readiness.bloodBankStatus === 'ADEQUATE', note: readiness.bloodBankStatus === 'ADEQUATE' ? 'Available' : 'Low' },
+    { label: 'Oxygen', value: `${readiness.oxygenCylinders ?? 0}`, ok: readiness.oxygenStatus === 'ADEQUATE', note: readiness.oxygenStatus === 'ADEQUATE' ? 'Available' : 'Low' },
+    { label: 'Theatre', value: `${readiness.operatingRoomsAvailable ?? 0}`, ok: Boolean(readiness.theatreAvailable) || (readiness.operatingRoomsAvailable ?? 0) > 0, note: readiness.theatreAvailable ? 'Available' : 'Closed' },
+    { label: 'Specialists', value: `${readiness.doctorsOnDuty ?? 0}`, ok: (readiness.doctorsOnDuty ?? 0) > 0, note: (readiness.doctorsOnDuty ?? 0) > 0 ? 'On Duty' : 'None' },
+  ] : [];
 
   return (
     <div className="cc-shell">
@@ -526,13 +630,28 @@ export default function CallCentrePage() {
           <div><strong>NEMS CALL CENTRE</strong><span>SIERRA LEONE</span></div>
         </div>
         <div className="cc-call-strip">
-          <div><span>Active Call</span><strong className={`cc-live ${selectedCall && !callClosed ? '' : 'is-idle'}`}><i />{formatDuration(callSeconds)}</strong></div>
-          <div><span>Call ID</span><strong>{selectedCall?.id.slice(0, 12).toUpperCase() || 'NO ACTIVE CALL'}</strong></div>
-          <div><span>Date & Time</span><strong>{new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date())}</strong></div>
+          <div>
+            <span>Active Call</span>
+            <strong className={`cc-live ${selectedCall && !callClosed ? '' : 'is-idle'}`}>
+              <i />{formatDuration(callSeconds)}
+              <em>{!selectedCall ? 'Idle' : callClosed ? 'Ended' : onHold ? 'Held' : 'Connected'}</em>
+            </strong>
+          </div>
+          <div><span>Call ID</span><strong>{selectedCall ? `#${selectedCall.id.slice(0, 12).toUpperCase()}` : '—'}</strong></div>
+          <div><span>Date &amp; Time</span><strong>{new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(now))}</strong></div>
           <div><span>Operator</span><strong>{operatorName}</strong></div>
-          <div><span>Status</span><strong className={`cc-status cc-status--${selectedCall?.callStatus.toLowerCase() || 'idle'}`}>{selectedCall?.callStatus || 'IDLE'}</strong></div>
+          <div><span>Status</span><strong className={`cc-status cc-status--${status.tone}`}>{status.label}</strong></div>
         </div>
         <div className="cc-operator">
+          <button
+            type="button"
+            className={`cc-icon-button cc-icon-button--dark ${muted ? 'is-active' : ''}`}
+            onClick={() => setMuted((value) => !value)}
+            aria-pressed={muted}
+            aria-label={muted ? 'Unmute call audio' : 'Mute call audio'}
+          >
+            <Headphones size={16} />
+          </button>
           <CallNotifications />
           <div className="cc-avatar">{operator ? `${operator.firstName[0]}${operator.lastName[0]}` : 'OP'}</div>
           <div><strong>{operatorName}</strong><span>Operator</span></div>
@@ -542,34 +661,19 @@ export default function CallCentrePage() {
 
       <aside className="cc-sidebar">
         <nav aria-label="Call centre navigation">
-          <div className="cc-nav-group">
-            <span className="cc-nav-label">Queue</span>
-            {queueFilters.map((filter) => {
-              const Icon = filter.icon;
-              const count = filterCounts[filter.id] || 0;
-              return (
-                <button
-                  type="button"
-                  className={`cc-nav-link ${queueFilter === filter.id ? 'is-active' : ''}`}
-                  key={filter.id}
-                  onClick={() => { setQueueFilter(filter.id); setQueueCollapsed(false); }}
-                  aria-pressed={queueFilter === filter.id}
-                >
-                  <Icon size={15} /><span>{filter.label}</span>
-                  {count > 0 && <b>{count}</b>}
-                </button>
-              );
-            })}
-          </div>
           {navGroups.map((group) => (
             <div className="cc-nav-group" key={group.label}>
               <span className="cc-nav-label">{group.label}</span>
               {group.links.map((link) => {
                 const Icon = link.icon;
-                const active = link.href !== '/' ? pathname.startsWith(link.href) : pathname === '/';
+                const badge = link.badge === 'active' ? activeCalls.length : link.badge === 'queue' ? queuedCalls.length : 0;
+                const active = link.href === '/call-centre'
+                  ? pathname === '/call-centre'
+                  : link.href !== '/' && pathname.startsWith(link.href.split('?')[0]) && link.href.includes('?') === false;
                 return (
                   <Link className={`cc-nav-link ${active ? 'is-active' : ''}`} href={link.href} key={link.label}>
                     <Icon size={15} /><span>{link.label}</span>
+                    {badge > 0 && <b>{badge}</b>}
                   </Link>
                 );
               })}
@@ -579,7 +683,7 @@ export default function CallCentrePage() {
         <a className="cc-emergency-line" href="tel:112"><Phone size={16} /><span>Emergency lines<strong>112 / 117</strong></span></a>
       </aside>
 
-      <main className={`cc-workspace ${queueCollapsed ? 'is-queue-collapsed' : ''}`}>
+      <main className="cc-workspace">
         {loadError && (
           <div className="cc-load-error" role="alert">
             <AlertTriangle size={17} />
@@ -588,128 +692,16 @@ export default function CallCentrePage() {
           </div>
         )}
 
-        <aside className="cc-queue" aria-label="Call queue">
-          {queueCollapsed ? (
-            <div className="cc-queue__rail">
-              <button type="button" className="cc-queue__toggle" onClick={toggleQueue} aria-label="Expand call queue" aria-expanded="false">
-                <ChevronRight size={13} />
-              </button>
-              <span className="cc-queue__rail-count">{queueCalls.length}</span>
-              <span className="cc-queue__rail-label">CALL QUEUE</span>
-              <div className="cc-queue__rail-dots">
-                {queueCalls.slice(0, 8).map((call) => (
-                  <i className={`is-${(call.triageResult?.colourCode || 'GREEN').toLowerCase()} ${call.id === activeCallId ? 'is-selected' : ''}`} key={call.id} />
-                ))}
-              </div>
+        {/* Column 1 — call controls, caller, patient, notes ----------------- */}
+        <div className="cc-col cc-col--controls">
+          <section className="cc-card">
+            <div className="cc-card__head">
+              <h2>Call Controls</h2>
+              <button className="cc-text-button" type="button" onClick={() => setNewCallOpen(true)}><Plus size={12} /> New</button>
             </div>
-          ) : (
-            <>
-              <div className="cc-queue__head">
-                <div>
-                  <span className="cc-eyebrow">Call queue</span>
-                  <strong>{queueCalls.length} {queueCalls.length === 1 ? 'call' : 'calls'}</strong>
-                </div>
-                <div className="cc-queue__head-actions">
-                  <button type="button" className="cc-text-button" onClick={() => setNewCallOpen(true)}><Plus size={13} /> New</button>
-                  <button type="button" className="cc-queue__toggle" onClick={toggleQueue} aria-label="Collapse call queue" aria-expanded="true">
-                    <ChevronLeft size={13} />
-                  </button>
-                </div>
-              </div>
-
-              <div className="cc-queue__search">
-                <Search size={12} />
-                <input
-                  value={queueSearch}
-                  onChange={(event) => setQueueSearch(event.target.value)}
-                  placeholder="Search caller, phone, nature"
-                  aria-label="Search the call queue"
-                />
-                {queueSearch && (
-                  <button type="button" onClick={() => setQueueSearch('')} aria-label="Clear search"><X size={11} /></button>
-                )}
-              </div>
-
-              <div className="cc-queue__filters" role="group" aria-label="Filter calls by status">
-                {queueFilters.map((filter) => (
-                  <button
-                    type="button"
-                    className={queueFilter === filter.id ? 'is-selected' : ''}
-                    key={filter.id}
-                    onClick={() => setQueueFilter(filter.id)}
-                    aria-pressed={queueFilter === filter.id}
-                  >
-                    {filter.short}<b>{filterCounts[filter.id] || 0}</b>
-                  </button>
-                ))}
-              </div>
-
-              <div className="cc-queue__list">
-                {loading && <Skeleton rows={4} className="cc-skeleton-stack--queue" />}
-
-                {!loading && !queueCalls.length && (
-                  <div className="cc-empty-state">
-                    <Inbox size={20} />
-                    <strong>{queueSearch ? 'No matching calls' : 'Queue is clear'}</strong>
-                    <span>
-                      {queueSearch
-                        ? 'Try a different caller name, phone number or emergency nature.'
-                        : `No ${queueFilter === 'all' ? '' : (queueFilters.find((filter) => filter.id === queueFilter)?.short || '').toLowerCase() + ' '}calls right now.`}
-                    </span>
-                    {!queueSearch && queueFilter !== 'all' && filterCounts.all > 0 && (
-                      <button type="button" onClick={() => setQueueFilter('all')}>Show all {filterCounts.all} calls</button>
-                    )}
-                    {!queueSearch && queueFilter === 'all' && (
-                      <button type="button" onClick={() => setNewCallOpen(true)}>Log a new call</button>
-                    )}
-                  </div>
-                )}
-
-                {!loading && queueCalls.map((call) => {
-                  const itemColour = (call.triageResult?.colourCode || 'GREEN').toLowerCase();
-                  const waiting = elapsedSeconds(call.callStartedAt, now, call.callEndedAt);
-                  return (
-                    <button
-                      type="button"
-                      className={`cc-queue-item ${call.id === activeCallId ? 'is-selected' : ''}`}
-                      key={call.id}
-                      onClick={() => setSelectedCallId(call.id)}
-                      aria-current={call.id === activeCallId}
-                    >
-                      <i className={`cc-queue-item__flag is-${itemColour}`} aria-hidden="true" />
-                      <div className="cc-queue-item__body">
-                        <strong>{callLabel(call)}</strong>
-                        <span>{callSubtitle(call)}</span>
-                      </div>
-                      <div className="cc-queue-item__meta">
-                        <em className={`cc-status cc-status--${call.callStatus.toLowerCase()}`}>{call.callStatus.slice(0, 4)}</em>
-                        <time dateTime={call.callStartedAt}>{formatDuration(waiting)}</time>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
-        </aside>
-
-        <section className="cc-call-panel" aria-label="Active call controls">
-          <div className="cc-section-heading">
-            <div><span>Call controls</span>{loading ? <strong>Loading…</strong> : <strong>{selectedCall ? (callClosed ? 'Closed' : onHold ? 'On hold' : 'Connected') : 'No active call'}</strong>}</div>
-            <button className="cc-text-button" onClick={() => setNewCallOpen(true)}><Plus size={13} /> New call</button>
-          </div>
-
-          {!loading && !selectedCall ? (
-            <div className="cc-empty-state cc-empty-state--panel">
-              <PhoneCall size={22} />
-              <strong>No call selected</strong>
-              <span>Pick a call from the queue or log a new one to begin triage.</span>
-              <button type="button" onClick={() => setNewCallOpen(true)}>Log a new call</button>
-            </div>
-          ) : (
-            <>
+            <div className="cc-card__body">
               <button className="cc-end-call" disabled={!selectedCall || callClosed || busyAction === 'complete'} onClick={() => void runCommand('complete', { reason: 'Call completed by operator' })}>
-                {busyAction === 'complete' ? <RefreshCw size={15} className="cc-spin" /> : <PhoneOff size={15} />} End call
+                {busyAction === 'complete' ? <RefreshCw size={14} className="cc-spin" /> : <PhoneOff size={14} />} End Call
               </button>
 
               <div className="cc-control-grid">
@@ -720,7 +712,7 @@ export default function CallCentrePage() {
                   aria-pressed={onHold}
                   onClick={() => void runCommand(onHold ? 'resume' : 'hold', { reason: 'Operator call control' })}
                 >
-                  {busyAction === 'hold' || busyAction === 'resume' ? <RefreshCw size={14} className="cc-spin" /> : <Pause size={14} />}
+                  {busyAction === 'hold' || busyAction === 'resume' ? <RefreshCw size={15} className="cc-spin" /> : <Pause size={15} />}
                   {onHold ? 'Resume' : 'Hold'}
                 </button>
                 <button
@@ -730,35 +722,44 @@ export default function CallCentrePage() {
                   aria-pressed={muted}
                   onClick={() => setMuted((value) => !value)}
                 >
-                  {muted ? <MicOff size={14} /> : <Mic size={14} />}{muted ? 'Unmute' : 'Mute'}
+                  {muted ? <MicOff size={15} /> : <Mic size={15} />}{muted ? 'Unmute' : 'Mute'}
                 </button>
                 <button
                   type="button"
-                  className={conferenceOpen ? 'is-active' : ''}
+                  className={transferOpen ? 'is-active' : ''}
                   disabled={!selectedCall || callClosed}
-                  aria-expanded={conferenceOpen}
-                  onClick={() => setConferenceOpen((value) => !value)}
+                  aria-expanded={transferOpen}
+                  onClick={() => void openTransfer()}
                 >
-                  <Users size={14} />Conference
+                  <PhoneForwarded size={15} />Transfer
                 </button>
               </div>
 
-              {onHold && (
-                <div className="cc-hold-banner" role="status">
-                  <Pause size={13} />
-                  <span>On hold · {formatDuration(elapsedSeconds(selectedCall?.heldAt, now))}</span>
-                  <button type="button" disabled={Boolean(busyAction)} onClick={() => void runCommand('resume', { reason: 'Operator resumed call' })}>Resume</button>
+              {transferOpen && (
+                <div className="cc-inline-action">
+                  <select value={transferTarget} onChange={(event) => setTransferTarget(event.target.value)} aria-label="Transfer to operator">
+                    <option value="">Select operator</option>
+                    {operators.map((item) => <option value={item.id} key={item.id}>{item.firstName} {item.lastName}</option>)}
+                  </select>
+                  <button disabled={!transferTarget || busyAction === 'transfer'} onClick={() => void runCommand('transfer', { targetOperatorId: transferTarget, reason: 'Operator transfer' })}>
+                    {busyAction === 'transfer' ? <RefreshCw size={11} className="cc-spin" /> : 'Send'}
+                  </button>
                 </div>
               )}
 
+              <button
+                type="button"
+                className={`cc-control-wide ${conferenceOpen ? 'is-active' : ''}`}
+                disabled={!selectedCall || callClosed}
+                aria-expanded={conferenceOpen}
+                onClick={() => setConferenceOpen((value) => !value)}
+              >
+                <Users size={13} /> Create Conference
+              </button>
+
               {conferenceOpen && (
                 <div className="cc-inline-action">
-                  <input
-                    value={conferenceMember}
-                    onChange={(event) => setConferenceMember(event.target.value)}
-                    placeholder="Clinician or facility"
-                    aria-label="Conference participant"
-                  />
+                  <input value={conferenceMember} onChange={(event) => setConferenceMember(event.target.value)} placeholder="Clinician or facility" aria-label="Conference participant" />
                   <button disabled={!conferenceMember.trim() || busyAction === 'conference'} onClick={() => void runCommand('conference', { participant: conferenceMember.trim() })}>
                     {busyAction === 'conference' ? <RefreshCw size={11} className="cc-spin" /> : 'Add'}
                   </button>
@@ -771,194 +772,413 @@ export default function CallCentrePage() {
                 </div>
               )}
 
-              <div className="cc-panel-block" id="cc-caller">
-                <div className="cc-section-heading"><span>Caller information</span></div>
-                {loading ? <Skeleton rows={3} /> : (
-                  <>
-                    <div className="cc-caller-card">
-                      <div className="cc-avatar cc-avatar--blue">{selectedCall?.callerName?.slice(0, 2).toUpperCase() || 'CL'}</div>
-                      <div><strong>{selectedCall?.callerName || 'Unnamed caller'}</strong><span>{callerLocation}</span></div>
-                    </div>
-                    <dl className="cc-detail-list">
-                      <div><dt><Phone size={12} />Phone</dt><dd>{selectedCall?.callerPhone ? <a href={`tel:${selectedCall.callerPhone}`}>{selectedCall.callerPhone}</a> : '—'}</dd></div>
-                      <div><dt><MapPin size={12} />Location</dt><dd>{callerLocation}</dd></div>
-                    </dl>
-                  </>
-                )}
-              </div>
-
-              <div className="cc-panel-block">
-                <div className="cc-section-heading"><span>Patient quick info</span></div>
-                <label className="cc-field"><span>Name</span><input value={patientInfo.name || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, name: event.target.value }))} placeholder="Patient name" /></label>
-                <div className="cc-two-fields">
-                  <label className="cc-field"><span>Age</span><input inputMode="numeric" value={patientInfo.age || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, age: Number(event.target.value) || undefined }))} placeholder="Age" /></label>
-                  <label className="cc-field"><span>Gender</span><select value={patientInfo.gender || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, gender: event.target.value }))}><option value="">Select</option><option>Female</option><option>Male</option><option>Unknown</option></select></label>
-                </div>
-                <div className="cc-checks">
-                  <span className={answers.breathing === 'no' ? 'is-danger' : ''}><Check size={11} />Breathing</span>
-                  <span className={answers.alert === 'no' ? 'is-danger' : ''}><Check size={11} />Conscious</span>
-                  <span><Check size={11} />Caller nearby</span>
-                </div>
-              </div>
-
-              <div className="cc-panel-block cc-notes">
-                <div className="cc-section-heading">
-                  <span>Call notes</span>
-                  <button disabled={!selectedCall || busyAction === 'notes'} onClick={() => void runCommand('notes', { note: notes })}>
-                    {busyAction === 'notes' ? 'Saving…' : 'Save note'}
-                  </button>
-                </div>
-                <textarea value={notes} onChange={(event) => setNotes(event.target.value)} placeholder="Document call details and actions…" />
-              </div>
-            </>
-          )}
-        </section>
-
-        <section className="cc-triage-panel" aria-label="Guided triage">
-          <div className="cc-triage-header">
-            {steps.map((step, index) => (
-              <div className="cc-step-wrap" key={step.label}>
-                {index > 0 && <ChevronRight size={13} className="cc-step-sep" />}
-                <button
-                  type="button"
-                  className={`cc-step ${step.done ? 'is-complete' : ''} ${index === currentStep ? 'is-active' : ''}`}
-                  onClick={() => scrollToId(step.target)}
-                >
-                  <span>{step.done ? <Check size={12} /> : index + 1}</span>
-                  <div>{index === 0 && <small>Triage steps</small>}<strong>{step.label}</strong></div>
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <div className="cc-protocols" id="cc-protocols">
-            <span className="cc-eyebrow">Select problem type</span>
-            <div className="cc-protocol-grid">
-              {triageProtocols.slice(0, 8).map((item) => {
-                const Icon = iconByProtocol[item.icon];
-                return (
-                  <button className={protocolId === item.id ? 'is-selected' : ''} key={item.id} onClick={() => { setProtocolId(item.id); setAnswers({}); setSelectedColour(undefined); }}>
-                    <Icon size={20} /><span>{item.shortName}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <select className="cc-more-protocols" aria-label="All triage protocols" value={protocolId} onChange={(event) => { setProtocolId(event.target.value); setAnswers({}); setSelectedColour(undefined); }}>
-              {triageProtocols.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}
-            </select>
-          </div>
-
-          <div className="cc-questionnaire" id="cc-questions">
-            <div className="cc-section-heading">
-              <div><span>{protocol.name.toUpperCase()} TRIAGE · KEY QUESTIONS</span><strong>{answered}/{protocol.questions.length} answered</strong></div>
-              {answered > 0 && <button type="button" onClick={() => { setAnswers({}); setSelectedColour(undefined); }}>Clear answers</button>}
-            </div>
-            <div className="cc-progress" role="progressbar" aria-valuenow={answered} aria-valuemin={0} aria-valuemax={protocol.questions.length} aria-label="Triage questions answered">
-              <i style={{ width: `${(answered / protocol.questions.length) * 100}%` }} />
-            </div>
-            <div className="cc-question-list">
-              {protocol.questions.map((question, index) => (
-                <div className={`cc-question ${answers[question.id] ? 'is-answered' : ''}`} key={question.id}>
-                  <div><span>{answers[question.id] ? <Check size={10} /> : index + 1}</span><div><strong>{question.text}</strong>{question.note && <small>{question.note}</small>}</div></div>
-                  <div className="cc-segmented" role="group" aria-label={question.text}>
-                    {['yes', 'no', 'unknown'].map((answer) => (
-                      <button className={answers[question.id] === answer ? 'is-selected' : ''} key={answer} onClick={() => setAnswers((current) => ({ ...current, [question.id]: answer }))}>{answer === 'unknown' ? 'Unknown' : answer[0].toUpperCase() + answer.slice(1)}</button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="cc-triage-footer">
-            <button
-              className="cc-button cc-button--secondary"
-              type="button"
-              disabled={currentStep === 0}
-              onClick={() => scrollToId(steps[Math.max(currentStep - 1, 0)].target)}
-            >
-              <ChevronLeft size={14} /> Back
-            </button>
-            <div className="cc-colour-picker" role="group" aria-label="Triage colour override">
-              {(['GREEN', 'YELLOW', 'RED'] as TriageColour[]).map((item) => (
-                <button
-                  className={`${item === colour ? 'is-selected' : ''} is-${item.toLowerCase()}`}
-                  key={item}
-                  aria-pressed={item === colour}
-                  onClick={() => setSelectedColour(item)}
-                >
-                  {item}
-                  {item === recommendation && !selectedColour && <em>rec</em>}
-                </button>
-              ))}
-            </div>
-            <button className="cc-button cc-button--primary" onClick={() => scrollToId('dispatch-panel')}>Next: Dispatch <ChevronRight size={14} /></button>
-          </div>
-        </section>
-
-        <aside className="cc-dispatch-panel" id="dispatch-panel" aria-label="Triage result and dispatch">
-          <section className={`cc-triage-result is-${colour.toLowerCase()}`}>
-            <span className="cc-eyebrow">Triage result</span>
-            <div><AlertTriangle size={22} /><div><strong>{colour} CODE</strong><span>{colour === 'RED' ? 'LIFE-THREATENING' : colour === 'YELLOW' ? 'URGENT' : 'NON-CRITICAL'}</span></div></div>
-            <p>{colour === 'RED' ? 'Immediate ambulance dispatch required' : colour === 'YELLOW' ? 'Prompt clinical response required' : 'Assess transport need and provide advice'}</p>
-            {selectedColour && selectedColour !== recommendation ? (
-              <button onClick={() => setSelectedColour(undefined)}>Overridden · use recommended {recommendation}</button>
-            ) : (
-              <button disabled>Matches the recommended result</button>
-            )}
-          </section>
-
-          <section className="cc-summary-card">
-            <div className="cc-section-heading"><span>Patient summary</span></div>
-            <dl className="cc-summary-grid">
-              <div><dt>Name</dt><dd>{patientInfo.name || 'Not recorded'}</dd></div>
-              <div><dt>Age / gender</dt><dd>{patientInfo.age || '—'} / {patientInfo.gender || '—'}</dd></div>
-              <div><dt>Status</dt><dd className={`cc-text-${colour.toLowerCase()}`}>● {colourPriority(colour)}</dd></div>
-              <div><dt>Symptoms</dt><dd>{selectedCall?.emergencyNature || patientInfo.symptoms || 'Not recorded'}</dd></div>
-            </dl>
-          </section>
-
-          <section className="cc-location-card">
-            <div className="cc-section-heading">
-              <span>Caller location</span>
-              <strong className={coordinates ? '' : 'is-warning'}>{coordinates ? 'GPS fix' : 'No GPS'}</strong>
-            </div>
-            <p><strong>{callerLocation}</strong><span>{selectedCall?.emergencyLocation?.landmark || 'Location reported by caller'}</span></p>
-            <div className="cc-map">
-              {coordinates ? (
-                <CallLocationMap
-                  latitude={coordinates.latitude}
-                  longitude={coordinates.longitude}
-                  label={callerLocation}
-                  colour={colour}
-                />
-              ) : (
-                <div className="cc-map__empty">
-                  <MapPinOff size={18} />
-                  <strong>No coordinates on this call</strong>
-                  <span>Ask the caller for a landmark or nearest facility.</span>
+              {onHold && (
+                <div className="cc-hold-banner" role="status">
+                  <Pause size={12} />
+                  <span>On hold · {formatDuration(elapsedSeconds(selectedCall?.heldAt, now))}</span>
                 </div>
               )}
             </div>
-            {coordinates && (
-              <a
-                className="cc-map__link"
-                href={`https://www.openstreetmap.org/?mlat=${coordinates.latitude}&mlon=${coordinates.longitude}#map=16/${coordinates.latitude}/${coordinates.longitude}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {coordinates.latitude.toFixed(4)}, {coordinates.longitude.toFixed(4)} · open map
-              </a>
-            )}
           </section>
 
-          <section className="cc-ambulance-card">
-            <div className="cc-section-heading">
-              <span>Nearest ambulances</span>
+          <section className="cc-card">
+            <div className="cc-card__head"><h2>Caller Information</h2></div>
+            <div className="cc-card__body">
+              {loading ? <Skeleton rows={3} /> : !selectedCall ? (
+                <div className="cc-empty-state">
+                  <PhoneCall size={20} />
+                  <strong>No call selected</strong>
+                  <span>Log a new call to begin triage.</span>
+                  <button type="button" onClick={() => setNewCallOpen(true)}>Log a new call</button>
+                </div>
+              ) : (
+                <>
+                  <div className="cc-caller-card">
+                    <div className="cc-avatar cc-avatar--blue">{(selectedCall.callerName || 'CL').slice(0, 2).toUpperCase()}</div>
+                    <div>
+                      <strong>{selectedCall.callerName || 'Unnamed caller'}</strong>
+                      <span>{callerFacilityName || selectedCall.callType.replace(/_/g, ' ').toLowerCase()}</span>
+                    </div>
+                  </div>
+                  {callerFacilityName && (
+                    <span className="cc-verified"><ShieldCheck size={10} /> Verified caller</span>
+                  )}
+                  <dl className="cc-detail-list">
+                    <div>
+                      <dt><Phone size={12} /></dt>
+                      <dd>{selectedCall.callerPhone ? <a href={`tel:${selectedCall.callerPhone}`}>{selectedCall.callerPhone}</a> : '—'}</dd>
+                    </div>
+                    <div>
+                      <dt><MapPin size={12} /></dt>
+                      <dd>
+                        <strong>{callerFacilityName || callerLocation}</strong>
+                        {callerFacilityName && callerAddress && <span>{callerAddress}</span>}
+                        {selectedCall.emergencyLocation?.landmark && <span>{selectedCall.emergencyLocation.landmark}</span>}
+                      </dd>
+                    </div>
+                  </dl>
+                  <div className="cc-meta-row">
+                    <span>PHU Code<strong>{facilityCode(selectedCall.callerFacility) || '—'}</strong></span>
+                    <span>Type<strong>{callerFacilityName ? 'Facility' : 'Community'}</strong></span>
+                  </div>
+                </>
+              )}
+            </div>
+          </section>
+
+          <section className="cc-card">
+            <div className="cc-card__head"><h2>Patient Quick Info</h2></div>
+            <div className="cc-card__body">
+              <div className="cc-caller-card">
+                <div className="cc-avatar cc-avatar--patient">{(patientInfo.name || 'PT').slice(0, 2).toUpperCase()}</div>
+                <div>
+                  <strong>{patientInfo.name || 'Patient not identified'}</strong>
+                  <span>{[patientInfo.gender, patientInfo.age ? `${patientInfo.age} years` : undefined].filter(Boolean).join(' • ') || 'Age and gender not recorded'}</span>
+                </div>
+              </div>
+
+              <div className="cc-checks">
+                <span className={answers.alert === 'no' ? 'is-danger' : ''}>
+                  {answers.alert === 'no' ? <X size={10} /> : <Check size={10} />}Conscious
+                </span>
+                <span className={answers.breathing === 'no' ? 'is-danger' : ''}>
+                  {answers.breathing === 'no' ? <X size={10} /> : <Check size={10} />}Breathing
+                </span>
+                <span className={answers.contact === 'no' ? 'is-danger' : ''}>
+                  {answers.contact === 'no' ? <X size={10} /> : <Check size={10} />}Close to patient
+                </span>
+              </div>
+
+              <button type="button" className="cc-ghost-button" onClick={() => setPatientDetailsOpen((value) => !value)} aria-expanded={patientDetailsOpen}>
+                {patientDetailsOpen ? 'Hide details' : 'View Full Details'} <ArrowRight size={11} />
+              </button>
+
+              {patientDetailsOpen && (
+                <div className="cc-patient-form">
+                  <label className="cc-field"><span>Name</span><input value={patientInfo.name || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, name: event.target.value }))} placeholder="Patient name" /></label>
+                  <div className="cc-two-fields">
+                    <label className="cc-field"><span>Age</span><input inputMode="numeric" value={patientInfo.age || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, age: Number(event.target.value) || undefined }))} placeholder="Age" /></label>
+                    <label className="cc-field"><span>Gender</span><select value={patientInfo.gender || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, gender: event.target.value }))}><option value="">Select</option><option>Female</option><option>Male</option><option>Unknown</option></select></label>
+                  </div>
+                  <label className="cc-field"><span>Symptoms</span><input value={patientInfo.symptoms || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, symptoms: event.target.value }))} placeholder="Presenting complaint" /></label>
+                </div>
+              )}
+            </div>
+          </section>
+
+          <section className="cc-card">
+            <div className="cc-card__head">
+              <h2>Call Notes</h2>
+              <button className="cc-text-button" type="button" disabled={!selectedCall || callClosed} onClick={() => setNoteOpen((value) => !value)}>
+                <Plus size={12} /> Add Note
+              </button>
+            </div>
+            <div className="cc-card__body">
+              {noteOpen && (
+                <div className="cc-note-compose">
+                  <textarea value={noteDraft} onChange={(event) => setNoteDraft(event.target.value)} placeholder="Document call details and actions…" autoFocus />
+                  <div>
+                    <button type="button" className="cc-ghost-button" onClick={() => { setNoteOpen(false); setNoteDraft(''); }}>Cancel</button>
+                    <button type="button" className="cc-button cc-button--primary" disabled={!noteDraft.trim() || busyAction === 'notes'} onClick={() => void runCommand('notes', { note: noteDraft.trim() })}>
+                      {busyAction === 'notes' ? <RefreshCw size={11} className="cc-spin" /> : null} Save
+                    </button>
+                  </div>
+                </div>
+              )}
+              {noteEntries.length ? (
+                <ul className="cc-note-list">
+                  {noteEntries.map((entry, index) => (
+                    <li key={`${entry.text}-${index}`}>
+                      {entry.time && <time>{entry.time}</time>}
+                      <p>{entry.text}</p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                !noteOpen && <p className="cc-empty-copy">No notes recorded for this call yet.</p>
+              )}
+            </div>
+          </section>
+        </div>
+
+        {/* Column 2 — triage ------------------------------------------------ */}
+        <div className="cc-col cc-col--triage">
+          <section className="cc-card cc-card--fill">
+            <div className="cc-card__head"><h2>Triage Steps</h2></div>
+
+            <div className="cc-steps">
+              {steps.map((step, index) => (
+                <div className={`cc-step ${step.done ? 'is-complete' : ''} ${index === currentStep ? 'is-active' : ''}`} key={step.label}>
+                  <span>{step.done ? <Check size={10} /> : index + 1}</span>
+                  <strong>{step.label}</strong>
+                </div>
+              ))}
+            </div>
+
+            <div className="cc-protocols">
+              <span className="cc-eyebrow">Select problem type</span>
+              <div className="cc-protocol-grid">
+                {problemTiles.map((tile) => {
+                  const item = protocolById[tile.id];
+                  if (!item) return null;
+                  const Icon = tile.icon;
+                  return (
+                    <button
+                      className={protocolId === item.id ? 'is-selected' : ''}
+                      key={item.id}
+                      onClick={() => { setProtocolId(item.id); setAnswers({}); setSelectedColour(undefined); setShowAllProtocols(false); }}
+                    >
+                      <Icon size={18} /><span>{item.name}</span>
+                    </button>
+                  );
+                })}
+                <button
+                  className={isOtherProtocol ? 'is-selected' : ''}
+                  onClick={() => setShowAllProtocols((value) => !value)}
+                  aria-expanded={showAllProtocols}
+                >
+                  <MoreHorizontal size={18} /><span>{isOtherProtocol ? protocol.name : 'Other / unknown'}</span>
+                </button>
+              </div>
+              {(showAllProtocols || isOtherProtocol) && (
+                <select
+                  className="cc-more-protocols"
+                  aria-label="All triage protocols"
+                  value={protocolId}
+                  onChange={(event) => { setProtocolId(event.target.value); setAnswers({}); setSelectedColour(undefined); }}
+                >
+                  {triageProtocols.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}
+                </select>
+              )}
+            </div>
+
+            <div className="cc-questionnaire">
+              <div className="cc-card__head cc-card__head--inner">
+                <h3>{protocol.name} triage — key questions</h3>
+                <div className="cc-heading-actions">
+                  <span>{answered}/{protocol.questions.length}</span>
+                  {answered > 0 && <button type="button" onClick={() => { setAnswers({}); setSelectedColour(undefined); }}>Clear</button>}
+                </div>
+              </div>
+              <div className="cc-question-list">
+                {protocol.questions.map((question) => (
+                  <div className={`cc-question ${answers[question.id] ? 'is-answered' : ''}`} key={question.id}>
+                    <div>
+                      <strong>{question.text}</strong>
+                      {question.note && <small>{question.note}</small>}
+                    </div>
+                    {isFreeText(question) ? (
+                      <input
+                        className="cc-question-input"
+                        value={answers[question.id] || ''}
+                        onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))}
+                        placeholder="Record answer"
+                        aria-label={question.text}
+                      />
+                    ) : (
+                      <div className="cc-segmented" role="group" aria-label={question.text}>
+                        {['yes', 'no', 'unknown'].map((answer) => (
+                          <button
+                            className={`${answers[question.id] === answer ? 'is-selected' : ''} is-${answer}`}
+                            key={answer}
+                            onClick={() => setAnswers((current) => ({ ...current, [question.id]: answer }))}
+                          >
+                            {answer[0].toUpperCase() + answer.slice(1)}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="cc-triage-footer">
+              <button
+                className="cc-button cc-button--secondary"
+                type="button"
+                disabled={answered === 0}
+                onClick={() => { setAnswers({}); setSelectedColour(undefined); }}
+              >
+                Back
+              </button>
+              <button
+                className="cc-button cc-button--primary cc-button--wide"
+                type="button"
+                onClick={() => { setSelectedColour(colour); setCriteriaOpen(true); }}
+              >
+                Next: Determine Colour Code <ArrowRight size={14} />
+              </button>
+            </div>
+          </section>
+        </div>
+
+        {/* Column 3 — triage result, patient summary, receiving facility ----- */}
+        <div className="cc-col cc-col--result">
+          <section className="cc-card">
+            <div className="cc-card__head"><h2>Triage Result</h2></div>
+            <div className="cc-card__body">
+              <div className={`cc-result is-${colour.toLowerCase()}`}>
+                <div className="cc-result__mark"><Bell size={17} /></div>
+                <div className="cc-result__text">
+                  <strong>{colour} CODE</strong>
+                  <span>{headline.title}</span>
+                </div>
+                <p>{headline.copy}</p>
+                <button type="button" onClick={() => setCriteriaOpen((value) => !value)} aria-expanded={criteriaOpen}>
+                  {criteriaOpen ? 'Hide Criteria' : 'View Criteria'}
+                </button>
+              </div>
+
+              {criteriaOpen && (
+                <ul className="cc-criteria">
+                  {protocol.criteria[colour].map((line) => <li key={line}><i />{line}</li>)}
+                </ul>
+              )}
+
+              <div className="cc-meta-grid">
+                <span>Category<strong>{protocol.name}</strong></span>
+                <span>Completed By<strong>{selectedColour ? operatorName : 'Pending'}</strong></span>
+                <span>Completed At<strong>{selectedCall?.triageResult?.completedAt ? formatClock(selectedCall.triageResult.completedAt) : selectedColour ? formatClock(new Date(now).toISOString()) : '--:--'}</strong></span>
+              </div>
+
+              <div className="cc-colour-picker" role="group" aria-label="Triage colour override">
+                {(['GREEN', 'YELLOW', 'RED'] as TriageColour[]).map((item) => (
+                  <button
+                    className={`${item === colour ? 'is-selected' : ''} is-${item.toLowerCase()}`}
+                    key={item}
+                    aria-pressed={item === colour}
+                    onClick={() => setSelectedColour(item)}
+                  >
+                    {item}{item === recommendation && <em>rec</em>}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="cc-card">
+            <div className="cc-card__head"><h2>Patient Summary</h2></div>
+            <div className="cc-card__body">
+              <dl className="cc-summary-list">
+                <div><dt>Name</dt><dd>{patientInfo.name || 'Not recorded'}</dd></div>
+                <div><dt>Age / Gender</dt><dd>{patientInfo.age ? `${patientInfo.age} years` : '—'} / {patientInfo.gender || '—'}</dd></div>
+                <div><dt>Status</dt><dd className={`cc-text-${colour.toLowerCase()}`}>● {colourPriority(colour) === 'CRITICAL' ? 'Critical' : colourPriority(colour) === 'HIGH' ? 'Urgent' : 'Stable'}</dd></div>
+                <div><dt>Symptoms</dt><dd className="cc-wrap">{selectedCall?.emergencyNature || patientInfo.symptoms || 'Not recorded'}</dd></div>
+              </dl>
+
+              <span className="cc-eyebrow cc-eyebrow--spaced">Vitals (reported)</span>
+              {bp || vitalFields.some((field) => readVital(vitals, field.keys) !== undefined) ? (
+                <div className="cc-vitals">
+                  {bp && (
+                    <div><dt>BP</dt><dd className={bpAbnormal(bp) ? 'is-abnormal' : ''}>{bp}<i>mmHg</i></dd></div>
+                  )}
+                  {vitalFields.map((field) => {
+                    const value = readVital(vitals, field.keys);
+                    if (value === undefined) return null;
+                    const numeric = Number(value);
+                    const abnormal = Number.isFinite(numeric) && field.abnormal?.(numeric);
+                    return (
+                      <div key={field.label}>
+                        <dt>{field.label}</dt>
+                        <dd className={abnormal ? 'is-abnormal' : ''}>{String(value)}<i>{field.unit}</i></dd>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="cc-empty-copy">No vitals reported by the caller.</p>
+              )}
+
+              <div className="cc-meta-row">
+                <span>Blood Group<strong>{bloodGroup ? String(bloodGroup) : '—'}</strong></span>
+                <span>Allergies<strong>{allergies ? String(allergies) : 'None known'}</strong></span>
+              </div>
+            </div>
+          </section>
+
+          <section className="cc-card">
+            <div className="cc-card__head">
+              <h2>Receiving Facility</h2>
+              {receivingFacility && (
+                <strong className={`cc-badge ${readiness ? 'is-ready' : 'is-muted'}`}>{readiness ? 'Ready' : 'No report'}</strong>
+              )}
+            </div>
+            <div className="cc-card__body">
+              <label className="cc-field"><span>Pickup facility</span>
+                <select value={pickupFacilityId} onChange={(event) => setPickupFacilityId(event.target.value)}>
+                  <option value="">Select pickup</option>
+                  {facilities.map((facility) => <option value={facility.id} key={facility.id}>{facility.name}</option>)}
+                </select>
+              </label>
+              <label className="cc-field"><span>Receiving facility (proposed)</span>
+                <select value={dropoffFacilityId} onChange={(event) => setDropoffFacilityId(event.target.value)}>
+                  <option value="">Select receiving facility</option>
+                  {facilities.filter((facility) => facility.id !== pickupFacilityId).map((facility) => <option value={facility.id} key={facility.id}>{facility.name}</option>)}
+                </select>
+              </label>
+
+              {receivingFacility && (
+                readinessTiles.length ? (
+                  <div className="cc-readiness">
+                    {readinessTiles.map((tile) => (
+                      <div className={tile.ok ? '' : 'is-low'} key={tile.label}>
+                        <strong>{tile.value}</strong>
+                        <span>{tile.label}</span>
+                        <em>{tile.note}</em>
+                      </div>
+                    ))}
+                  </div>
+                ) : <p className="cc-empty-copy">No readiness report submitted by this facility.</p>
+              )}
+
+              {receivingFacility?.phone && (
+                <a className="cc-ghost-button cc-ghost-button--full" href={`tel:${receivingFacility.phone}`}>
+                  <Phone size={12} /> Call Facility RC
+                </a>
+              )}
+            </div>
+          </section>
+        </div>
+
+        {/* Column 4 — location, ambulances, timeline ------------------------- */}
+        <div className="cc-col cc-col--location">
+          <section className="cc-card">
+            <div className="cc-card__head">
+              <h2>Caller Location</h2>
+              <strong className={`cc-badge ${coordinates ? 'is-ready' : 'is-warning'}`}>{coordinates ? 'Accurate' : 'No GPS'}</strong>
+            </div>
+            <div className="cc-card__body">
+              <p className="cc-location-text">
+                <strong>{callerFacilityName || callerLocation}{facilityCode(selectedCall?.callerFacility) ? ` (${facilityCode(selectedCall?.callerFacility)})` : ''}</strong>
+                <span>{callerAddress || selectedCall?.emergencyLocation?.landmark || 'Location reported by caller'}</span>
+              </p>
+              <div className="cc-map">
+                {coordinates ? (
+                  <CallLocationMap
+                    latitude={coordinates.latitude}
+                    longitude={coordinates.longitude}
+                    label={callerLocation}
+                    colour={colour}
+                  />
+                ) : (
+                  <div className="cc-map__empty">
+                    <MapPinOff size={18} />
+                    <strong>No coordinates on this call</strong>
+                    <span>Ask the caller for a landmark or nearest facility.</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+
+          <section className="cc-card">
+            <div className="cc-card__head">
+              <h2>Nearest Ambulances</h2>
               <div className="cc-heading-actions">
                 {rankings.length > 3 && (
                   <button type="button" onClick={() => setShowAllAmbulances((value) => !value)}>
-                    {showAllAmbulances ? 'Show top 3' : `View all ${rankings.length}`}
+                    {showAllAmbulances ? 'Top 3' : `View All ${rankings.length}`}
                   </button>
                 )}
                 <button type="button" onClick={() => void refreshRankings()} disabled={!selectedCall || rankingRefreshing} aria-label="Refresh ambulance ranking">
@@ -966,48 +1186,84 @@ export default function CallCentrePage() {
                 </button>
               </div>
             </div>
-            <div className="cc-ambulance-list">
-              {callDetailLoading && <Skeleton rows={3} />}
-              {!callDetailLoading && visibleRankings.map((item) => (
-                <button className={selectedAmbulanceId === item.ambulanceId ? 'is-selected' : ''} disabled={!item.eligible} key={item.ambulanceId} onClick={() => setSelectedAmbulanceId(item.ambulanceId)}>
-                  <Ambulance size={17} /><div><strong>{item.registryId}</strong><span>{item.facilityName || (item.eligible ? 'Available' : item.reasons?.[0])}</span></div><b>{item.distanceKm != null ? `${item.distanceKm.toFixed(1)} km` : item.estimatedMinutes ? `${item.estimatedMinutes} min` : 'Ranked'}</b>
-                </button>
-              ))}
-              {!callDetailLoading && !rankings.length && (
+            <div className="cc-card__body">
+              <div className="cc-ambulance-list">
+                {callDetailLoading && <Skeleton rows={3} />}
+                {!callDetailLoading && visibleRankings.map((item) => (
+                  <button
+                    className={selectedAmbulanceId === item.ambulanceId ? 'is-selected' : ''}
+                    disabled={!item.eligible}
+                    key={item.ambulanceId}
+                    onClick={() => setSelectedAmbulanceId(item.ambulanceId)}
+                  >
+                    <span className="cc-ambulance-list__mark"><Ambulance size={15} /></span>
+                    <div>
+                      <strong>{item.registryId}</strong>
+                      <span>{item.facilityName || 'Unassigned base'}</span>
+                      <em className={item.eligible ? 'is-ok' : 'is-busy'}>{item.eligible ? 'Available' : item.reasons?.[0] || 'On mission'}</em>
+                    </div>
+                    <div className="cc-ambulance-list__metrics">
+                      <b>{item.distanceKm != null ? `${item.distanceKm.toFixed(1)} km away` : 'Distance n/a'}</b>
+                      <span>{item.estimatedMinutes != null ? `ETA ${item.estimatedMinutes} min` : 'ETA n/a'}</span>
+                    </div>
+                  </button>
+                ))}
+                {!callDetailLoading && !rankings.length && (
+                  <p className="cc-empty-copy">
+                    {selectedCall ? 'No eligible ambulance ranking is available for this call.' : 'Select a call to rank nearby ambulances.'}
+                  </p>
+                )}
+              </div>
+
+              <button
+                className={`cc-dispatch-button is-${colour.toLowerCase()}`}
+                disabled={!selectedCall || !pickupFacilityId || !dropoffFacilityId || !selectedAmbulanceId || Boolean(busyAction)}
+                onClick={() => void dispatch()}
+              >
+                {busyAction === 'dispatch' ? <RefreshCw size={14} className="cc-spin" /> : <Radio size={14} />}
+                Dispatch Ambulance
+              </button>
+              {selectedCall && !dispatched && (!pickupFacilityId || !dropoffFacilityId || !selectedAmbulanceId) && (
                 <p className="cc-empty-copy">
-                  {selectedCall ? 'No eligible ambulance ranking is available for this call.' : 'Select a call to rank nearby ambulances.'}
+                  {!selectedAmbulanceId ? 'Select an ambulance to enable dispatch.' : 'Select pickup and receiving facilities to enable dispatch.'}
                 </p>
               )}
             </div>
           </section>
 
-          <section className="cc-dispatch-form">
-            <div className="cc-section-heading"><span>Dispatch assignment</span></div>
-            <label><span>Pickup facility</span><select value={pickupFacilityId} onChange={(event) => setPickupFacilityId(event.target.value)}><option value="">Select pickup</option>{facilities.map((facility) => <option value={facility.id} key={facility.id}>{facility.name}</option>)}</select></label>
-            <label><span>Receiving facility</span><select value={dropoffFacilityId} onChange={(event) => setDropoffFacilityId(event.target.value)}><option value="">Select receiving facility</option>{facilities.filter((facility) => facility.id !== pickupFacilityId).map((facility) => <option value={facility.id} key={facility.id}>{facility.name}</option>)}</select></label>
-            <button className={`cc-dispatch-button is-${colour.toLowerCase()}`} disabled={!selectedCall || !pickupFacilityId || !dropoffFacilityId || !selectedAmbulanceId || Boolean(busyAction)} onClick={() => void dispatch()}>
-              {busyAction === 'dispatch' ? <RefreshCw size={16} className="cc-spin" /> : <Radio size={16} />}
-              Dispatch ambulance
-            </button>
-            {selectedCall && !selectedAmbulanceId && <p className="cc-empty-copy">Select an ambulance above to enable dispatch.</p>}
+          <section className="cc-card">
+            <div className="cc-card__head"><h2>Call Timeline</h2></div>
+            <div className="cc-card__body">
+              <div className="cc-timeline">
+                {callDetailLoading && <Skeleton rows={3} />}
+                {!callDetailLoading && events.slice(0, 6).map((event, index) => (
+                  <div key={event.id}>
+                    <i className={index === 0 ? 'is-current' : ''} />
+                    <time>{formatClock(event.createdAt)}</time>
+                    <p><strong>{event.summary}</strong><span>{event.actorName || 'System'}</span></p>
+                  </div>
+                ))}
+                {!callDetailLoading && !events.length && <p className="cc-empty-copy">Events will appear as the call progresses.</p>}
+                {!callDetailLoading && selectedCall && !dispatched && (
+                  <div className="is-pending">
+                    <i />
+                    <time>Next</time>
+                    <p><strong>Dispatch ambulance</strong><span>Assign team &amp; inform facility</span></p>
+                  </div>
+                )}
+              </div>
+            </div>
           </section>
-
-          <section className="cc-timeline">
-            <div className="cc-section-heading"><span>Call timeline</span></div>
-            {callDetailLoading && <Skeleton rows={3} />}
-            {!callDetailLoading && events.slice(0, 4).map((event, index) => <div key={event.id}><i className={index === 0 ? 'is-current' : ''} /><time>{new Date(event.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time><p><strong>{event.summary}</strong><span>{event.actorName || 'System'}</span></p></div>)}
-            {!callDetailLoading && !events.length && <p className="cc-empty-copy">Events will appear as the call progresses.</p>}
-          </section>
-        </aside>
+        </div>
       </main>
 
       <footer className="cc-statusbar">
-        <div><PhoneCall size={17} /><span>Active calls<strong>{dashboard?.activeCalls ?? activeCalls.length}</strong></span></div>
-        <div><Users size={17} /><span>Calls in queue<strong>{filterCounts.active + filterCounts.held}</strong></span></div>
-        <div><Ambulance size={17} /><span>Ambulances available<strong>{dashboard?.ambulancesAvailable ?? 0}</strong></span></div>
-        <div><Clock3 size={17} /><span>Average response time<strong>{dashboard?.todayStats?.averageResponseTime || '—'}</strong></span></div>
-        <div><FileText size={17} /><span>Today’s missions<strong>{dashboard?.todayStats?.ambulancesDispatched ?? 0}</strong></span></div>
-        <div><CircleDot size={17} /><span>System status<strong className={loadError ? 'is-warning' : ''}>{loadError ? 'Live data unavailable' : 'All systems operational'}</strong></span></div>
+        <div><PhoneCall size={17} /><span>Active Calls<strong>{dashboard?.activeCalls ?? activeCalls.length}</strong></span></div>
+        <div><Users size={17} /><span>Calls in Queue<strong>{queuedCalls.length}</strong></span></div>
+        <div><Ambulance size={17} /><span>Ambulances Available<strong>{dashboard ? `${dashboard.ambulancesAvailable} / ${dashboard.ambulancesAvailable + dashboard.ambulancesOnMission}` : '—'}</strong></span></div>
+        <div><Clock3 size={17} /><span>Average Response Time<strong>{dashboard?.todayStats?.averageResponseTime || '—'}</strong></span></div>
+        <div><FileText size={17} /><span>Today’s Missions<strong>{dashboard?.todayStats?.completedMissions ?? 0}</strong></span></div>
+        <div><CircleDot size={17} /><span>System Status<strong className={loadError ? 'is-warning' : ''}>{loadError ? 'Live data unavailable' : 'All Systems Operational'}</strong></span></div>
         <button onClick={() => void loadConsole(true)} disabled={refreshing} aria-label="Refresh console"><RefreshCw size={15} className={refreshing ? 'cc-spin' : ''} /></button>
       </footer>
 

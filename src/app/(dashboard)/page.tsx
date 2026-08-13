@@ -24,6 +24,7 @@ import {
   Wind
 } from 'lucide-react';
 import { StatCard, DataTable, PriorityBadge, StatusIndicator } from '@/components/ui';
+import NemsCallCentreDashboard from './NemsCallCentreDashboard';
 
 interface Referral {
   id: string;
@@ -107,7 +108,11 @@ function QuickActionCard({
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
-  
+
+  // NEMS operators work the call centre, not the referral inbox — they get the
+  // call-centre dashboard in this same shell instead of the referral overview.
+  const isNemsUser = user?.userType === 'NEMS';
+
   // UX Decision: Time-based greeting creates personal connection
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -126,21 +131,25 @@ export default function DashboardPage() {
   const { data: referralsData, isLoading: referralsLoading } = useQuery({
     queryKey: ['referrals', 'dashboard'],
     queryFn: () => referralService.list({ page: 1, limit: 5 }),
+    enabled: !isNemsUser,
   });
 
   const { data: pendingReferrals } = useQuery({
     queryKey: ['referrals', 'pending'],
     queryFn: () => referralService.listPending(),
+    enabled: !isNemsUser,
   });
 
   const { data: incomingReferrals } = useQuery({
     queryKey: ['referrals', 'incoming'],
     queryFn: () => referralService.listIncoming({ page: 1, limit: 10 }),
+    enabled: !isNemsUser,
   });
 
   const { data: outgoingReferrals } = useQuery({
     queryKey: ['referrals', 'outgoing'],
     queryFn: () => referralService.listOutgoing({ page: 1, limit: 10 }),
+    enabled: !isNemsUser,
   });
 
   // Admin and NEMS users get global stats from analytics API
@@ -149,7 +158,7 @@ export default function DashboardPage() {
   const { data: analyticsData } = useQuery({
     queryKey: ['analytics', 'referrals', 'overview'],
     queryFn: () => analyticsService.getReferralAnalytics(),
-    enabled: isAdminUser, // Only fetch for admin users
+    enabled: isAdminUser && !isNemsUser, // Only fetch for admin users
   });
 
   // Fetch facility readiness for users with a facility
@@ -157,7 +166,7 @@ export default function DashboardPage() {
   const { data: facilityReadiness } = useQuery({
     queryKey: ['facility-readiness', facilityId],
     queryFn: () => readinessService.getLatest(facilityId!),
-    enabled: !!facilityId, // Only fetch if user has a facility
+    enabled: !!facilityId && !isNemsUser, // Only fetch if user has a facility
   });
 
   const referrals: Referral[] = referralsData?.data || [];
@@ -289,6 +298,24 @@ export default function DashboardPage() {
       ),
     }),
   ], []);
+
+  // NEMS operators get the call-centre view of this same dashboard route.
+  if (isNemsUser) {
+    return (
+      <>
+        <div style={{ marginBottom: '24px' }}>
+          <h1 style={{ fontSize: '28px', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: '6px' }}>
+            {getGreeting()}, {user?.firstName}
+          </h1>
+          <p style={{ color: 'var(--muted)', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Calendar size={14} />
+            {currentDate}
+          </p>
+        </div>
+        <NemsCallCentreDashboard />
+      </>
+    );
+  }
 
   return (
     <>
