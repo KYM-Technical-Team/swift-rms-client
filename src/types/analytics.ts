@@ -103,6 +103,73 @@ export interface AnalyticsQuery {
   dateTo?: string;
   facilityId?: string;
   districtId?: string;
+  groupBy?: 'DAY' | 'WEEK' | 'MONTH';
+}
+
+export interface AnalyticsTrendPoint {
+  period: string;
+  red: number;
+  yellow: number;
+  green: number;
+  other: number;
+  total: number;
+}
+
+export interface FleetStatusSummary {
+  total: number;
+  available: number;
+  onMission: number;
+  maintenance: number;
+  outOfService: number;
+}
+
+export interface ReadinessStatusSummary {
+  totalFacilities: number;
+  reportingFacilities: number;
+  reportingRate: number;
+  high: number;
+  medium: number;
+  low: number;
+}
+
+export interface NationalDashboardSummary {
+  totalReferrals: number;
+  totalMissions: number;
+  activeReferrals: number;
+  missionSuccessRate: number;
+  averageResponseTimeMinutes: number;
+  averageTimeToSceneMinutes: number;
+  averageTimeToHospitalMinutes: number;
+  averageTurnaroundMinutes: number;
+  abortRate: number;
+  averageTimeToClinicianMinutes: number;
+}
+
+export interface NationalDashboardResponse {
+  summary: NationalDashboardSummary;
+  trends: AnalyticsTrendPoint[];
+  priorityDistribution: Record<string, number>;
+  colourCodeDistribution: Record<string, number>;
+  fleetStatus: FleetStatusSummary;
+  readinessStatus: ReadinessStatusSummary;
+}
+
+export interface DistrictPerformanceRow {
+  districtId: string;
+  districtName: string;
+  referralCount: number;
+  missionCount: number;
+  averageResponseTimeMinutes: number;
+  averageTimeToSceneMinutes: number;
+  averageTimeToHospitalMinutes: number;
+  successRate: number;
+  abortRate: number;
+  readinessReportingRate: number;
+  availableAmbulances: number;
+}
+
+export interface DistrictPerformanceResponse {
+  districts: DistrictPerformanceRow[];
 }
 
 export interface GenerateReportRequest {

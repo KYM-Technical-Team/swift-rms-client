@@ -8,11 +8,23 @@ import {
   HeatmapData,
   DHIS2Export,
   AnalyticsQuery,
+  NationalDashboardResponse,
+  DistrictPerformanceResponse,
   GenerateReportRequest,
   ApiResponse,
 } from '@/types';
 
 export const analyticsService = {
+  getNationalDashboard: async (query?: AnalyticsQuery): Promise<NationalDashboardResponse> => {
+    const response = await apiClient.get<ApiResponse<NationalDashboardResponse>>('/analytics/national-dashboard', { params: query });
+    return response.data.data!;
+  },
+
+  getDistrictPerformance: async (query?: AnalyticsQuery): Promise<DistrictPerformanceResponse> => {
+    const response = await apiClient.get<ApiResponse<DistrictPerformanceResponse>>('/analytics/district-performance', { params: query });
+    return response.data.data!;
+  },
+
   getReferralAnalytics: async (query?: AnalyticsQuery): Promise<ReferralAnalytics> => {
     const response = await apiClient.get<ApiResponse<ReferralAnalytics>>('/analytics/referrals', { params: query });
     return response.data.data!;
