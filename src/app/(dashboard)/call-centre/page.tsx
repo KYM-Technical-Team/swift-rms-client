@@ -12,6 +12,7 @@ import {
   Car,
   Check,
   ChevronLeft,
+  ClipboardList,
   Clock,
   Droplet,
   Flame,
@@ -30,6 +31,8 @@ import {
   Radio,
   RefreshCw,
   ShieldCheck,
+  Stethoscope,
+  User,
   Users,
   Wind,
   X,
@@ -44,6 +47,7 @@ import {
 } from '@/lib/triage-protocols';
 import type {
   Call,
+  AmbulanceRank,
   CallType,
   CreateCallRequest,
   EmergencyNature,
@@ -52,6 +56,7 @@ import type {
 } from '@/types';
 import {
   useActiveFacilities,
+  useAmbulanceFleet,
   useAmbulanceRanking,
   useCallCentreDashboard,
   useCallCommand,
@@ -62,12 +67,15 @@ import {
   useNemsOperators,
   useTriageAndDispatch,
 } from './hooks';
-import './call-centre.css';
+import '../console.css';
 
 const CallLocationMap = dynamic(() => import('./CallLocationMap'), {
   ssr: false,
   loading: () => <div className="cc-skeleton cc-skeleton--map" />,
 });
+
+/** The console is split into tabs so the operator never scrolls the page to reach a control. */
+type ConsoleTab = 'triage' | 'patient' | 'dispatch' | 'log';
 
 const problemTiles: { id: string; icon: typeof Baby }[] = [
   { id: 'obstetric', icon: Baby },
@@ -125,7 +133,7 @@ function facilityLabel(value?: Call['callerFacility']) {
 
 function facilityCode(value?: Call['callerFacility']) {
   if (!value || typeof value === 'string') return undefined;
-  return value.facilityCode;
+  return value.facilityCode || value.code;
 }
 
 /** A question with no colour mapping captures data rather than branching the protocol. */
@@ -282,6 +290,7 @@ export default function CallCentrePage() {
   const callsQuery = useCalls();
   const dashboardQuery = useCallCentreDashboard();
   const facilitiesQuery = useActiveFacilities();
+  const ambulanceFleetQuery = useAmbulanceFleet();
   const logCall = useLogCall();
   const command = useCallCommand();
   const triageAndDispatch = useTriageAndDispatch();
@@ -292,6 +301,7 @@ export default function CallCentrePage() {
 
   // ---- local state ------------------------------------------------------
   const [selectedCallId, setSelectedCallId] = useState<string>();
+  const [tab, setTab] = useState<ConsoleTab>('triage');
   const [now, setNow] = useState(() => Date.now());
   const [protocolId, setProtocolId] = useState('obstetric');
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -323,6 +333,7 @@ export default function CallCentrePage() {
   const [loadedCallId, setLoadedCallId] = useState(activeCallId);
   if (activeCallId !== loadedCallId) {
     setLoadedCallId(activeCallId);
+    setTab('triage');
     setNoteDraft('');
     setNoteOpen(false);
     setCriteriaOpen(false);
@@ -346,7 +357,26 @@ export default function CallCentrePage() {
   const operatorsQuery = useNemsOperators(transferOpen, operator?.id);
 
   const events = useMemo(() => eventsQuery.data ?? [], [eventsQuery.data]);
-  const rankings = useMemo(() => rankingQuery.data ?? [], [rankingQuery.data]);
+  const rankings = useMemo(() => {
+    const ranked = rankingQuery.data ?? [];
+    const rankedIds = new Set(ranked.map((item) => item.ambulanceId));
+    const unrankedFleet: AmbulanceRank[] = (ambulanceFleetQuery.data?.data ?? [])
+      .filter((ambulance) => !rankedIds.has(ambulance.id))
+      .map((ambulance) => ({
+        ambulanceId: ambulance.id,
+        registryId: ambulance.ambulanceId,
+        facilityName: ambulance.facility?.name,
+        locationUpdatedAt: ambulance.lastLocationUpdate,
+        equipment: ambulance.equipment,
+        crewMembers: ambulance.crew?.map((member) => `${member.firstName} ${member.lastName}`),
+        eligible: false,
+        reasons: [ambulance.status === 'AVAILABLE'
+          ? 'Awaiting eligibility check'
+          : ambulance.status.replace(/_/g, ' ').toLowerCase()],
+        score: -1000,
+      }));
+    return [...ranked, ...unrankedFleet];
+  }, [ambulanceFleetQuery.data, rankingQuery.data]);
   const readiness = readinessQuery.data;
 
   // The best eligible ambulance is the default; an explicit pick wins while it stays eligible.
@@ -367,7 +397,7 @@ export default function CallCentrePage() {
 
   const runCommand = (
     action: 'hold' | 'resume' | 'transfer' | 'conference' | 'notes' | 'complete',
-    payload: { reason?: string; participant?: string; note?: string; targetOperatorId?: string } = {},
+    payload: { reason?: string; participant?: string; note?: string; targetOperatorId?: string; members?: string[] } = {},
   ) => {
     if (!selectedCall) return;
     command.mutate(
@@ -422,7 +452,7 @@ export default function CallCentrePage() {
           colourCode: colour,
           triageResult,
           patientInfo,
-          notes: selectedCall.notes,
+          notes: selectedCall.notes?.slice(-2000),
         },
       },
       {
@@ -492,10 +522,25 @@ export default function CallCentrePage() {
     { label: 'Doctors', value: `${readiness.doctorsOnDuty ?? 0}`, ok: (readiness.doctorsOnDuty ?? 0) > 0, note: (readiness.doctorsOnDuty ?? 0) > 0 ? 'On duty' : 'None' },
   ] : [];
 
+  const consoleTabs: { id: ConsoleTab; label: string; icon: typeof Baby; badge?: string; ready?: boolean }[] = [
+    { id: 'triage', label: 'Triage', icon: Stethoscope, badge: `${answered}/${totalQuestions}`, ready: totalQuestions > 0 && answered === totalQuestions },
+    { id: 'patient', label: 'Patient', icon: User, badge: patientInfo.name ? undefined : 'Add', ready: false },
+    { id: 'dispatch', label: 'Dispatch', icon: Radio, badge: dispatched ? 'Sent' : `${checklistDone}/${dispatchChecklist.length}`, ready: dispatched || canDispatch },
+    { id: 'log', label: 'Call log', icon: ClipboardList, badge: noteEntries.length ? String(noteEntries.length) : undefined },
+  ];
+
   const refreshAll = () => {
     void callsQuery.refetch();
     void dashboardQuery.refetch();
+    void facilitiesQuery.refetch();
+    void ambulanceFleetQuery.refetch();
     if (activeCallId) { void eventsQuery.refetch(); void rankingQuery.refetch(); }
+  };
+
+  const confirmTriageAndOpenDispatch = () => {
+    setSelectedColour(colour);
+    setTab('dispatch');
+    window.requestAnimationFrame(() => document.getElementById('cc-tab-dispatch')?.focus());
   };
 
   return (
@@ -516,7 +561,7 @@ export default function CallCentrePage() {
         </div>
       </div>
 
-      {/* ── KPI row ─────────────────────────────────────────────────── */}
+      {/* ── KPI + live call strip ───────────────────────────────────── */}
       <div className="stats-grid cc-stats">
         <div className="stat-card">
           <div className="stat-header"><div className="stat-icon stat-icon-error"><PhoneCall size={20} /></div></div>
@@ -540,7 +585,6 @@ export default function CallCentrePage() {
         </div>
       </div>
 
-      {/* ── Live call bar ───────────────────────────────────────────── */}
       <div className="card cc-callbar">
         <div className="cc-callbar__item">
           <span>Active call</span>
@@ -559,6 +603,12 @@ export default function CallCentrePage() {
           <strong><em className={`cc-status is-${status.tone}`}>{status.label}</em></strong>
         </div>
         <div className="cc-callbar__item">
+          <span>Triage code</span>
+          <strong>
+            <em className={`cc-status is-code-${colour.toLowerCase()}`}>{selectedColour ? colour : `${recommendation} · rec`}</em>
+          </strong>
+        </div>
+        <div className="cc-callbar__item">
           <span>Today’s missions</span>
           <strong>{dashboard?.todayStats?.completedMissions ?? 0}</strong>
         </div>
@@ -572,10 +622,10 @@ export default function CallCentrePage() {
         </div>
       )}
 
-      {/* ── Console ─────────────────────────────────────────────────── */}
+      {/* ── Console: persistent call rail + tabbed work area ─────────── */}
       <div className="cc-console">
-        {/* Column 1 — the call */}
-        <div className="cc-col">
+        {/* Always-visible rail — call handling never hides behind a tab. */}
+        <aside className="cc-rail">
           <section className="card cc-card">
             <div className="cc-card__head"><h2>Call controls</h2></div>
             <div className="cc-card__body">
@@ -626,8 +676,8 @@ export default function CallCentrePage() {
 
               {conferenceOpen && (
                 <div className="cc-inline-action">
-                  <input value={conferenceMember} onChange={(event) => setConferenceMember(event.target.value)} placeholder="Clinician or facility" aria-label="Conference participant" />
-                  <button className="btn btn-secondary btn-sm" disabled={!conferenceMember.trim() || commandBusy === 'conference'} onClick={() => runCommand('conference', { participant: conferenceMember.trim() })}>
+                  <input maxLength={120} disabled={conferenceMembers.length >= 10} value={conferenceMember} onChange={(event) => setConferenceMember(event.target.value)} placeholder={conferenceMembers.length >= 10 ? 'Participant limit reached' : 'Clinician or facility'} aria-label="Conference participant" />
+                  <button className="btn btn-secondary btn-sm" disabled={!conferenceMember.trim() || conferenceMembers.length >= 10 || commandBusy === 'conference'} onClick={() => runCommand('conference', { members: [...new Set([...conferenceMembers, conferenceMember.trim()])].slice(0, 10) })}>
                     {commandBusy === 'conference' ? <RefreshCw size={13} className="cc-spin" /> : 'Add'}
                   </button>
                 </div>
@@ -689,438 +739,497 @@ export default function CallCentrePage() {
               )}
             </div>
           </section>
+        </aside>
 
-          <section className="card cc-card">
-            <div className="cc-card__head">
-              <h2>Patient</h2>
-              <button className="cc-text-button" type="button" onClick={() => setPatientFormOpen((value) => !value)} aria-expanded={patientFormOpen}>
-                {patientFormOpen ? 'Done' : 'Edit'}
-              </button>
-            </div>
-            <div className="cc-card__body">
-              <div className="cc-person">
-                <div className="cc-avatar cc-avatar--patient">{(patientInfo.name || 'PT').slice(0, 2).toUpperCase()}</div>
-                <div>
-                  <strong>{patientInfo.name || 'Patient not identified'}</strong>
-                  <span>{[patientInfo.gender, patientInfo.age ? `${patientInfo.age} years` : undefined].filter(Boolean).join(' · ') || 'Age and gender not recorded'}</span>
-                </div>
-              </div>
-
-              <div className="cc-checks">
-                <span className={answers.alert === 'no' ? 'is-danger' : answers.alert ? 'is-ok' : ''}>
-                  {answers.alert === 'no' ? <X size={14} /> : <Check size={14} />}Conscious
-                </span>
-                <span className={answers.breathing === 'no' ? 'is-danger' : answers.breathing ? 'is-ok' : ''}>
-                  {answers.breathing === 'no' ? <X size={14} /> : <Check size={14} />}Breathing
-                </span>
-                <span className={answers.contact === 'no' ? 'is-danger' : answers.contact ? 'is-ok' : ''}>
-                  {answers.contact === 'no' ? <X size={14} /> : <Check size={14} />}Caller with patient
-                </span>
-              </div>
-
-              {patientFormOpen && (
-                <div className="cc-patient-form">
-                  <label className="cc-field"><span>Name</span><input value={patientInfo.name || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, name: event.target.value }))} placeholder="Patient name" /></label>
-                  <div className="cc-two-fields">
-                    <label className="cc-field"><span>Age</span><input inputMode="numeric" value={patientInfo.age || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, age: Number(event.target.value) || undefined }))} placeholder="Age" /></label>
-                    <label className="cc-field"><span>Gender</span><select value={patientInfo.gender || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, gender: event.target.value }))}><option value="">Select</option><option>Female</option><option>Male</option><option>Unknown</option></select></label>
-                  </div>
-                  <label className="cc-field"><span>Symptoms</span><input value={patientInfo.symptoms || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, symptoms: event.target.value }))} placeholder="Presenting complaint" /></label>
-                </div>
-              )}
-            </div>
-          </section>
-
-          <section className="card cc-card">
-            <div className="cc-card__head">
-              <h2>Call notes</h2>
-              <button className="cc-text-button" type="button" disabled={!selectedCall || callClosed} onClick={() => setNoteOpen((value) => !value)}>
-                <Plus size={14} /> Add note
-              </button>
-            </div>
-            <div className="cc-card__body">
-              {noteOpen && (
-                <div className="cc-note-compose">
-                  <textarea value={noteDraft} onChange={(event) => setNoteDraft(event.target.value)} placeholder="Document call details and actions…" autoFocus />
-                  <div>
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => { setNoteOpen(false); setNoteDraft(''); }}>Cancel</button>
-                    <button type="button" className="btn btn-primary btn-sm" disabled={!noteDraft.trim() || commandBusy === 'notes'} onClick={() => runCommand('notes', { note: noteDraft.trim() })}>
-                      {commandBusy === 'notes' && <RefreshCw size={14} className="cc-spin" />} Save note
-                    </button>
-                  </div>
-                </div>
-              )}
-              {noteEntries.length ? (
-                <ul className="cc-note-list">
-                  {noteEntries.map((entry, index) => (
-                    <li key={`${entry.text}-${index}`}>
-                      {entry.time && <time>{entry.time}</time>}
-                      <p>{entry.text}</p>
-                    </li>
-                  ))}
-                </ul>
-              ) : !noteOpen && <p className="cc-empty-copy">No notes recorded for this call yet.</p>}
-            </div>
-          </section>
-        </div>
-
-        {/* Column 2 — triage */}
-        <div className="cc-col">
-          <section className="card cc-card">
-            <div className="cc-steps">
-              {steps.map((step, index) => (
-                <div className={`cc-step ${step.done ? 'is-complete' : ''} ${index === currentStep ? 'is-active' : ''}`} key={step.label}>
-                  <span>{step.done ? <Check size={13} /> : index + 1}</span>
-                  <strong>{step.label}</strong>
-                </div>
-              ))}
-            </div>
-
-            <div className="cc-protocols">
-              <div className="cc-subhead">
-                <h3>Select problem type</h3>
-                {isOtherProtocol && <span>{protocol.name}</span>}
-              </div>
-              <div className="cc-protocol-grid">
-                {problemTiles.map((tile) => {
-                  const item = protocolById[tile.id];
-                  if (!item) return null;
-                  const Icon = tile.icon;
-                  return (
-                    <button
-                      className={protocolId === item.id ? 'is-selected' : ''}
-                      key={item.id}
-                      onClick={() => { setProtocolId(item.id); setAnswers({}); setSelectedColour(undefined); setShowAllProtocols(false); }}
-                    >
-                      <Icon size={22} /><span>{item.name}</span>
-                    </button>
-                  );
-                })}
-                <button className={isOtherProtocol ? 'is-selected' : ''} onClick={() => setShowAllProtocols((value) => !value)} aria-expanded={showAllProtocols}>
-                  <MoreHorizontal size={22} /><span>Other / unknown</span>
-                </button>
-              </div>
-              {(showAllProtocols || isOtherProtocol) && (
-                <select
-                  className="cc-more-protocols"
-                  aria-label="All triage protocols"
-                  value={protocolId}
-                  onChange={(event) => { setProtocolId(event.target.value); setAnswers({}); setSelectedColour(undefined); }}
+        {/* Tabbed work area — one section at a time, scrolls inside itself. */}
+        <div className="cc-panel">
+          <div className="cc-tabs" role="tablist" aria-label="Call console sections">
+            {consoleTabs.map((item, index) => {
+              const Icon = item.icon;
+              const isActive = tab === item.id;
+              return (
+                <button
+                  className={`cc-tab ${isActive ? 'is-active' : ''}`}
+                  type="button"
+                  role="tab"
+                  id={`cc-tab-${item.id}`}
+                  key={item.id}
+                  aria-selected={isActive}
+                  aria-controls={`cc-panel-${item.id}`}
+                  tabIndex={isActive ? 0 : -1}
+                  onClick={() => setTab(item.id)}
+                  onKeyDown={(event) => {
+                    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+                    event.preventDefault();
+                    const step = event.key === 'ArrowRight' ? 1 : consoleTabs.length - 1;
+                    const next = consoleTabs[(index + step) % consoleTabs.length];
+                    setTab(next.id);
+                    document.getElementById(`cc-tab-${next.id}`)?.focus();
+                  }}
                 >
-                  {triageProtocols.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}
-                </select>
-              )}
-            </div>
+                  <Icon size={16} />
+                  <span>{item.label}</span>
+                  {item.badge && <em className={`cc-tab__badge ${item.ready ? 'is-ready' : ''}`}>{item.badge}</em>}
+                </button>
+              );
+            })}
+          </div>
 
-            <div className="cc-questionnaire">
-              <div className="cc-question-bar">
-                <div>
-                  <h3>{protocol.name} triage — key questions</h3>
-                  <span>{answered} of {totalQuestions} answered</span>
-                </div>
-                <div className="cc-question-bar__right">
-                  <span className={`cc-recommend is-${recommendation.toLowerCase()}`}>Recommends {recommendation}</span>
-                  {answered > 0 && <button className="cc-text-button" type="button" onClick={() => { setAnswers({}); setSelectedColour(undefined); }}>Clear</button>}
-                </div>
-              </div>
-              <div className="cc-progress" role="progressbar" aria-valuenow={answered} aria-valuemin={0} aria-valuemax={totalQuestions} aria-label="Triage questions answered">
-                <i style={{ width: `${totalQuestions ? (answered / totalQuestions) * 100 : 0}%` }} />
-              </div>
+          <div className="cc-tabpanel" role="tabpanel" id={`cc-panel-${tab}`} aria-labelledby={`cc-tab-${tab}`} tabIndex={-1}>
+            {tab === 'triage' && (
+              <div className="cc-tab-grid cc-tab-grid--triage">
+                <section className="card cc-card">
+                  <div className="cc-steps">
+                    {steps.map((step, index) => (
+                      <div className={`cc-step ${step.done ? 'is-complete' : ''} ${index === currentStep ? 'is-active' : ''}`} key={step.label}>
+                        <span>{step.done ? <Check size={13} /> : index + 1}</span>
+                        <strong>{step.label}</strong>
+                      </div>
+                    ))}
+                  </div>
 
-              <div className="cc-question-list">
-                {protocol.questions.map((question, index) => (
-                  <div className={`cc-question ${answers[question.id] ? 'is-answered' : ''}`} key={question.id}>
-                    <div className="cc-question__text">
-                      <span className="cc-question__index">{answers[question.id] ? <Check size={13} /> : index + 1}</span>
+                  <div className="cc-protocols">
+                    <div className="cc-subhead">
+                      <h3>Select problem type</h3>
+                      {isOtherProtocol && <span>{protocol.name}</span>}
+                    </div>
+                    <div className="cc-protocol-grid">
+                      {problemTiles.map((tile) => {
+                        const item = protocolById[tile.id];
+                        if (!item) return null;
+                        const Icon = tile.icon;
+                        return (
+                          <button
+                            className={protocolId === item.id ? 'is-selected' : ''}
+                            key={item.id}
+                            onClick={() => { setProtocolId(item.id); setAnswers({}); setSelectedColour(undefined); setShowAllProtocols(false); }}
+                          >
+                            <Icon size={22} /><span>{item.name}</span>
+                          </button>
+                        );
+                      })}
+                      <button className={isOtherProtocol ? 'is-selected' : ''} onClick={() => setShowAllProtocols((value) => !value)} aria-expanded={showAllProtocols}>
+                        <MoreHorizontal size={22} /><span>Other / unknown</span>
+                      </button>
+                    </div>
+                    {(showAllProtocols || isOtherProtocol) && (
+                      <select
+                        className="cc-more-protocols"
+                        aria-label="All triage protocols"
+                        value={protocolId}
+                        onChange={(event) => { setProtocolId(event.target.value); setAnswers({}); setSelectedColour(undefined); }}
+                      >
+                        {triageProtocols.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}
+                      </select>
+                    )}
+                  </div>
+
+                  <div className="cc-questionnaire">
+                    <div className="cc-question-bar">
                       <div>
-                        <strong>{question.text}</strong>
-                        {question.note && <small>{question.note}</small>}
+                        <h3>{protocol.name} triage — key questions</h3>
+                        <span>{answered} of {totalQuestions} answered</span>
+                      </div>
+                      <div className="cc-question-bar__right">
+                        <span className={`cc-recommend is-${recommendation.toLowerCase()}`}>Recommends {recommendation}</span>
+                        {answered > 0 && <button className="cc-text-button" type="button" onClick={() => { setAnswers({}); setSelectedColour(undefined); }}>Clear</button>}
                       </div>
                     </div>
-                    {isFreeText(question) ? (
-                      <input
-                        className="cc-question-input"
-                        value={answers[question.id] || ''}
-                        onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))}
-                        placeholder="Record answer"
-                        aria-label={question.text}
-                      />
-                    ) : (
-                      <div className="cc-segmented" role="group" aria-label={question.text}>
-                        {(['yes', 'no', 'unknown'] as const).map((answer) => (
-                          <button
-                            className={`${answers[question.id] === answer ? 'is-selected' : ''} is-${answer}`}
-                            key={answer}
-                            aria-pressed={answers[question.id] === answer}
-                            onClick={() => setAnswers((current) => ({ ...current, [question.id]: answer }))}
-                          >
-                            {answer[0].toUpperCase() + answer.slice(1)}
-                          </button>
-                        ))}
+                    <div className="cc-progress" role="progressbar" aria-valuenow={answered} aria-valuemin={0} aria-valuemax={totalQuestions} aria-label="Triage questions answered">
+                      <i style={{ width: `${totalQuestions ? (answered / totalQuestions) * 100 : 0}%` }} />
+                    </div>
+
+                    <div className="cc-question-list">
+                      {protocol.questions.map((question, index) => (
+                        <div className={`cc-question ${answers[question.id] ? 'is-answered' : ''}`} key={question.id}>
+                          <div className="cc-question__text">
+                            <span className="cc-question__index">{answers[question.id] ? <Check size={13} /> : index + 1}</span>
+                            <div>
+                              <strong>{question.text}</strong>
+                              {question.note && <small>{question.note}</small>}
+                            </div>
+                          </div>
+                          {isFreeText(question) ? (
+                            <input
+                              className="cc-question-input"
+                              value={answers[question.id] || ''}
+                              onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))}
+                              placeholder="Record answer"
+                              aria-label={question.text}
+                            />
+                          ) : (
+                            <div className="cc-segmented" role="group" aria-label={question.text}>
+                              {(['yes', 'no', 'unknown'] as const).map((answer) => (
+                                <button
+                                  className={`${answers[question.id] === answer ? 'is-selected' : ''} is-${answer}`}
+                                  key={answer}
+                                  aria-pressed={answers[question.id] === answer}
+                                  onClick={() => setAnswers((current) => ({ ...current, [question.id]: answer }))}
+                                >
+                                  {answer[0].toUpperCase() + answer.slice(1)}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="cc-triage-footer">
+                    <button className="btn btn-secondary" type="button" disabled={answered === 0} onClick={() => { setAnswers({}); setSelectedColour(undefined); }}>
+                      <ChevronLeft size={16} /> Start over
+                    </button>
+                    <button
+                      className={`cc-confirm is-${colour.toLowerCase()}`}
+                      type="button"
+                      disabled={!selectedCall}
+                      onClick={confirmTriageAndOpenDispatch}
+                    >
+                      {selectedColour ? `${colour} code confirmed` : `Confirm ${colour} code`} <ArrowRight size={16} />
+                    </button>
+                  </div>
+                </section>
+
+                <section className="card cc-card">
+                  <div className="cc-card__head"><h2>Triage result</h2></div>
+                  <div className="cc-card__body">
+                    <div className={`cc-result is-${colour.toLowerCase()}`}>
+                      <div className="cc-result__mark"><Bell size={22} /></div>
+                      <div className="cc-result__text">
+                        <strong>{colour} code</strong>
+                        <span>{headline.title}</span>
+                      </div>
+                      <p>{headline.copy}</p>
+                      <button type="button" onClick={() => setCriteriaOpen((value) => !value)} aria-expanded={criteriaOpen}>
+                        {criteriaOpen ? 'Hide criteria' : 'View criteria'}
+                      </button>
+                    </div>
+
+                    {criteriaOpen && (
+                      <ul className="cc-criteria">
+                        {protocol.criteria[colour].map((line) => <li key={line}><i />{line}</li>)}
+                      </ul>
+                    )}
+
+                    <div className="cc-colour-picker" role="group" aria-label="Override triage colour">
+                      {(['GREEN', 'YELLOW', 'RED'] as TriageColour[]).map((item) => (
+                        <button
+                          className={`${item === colour ? 'is-selected' : ''} is-${item.toLowerCase()}`}
+                          key={item}
+                          aria-pressed={item === colour}
+                          onClick={() => setSelectedColour(item)}
+                        >
+                          {item}{item === recommendation && <em>rec</em>}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="cc-meta-grid">
+                      <span>Category<strong>{protocol.name}</strong></span>
+                      <span>Confirmed by<strong>{selectedColour ? operatorName : 'Pending'}</strong></span>
+                      <span>Confirmed at<strong>{selectedCall?.triageResult?.completedAt ? formatClock(selectedCall.triageResult.completedAt) : selectedColour ? formatClock(new Date(now).toISOString()) : '--:--'}</strong></span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            )}
+
+            {tab === 'patient' && (
+              <div className="cc-tab-grid cc-tab-grid--split">
+                <section className="card cc-card">
+                  <div className="cc-card__head">
+                    <h2>Patient</h2>
+                    <button className="cc-text-button" type="button" onClick={() => setPatientFormOpen((value) => !value)} aria-expanded={patientFormOpen}>
+                      {patientFormOpen ? 'Done' : 'Edit'}
+                    </button>
+                  </div>
+                  <div className="cc-card__body">
+                    <div className="cc-person">
+                      <div className="cc-avatar cc-avatar--patient">{(patientInfo.name || 'PT').slice(0, 2).toUpperCase()}</div>
+                      <div>
+                        <strong>{patientInfo.name || 'Patient not identified'}</strong>
+                        <span>{[patientInfo.gender, patientInfo.age ? `${patientInfo.age} years` : undefined].filter(Boolean).join(' · ') || 'Age and gender not recorded'}</span>
+                      </div>
+                    </div>
+
+                    <div className="cc-checks">
+                      <span className={answers.alert === 'no' ? 'is-danger' : answers.alert ? 'is-ok' : ''}>
+                        {answers.alert === 'no' ? <X size={14} /> : <Check size={14} />}Conscious
+                      </span>
+                      <span className={answers.breathing === 'no' ? 'is-danger' : answers.breathing ? 'is-ok' : ''}>
+                        {answers.breathing === 'no' ? <X size={14} /> : <Check size={14} />}Breathing
+                      </span>
+                      <span className={answers.contact === 'no' ? 'is-danger' : answers.contact ? 'is-ok' : ''}>
+                        {answers.contact === 'no' ? <X size={14} /> : <Check size={14} />}Caller with patient
+                      </span>
+                    </div>
+
+                    {patientFormOpen && (
+                      <div className="cc-patient-form">
+                        <label className="cc-field"><span>Name</span><input value={patientInfo.name || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, name: event.target.value }))} placeholder="Patient name" /></label>
+                        <div className="cc-two-fields">
+                          <label className="cc-field"><span>Age</span><input inputMode="numeric" value={patientInfo.age || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, age: Number(event.target.value) || undefined }))} placeholder="Age" /></label>
+                          <label className="cc-field"><span>Gender</span><select value={patientInfo.gender || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, gender: event.target.value }))}><option value="">Select</option><option>Female</option><option>Male</option><option>Unknown</option></select></label>
+                        </div>
+                        <label className="cc-field"><span>Symptoms</span><input value={patientInfo.symptoms || ''} onChange={(event) => setPatientInfo((value) => ({ ...value, symptoms: event.target.value }))} placeholder="Presenting complaint" /></label>
                       </div>
                     )}
                   </div>
-                ))}
-              </div>
-            </div>
+                </section>
 
-            <div className="cc-triage-footer">
-              <button className="btn btn-secondary" type="button" disabled={answered === 0} onClick={() => { setAnswers({}); setSelectedColour(undefined); }}>
-                <ChevronLeft size={16} /> Start over
-              </button>
-              <button
-                className={`cc-confirm is-${colour.toLowerCase()}`}
-                type="button"
-                disabled={!selectedCall}
-                onClick={() => { setSelectedColour(colour); setCriteriaOpen(true); }}
-              >
-                {selectedColour ? `${colour} code confirmed` : `Confirm ${colour} code`} <ArrowRight size={16} />
-              </button>
-            </div>
-          </section>
-        </div>
+                <section className="card cc-card">
+                  <div className="cc-card__head"><h2>Patient summary</h2></div>
+                  <div className="cc-card__body">
+                    <dl className="cc-summary-list">
+                      <div><dt>Name</dt><dd>{patientInfo.name || 'Not recorded'}</dd></div>
+                      <div><dt>Age / gender</dt><dd>{patientInfo.age ? `${patientInfo.age} years` : '—'} / {patientInfo.gender || '—'}</dd></div>
+                      <div><dt>Status</dt><dd className={`cc-text-${colour.toLowerCase()}`}>● {colourPriority(colour) === 'CRITICAL' ? 'Critical' : colourPriority(colour) === 'HIGH' ? 'Urgent' : 'Stable'}</dd></div>
+                      <div><dt>Symptoms</dt><dd className="cc-wrap">{patientInfo.symptoms || selectedCall?.emergencyNature || 'Not recorded'}</dd></div>
+                    </dl>
 
-        {/* Column 3 — result, dispatch, context */}
-        <div className="cc-col">
-          <section className="card cc-card">
-            <div className="cc-card__head"><h2>Triage result</h2></div>
-            <div className="cc-card__body">
-              <div className={`cc-result is-${colour.toLowerCase()}`}>
-                <div className="cc-result__mark"><Bell size={22} /></div>
-                <div className="cc-result__text">
-                  <strong>{colour} code</strong>
-                  <span>{headline.title}</span>
-                </div>
-                <p>{headline.copy}</p>
-                <button type="button" onClick={() => setCriteriaOpen((value) => !value)} aria-expanded={criteriaOpen}>
-                  {criteriaOpen ? 'Hide criteria' : 'View criteria'}
-                </button>
-              </div>
-
-              {criteriaOpen && (
-                <ul className="cc-criteria">
-                  {protocol.criteria[colour].map((line) => <li key={line}><i />{line}</li>)}
-                </ul>
-              )}
-
-              <div className="cc-colour-picker" role="group" aria-label="Override triage colour">
-                {(['GREEN', 'YELLOW', 'RED'] as TriageColour[]).map((item) => (
-                  <button
-                    className={`${item === colour ? 'is-selected' : ''} is-${item.toLowerCase()}`}
-                    key={item}
-                    aria-pressed={item === colour}
-                    onClick={() => setSelectedColour(item)}
-                  >
-                    {item}{item === recommendation && <em>rec</em>}
-                  </button>
-                ))}
-              </div>
-
-              <div className="cc-meta-grid">
-                <span>Category<strong>{protocol.name}</strong></span>
-                <span>Confirmed by<strong>{selectedColour ? operatorName : 'Pending'}</strong></span>
-                <span>Confirmed at<strong>{selectedCall?.triageResult?.completedAt ? formatClock(selectedCall.triageResult.completedAt) : selectedColour ? formatClock(new Date(now).toISOString()) : '--:--'}</strong></span>
-              </div>
-            </div>
-          </section>
-
-          <section className="card cc-card">
-            <div className="cc-card__head">
-              <h2>Caller location</h2>
-              <span className={`badge ${coordinates ? 'badge-success' : 'badge-warning'}`}>{coordinates ? 'GPS fix' : 'No GPS'}</span>
-            </div>
-            <div className="cc-card__body">
-              <p className="cc-location-text">
-                <strong>{callerFacilityName || callerLocation}{facilityCode(selectedCall?.callerFacility) ? ` (${facilityCode(selectedCall?.callerFacility)})` : ''}</strong>
-                <span>{callerAddress || selectedCall?.emergencyLocation?.landmark || 'Location reported by caller'}</span>
-              </p>
-              <div className="cc-map">
-                {coordinates ? (
-                  <CallLocationMap latitude={coordinates.latitude} longitude={coordinates.longitude} label={callerLocation} colour={colour} />
-                ) : (
-                  <div className="cc-map__empty">
-                    <MapPinOff size={22} />
-                    <strong>No coordinates on this call</strong>
-                    <span>Ask the caller for a landmark or nearest facility.</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-
-          <section className="card cc-card">
-            <div className="cc-card__head">
-              <h2>Nearest ambulances</h2>
-              <div className="cc-heading-actions">
-                {rankings.length > 3 && (
-                  <button className="cc-text-button" type="button" onClick={() => setShowAllAmbulances((value) => !value)}>
-                    {showAllAmbulances ? 'Top 3' : `All ${rankings.length}`}
-                  </button>
-                )}
-                <button className="cc-text-button" type="button" onClick={() => void rankingQuery.refetch()} disabled={!selectedCall || rankingQuery.isFetching} aria-label="Refresh ambulance ranking">
-                  <RefreshCw size={14} className={rankingQuery.isFetching ? 'cc-spin' : ''} />
-                </button>
-              </div>
-            </div>
-            <div className="cc-card__body">
-              <div className="cc-ambulance-list">
-                {rankingQuery.isLoading && <Skeleton rows={3} />}
-                {!rankingQuery.isLoading && visibleRankings.map((item) => (
-                  <button
-                    className={selectedAmbulanceId === item.ambulanceId ? 'is-selected' : ''}
-                    disabled={!item.eligible}
-                    key={item.ambulanceId}
-                    aria-pressed={selectedAmbulanceId === item.ambulanceId}
-                    onClick={() => setAmbulanceChoice(item.ambulanceId)}
-                  >
-                    <span className="cc-ambulance-list__mark"><Ambulance size={19} /></span>
-                    <div>
-                      <strong>{item.registryId}</strong>
-                      <span>{item.facilityName || 'Unassigned base'}</span>
-                      <em className={item.eligible ? 'is-ok' : 'is-busy'}>{item.eligible ? 'Available' : item.reasons?.[0] || 'On mission'}</em>
-                    </div>
-                    <div className="cc-ambulance-list__metrics">
-                      <b>{item.distanceKm != null ? `${item.distanceKm.toFixed(1)} km` : '—'}</b>
-                      <span>{item.estimatedMinutes != null ? `ETA ${item.estimatedMinutes} min` : 'ETA n/a'}</span>
-                    </div>
-                  </button>
-                ))}
-                {!rankingQuery.isLoading && !rankings.length && (
-                  <p className="cc-empty-copy">
-                    {selectedCall ? 'No eligible ambulance ranking is available for this call.' : 'Select a call to rank nearby ambulances.'}
-                  </p>
-                )}
-              </div>
-            </div>
-          </section>
-
-          <section className="card cc-card">
-            <div className="cc-card__head">
-              <h2>Facilities</h2>
-              {receivingFacility && (
-                <span className={`badge ${readiness ? 'badge-success' : 'badge-neutral'}`}>{readiness ? 'Readiness reported' : 'No report'}</span>
-              )}
-            </div>
-            <div className="cc-card__body">
-              <label className="cc-field"><span>Pickup facility</span>
-                <select value={pickupFacilityId} onChange={(event) => setPickupFacilityId(event.target.value)} disabled={facilitiesQuery.isLoading}>
-                  <option value="">{facilitiesQuery.isLoading ? 'Loading facilities…' : 'Select pickup'}</option>
-                  {facilities.map((facility) => <option value={facility.id} key={facility.id}>{facility.name}</option>)}
-                </select>
-              </label>
-              <label className="cc-field"><span>Receiving facility</span>
-                <select value={dropoffFacilityId} onChange={(event) => setDropoffFacilityId(event.target.value)} disabled={facilitiesQuery.isLoading}>
-                  <option value="">{facilitiesQuery.isLoading ? 'Loading facilities…' : 'Select receiving facility'}</option>
-                  {facilities.filter((facility) => facility.id !== pickupFacilityId).map((facility) => <option value={facility.id} key={facility.id}>{facility.name}</option>)}
-                </select>
-              </label>
-
-              {receivingFacility && (readinessTiles.length ? (
-                <div className="cc-readiness">
-                  {readinessTiles.map((tile) => (
-                    <div className={tile.ok ? '' : 'is-low'} key={tile.label}>
-                      <strong>{tile.value}</strong>
-                      <span>{tile.label}</span>
-                      <em>{tile.note}</em>
-                    </div>
-                  ))}
-                </div>
-              ) : <p className="cc-empty-copy">{readinessQuery.isLoading ? 'Checking facility readiness…' : 'No readiness report submitted by this facility.'}</p>)}
-
-              {receivingFacility?.phone && (
-                <a className="btn btn-secondary cc-full-button" href={`tel:${receivingFacility.phone}`}><Phone size={15} /> Call receiving facility</a>
-              )}
-            </div>
-          </section>
-
-          <section className={`card cc-card cc-card--dispatch ${canDispatch ? 'is-ready' : ''}`}>
-            <div className="cc-card__head">
-              <h2>Dispatch</h2>
-              <span className="cc-card__meta">{checklistDone} of {dispatchChecklist.length} ready</span>
-            </div>
-            <div className="cc-card__body">
-              {dispatched ? (
-                <div className="cc-dispatched" role="status">
-                  <Check size={18} />
-                  <div><strong>Ambulance dispatched</strong><span>The mission is live — track it under Ambulances.</span></div>
-                </div>
-              ) : (
-                <ol className="cc-checklist">
-                  {dispatchChecklist.map((item) => (
-                    <li className={item.done ? 'is-done' : ''} key={item.label}>
-                      <i>{item.done ? <Check size={13} /> : null}</i>
-                      <div><strong>{item.label}</strong><span>{item.hint}</span></div>
-                    </li>
-                  ))}
-                </ol>
-              )}
-
-              <button className={`cc-dispatch-button is-${colour.toLowerCase()}`} disabled={!canDispatch || dispatched} onClick={dispatch}>
-                {triageAndDispatch.isPending ? <RefreshCw size={17} className="cc-spin" /> : <Radio size={17} />}
-                {dispatched ? 'Already dispatched' : 'Dispatch ambulance'}
-              </button>
-            </div>
-          </section>
-
-          <section className="card cc-card">
-            <div className="cc-card__head"><h2>Patient summary</h2></div>
-            <div className="cc-card__body">
-              <dl className="cc-summary-list">
-                <div><dt>Name</dt><dd>{patientInfo.name || 'Not recorded'}</dd></div>
-                <div><dt>Age / gender</dt><dd>{patientInfo.age ? `${patientInfo.age} years` : '—'} / {patientInfo.gender || '—'}</dd></div>
-                <div><dt>Status</dt><dd className={`cc-text-${colour.toLowerCase()}`}>● {colourPriority(colour) === 'CRITICAL' ? 'Critical' : colourPriority(colour) === 'HIGH' ? 'Urgent' : 'Stable'}</dd></div>
-                <div><dt>Symptoms</dt><dd className="cc-wrap">{selectedCall?.emergencyNature || patientInfo.symptoms || 'Not recorded'}</dd></div>
-              </dl>
-
-              <span className="cc-eyebrow cc-eyebrow--spaced">Vitals (reported)</span>
-              {bp || vitalFields.some((field) => readVital(vitals, field.keys) !== undefined) ? (
-                <div className="cc-vitals">
-                  {bp && <div><dt>BP</dt><dd className={bpAbnormal(bp) ? 'is-abnormal' : ''}>{bp}<i>mmHg</i></dd></div>}
-                  {vitalFields.map((field) => {
-                    const value = readVital(vitals, field.keys);
-                    if (value === undefined) return null;
-                    const numeric = Number(value);
-                    const abnormal = Number.isFinite(numeric) && field.abnormal?.(numeric);
-                    return (
-                      <div key={field.label}>
-                        <dt>{field.label}</dt>
-                        <dd className={abnormal ? 'is-abnormal' : ''}>{String(value)}<i>{field.unit}</i></dd>
+                    <span className="cc-eyebrow cc-eyebrow--spaced">Vitals (reported)</span>
+                    {bp || vitalFields.some((field) => readVital(vitals, field.keys) !== undefined) ? (
+                      <div className="cc-vitals">
+                        {bp && <div><dt>BP</dt><dd className={bpAbnormal(bp) ? 'is-abnormal' : ''}>{bp}<i>mmHg</i></dd></div>}
+                        {vitalFields.map((field) => {
+                          const value = readVital(vitals, field.keys);
+                          if (value === undefined) return null;
+                          const numeric = Number(value);
+                          const abnormal = Number.isFinite(numeric) && field.abnormal?.(numeric);
+                          return (
+                            <div key={field.label}>
+                              <dt>{field.label}</dt>
+                              <dd className={abnormal ? 'is-abnormal' : ''}>{String(value)}<i>{field.unit}</i></dd>
+                            </div>
+                          );
+                        })}
                       </div>
-                    );
-                  })}
+                    ) : <p className="cc-empty-copy">No vitals reported by the caller.</p>}
+
+                    <div className="cc-meta-row">
+                      <span>Blood group<strong>{bloodGroup ? String(bloodGroup) : '—'}</strong></span>
+                      <span>Allergies<strong>{allergies ? String(allergies) : 'None known'}</strong></span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            )}
+
+            {tab === 'dispatch' && (
+              <div className="cc-tab-grid cc-tab-grid--split">
+                <div className="cc-col">
+                  <section className={`card cc-card cc-card--dispatch ${canDispatch ? 'is-ready' : ''}`}>
+                    <div className="cc-card__head">
+                      <h2>Dispatch</h2>
+                      <span className="cc-card__meta">{checklistDone} of {dispatchChecklist.length} ready</span>
+                    </div>
+                    <div className="cc-card__body">
+                      {dispatched ? (
+                        <div className="cc-dispatched" role="status">
+                          <Check size={18} />
+                          <div><strong>Ambulance dispatched</strong><span>The mission is live — track it under Ambulances.</span></div>
+                        </div>
+                      ) : (
+                        <ol className="cc-checklist">
+                          {dispatchChecklist.map((item) => (
+                            <li className={item.done ? 'is-done' : ''} key={item.label}>
+                              <i>{item.done ? <Check size={13} /> : null}</i>
+                              <div><strong>{item.label}</strong><span>{item.hint}</span></div>
+                            </li>
+                          ))}
+                        </ol>
+                      )}
+
+                      <button className={`cc-dispatch-button is-${colour.toLowerCase()}`} disabled={!canDispatch || dispatched} onClick={dispatch}>
+                        {triageAndDispatch.isPending ? <RefreshCw size={17} className="cc-spin" /> : <Radio size={17} />}
+                        {dispatched ? 'Already dispatched' : 'Dispatch ambulance'}
+                      </button>
+                    </div>
+                  </section>
+
+                  <section className="card cc-card">
+                    <div className="cc-card__head">
+                      <h2>Facilities</h2>
+                      {receivingFacility && (
+                        <span className={`badge ${readiness ? 'badge-success' : 'badge-neutral'}`}>{readiness ? 'Readiness reported' : 'No report'}</span>
+                      )}
+                    </div>
+                    <div className="cc-card__body">
+                      <label className="cc-field"><span>Pickup facility</span>
+                        <select value={pickupFacilityId} onChange={(event) => setPickupFacilityId(event.target.value)} disabled={facilitiesQuery.isLoading}>
+                          <option value="">{facilitiesQuery.isLoading ? 'Loading facilities…' : facilitiesQuery.isError && !facilities.length ? 'Facilities unavailable' : !facilities.length ? 'No active facilities found' : 'Select pickup'}</option>
+                          {facilities.map((facility) => <option value={facility.id} key={facility.id}>{facility.name}</option>)}
+                        </select>
+                      </label>
+                      <label className="cc-field"><span>Receiving facility</span>
+                        <select value={dropoffFacilityId} onChange={(event) => setDropoffFacilityId(event.target.value)} disabled={facilitiesQuery.isLoading}>
+                          <option value="">{facilitiesQuery.isLoading ? 'Loading facilities…' : facilitiesQuery.isError && !facilities.length ? 'Facilities unavailable' : !facilities.length ? 'No active facilities found' : 'Select receiving facility'}</option>
+                          {facilities.filter((facility) => facility.id !== pickupFacilityId).map((facility) => <option value={facility.id} key={facility.id}>{facility.name}</option>)}
+                        </select>
+                      </label>
+
+                      {facilitiesQuery.isError && !facilities.length && (
+                        <p className="cc-empty-copy" role="alert">
+                          Could not load live facilities. <button className="cc-text-button" type="button" onClick={() => void facilitiesQuery.refetch()}>Retry</button>
+                        </p>
+                      )}
+
+                      {receivingFacility && (readinessTiles.length ? (
+                        <div className="cc-readiness">
+                          {readinessTiles.map((tile) => (
+                            <div className={tile.ok ? '' : 'is-low'} key={tile.label}>
+                              <strong>{tile.value}</strong>
+                              <span>{tile.label}</span>
+                              <em>{tile.note}</em>
+                            </div>
+                          ))}
+                        </div>
+                      ) : <p className="cc-empty-copy">{readinessQuery.isLoading ? 'Checking facility readiness…' : 'No readiness report submitted by this facility.'}</p>)}
+
+                      {receivingFacility?.phone && (
+                        <a className="btn btn-secondary cc-full-button" href={`tel:${receivingFacility.phone}`}><Phone size={15} /> Call receiving facility</a>
+                      )}
+                    </div>
+                  </section>
                 </div>
-              ) : <p className="cc-empty-copy">No vitals reported by the caller.</p>}
 
-              <div className="cc-meta-row">
-                <span>Blood group<strong>{bloodGroup ? String(bloodGroup) : '—'}</strong></span>
-                <span>Allergies<strong>{allergies ? String(allergies) : 'None known'}</strong></span>
-              </div>
-            </div>
-          </section>
+                <div className="cc-col">
+                  <section className="card cc-card">
+                    <div className="cc-card__head">
+                      <h2>Nearest ambulances</h2>
+                      <div className="cc-heading-actions">
+                        {rankings.length > 3 && (
+                          <button className="cc-text-button" type="button" onClick={() => setShowAllAmbulances((value) => !value)}>
+                            {showAllAmbulances ? 'Top 3' : `All ${rankings.length}`}
+                          </button>
+                        )}
+                        <button className="cc-text-button" type="button" onClick={() => { void rankingQuery.refetch(); void ambulanceFleetQuery.refetch(); }} disabled={!selectedCall || rankingQuery.isFetching || ambulanceFleetQuery.isFetching} aria-label="Refresh live ambulances">
+                          <RefreshCw size={14} className={rankingQuery.isFetching || ambulanceFleetQuery.isFetching ? 'cc-spin' : ''} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="cc-card__body">
+                      <div className="cc-ambulance-list">
+                        {rankingQuery.isLoading && ambulanceFleetQuery.isLoading && <Skeleton rows={3} />}
+                        {visibleRankings.map((item) => (
+                          <button
+                            className={selectedAmbulanceId === item.ambulanceId ? 'is-selected' : ''}
+                            disabled={!item.eligible}
+                            key={item.ambulanceId}
+                            aria-pressed={selectedAmbulanceId === item.ambulanceId}
+                            onClick={() => setAmbulanceChoice(item.ambulanceId)}
+                          >
+                            <span className="cc-ambulance-list__mark"><Ambulance size={19} /></span>
+                            <div>
+                              <strong>{item.registryId}</strong>
+                              <span>{item.facilityName || 'Unassigned base'}</span>
+                              <em className={item.eligible ? 'is-ok' : 'is-busy'}>{item.eligible ? 'Available' : item.reasons?.[0] || 'On mission'}</em>
+                            </div>
+                            <div className="cc-ambulance-list__metrics">
+                              <b>{item.distanceKm != null ? `${item.distanceKm.toFixed(1)} km` : '—'}</b>
+                              <span>{item.estimatedMinutes != null ? `ETA ${item.estimatedMinutes} min` : 'ETA n/a'}</span>
+                            </div>
+                          </button>
+                        ))}
+                        {!rankingQuery.isLoading && !ambulanceFleetQuery.isLoading && !rankings.length && (
+                          <p className="cc-empty-copy">
+                            {rankingQuery.isError && ambulanceFleetQuery.isError
+                              ? 'Could not load the live ambulance fleet. Use refresh to try again.'
+                              : selectedCall ? 'No ambulances are registered in the live fleet.' : 'Select a call to rank live ambulances.'}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </section>
 
-          <section className="card cc-card">
-            <div className="cc-card__head"><h2>Call timeline</h2></div>
-            <div className="cc-card__body">
-              <div className="cc-timeline">
-                {eventsQuery.isLoading && <Skeleton rows={3} />}
-                {!eventsQuery.isLoading && events.slice(0, 6).map((event, index) => (
-                  <div key={event.id}>
-                    <i className={index === 0 ? 'is-current' : ''} />
-                    <time>{formatClock(event.createdAt)}</time>
-                    <p><strong>{event.summary}</strong><span>{event.actorName || 'System'}</span></p>
-                  </div>
-                ))}
-                {!eventsQuery.isLoading && !events.length && <p className="cc-empty-copy">Events will appear as the call progresses.</p>}
-                {!eventsQuery.isLoading && selectedCall && !dispatched && (
-                  <div className="is-pending">
-                    <i />
-                    <time>Next</time>
-                    <p><strong>Dispatch ambulance</strong><span>Assign team &amp; inform facility</span></p>
-                  </div>
-                )}
+                  <section className="card cc-card">
+                    <div className="cc-card__head">
+                      <h2>Caller location</h2>
+                      <span className={`badge ${coordinates ? 'badge-success' : 'badge-warning'}`}>{coordinates ? 'GPS fix' : 'No GPS'}</span>
+                    </div>
+                    <div className="cc-card__body">
+                      <p className="cc-location-text">
+                        <strong>{callerFacilityName || callerLocation}{facilityCode(selectedCall?.callerFacility) ? ` (${facilityCode(selectedCall?.callerFacility)})` : ''}</strong>
+                        <span>{callerAddress || selectedCall?.emergencyLocation?.landmark || 'Location reported by caller'}</span>
+                      </p>
+                      <div className="cc-map">
+                        {coordinates ? (
+                          <CallLocationMap latitude={coordinates.latitude} longitude={coordinates.longitude} label={callerLocation} colour={colour} />
+                        ) : (
+                          <div className="cc-map__empty">
+                            <MapPinOff size={22} />
+                            <strong>No coordinates on this call</strong>
+                            <span>Ask the caller for a landmark or nearest facility.</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </section>
+                </div>
               </div>
-            </div>
-          </section>
+            )}
+
+            {tab === 'log' && (
+              <div className="cc-tab-grid cc-tab-grid--split">
+                <section className="card cc-card">
+                  <div className="cc-card__head">
+                    <h2>Call notes</h2>
+                    <button className="cc-text-button" type="button" disabled={!selectedCall || callClosed} onClick={() => setNoteOpen((value) => !value)}>
+                      <Plus size={14} /> Add note
+                    </button>
+                  </div>
+                  <div className="cc-card__body">
+                    {noteOpen && (
+                      <div className="cc-note-compose">
+                        <textarea maxLength={2000} value={noteDraft} onChange={(event) => setNoteDraft(event.target.value)} placeholder="Document call details and actions…" autoFocus />
+                        <div>
+                          <button type="button" className="btn btn-secondary btn-sm" onClick={() => { setNoteOpen(false); setNoteDraft(''); }}>Cancel</button>
+                          <button type="button" className="btn btn-primary btn-sm" disabled={!noteDraft.trim() || commandBusy === 'notes'} onClick={() => runCommand('notes', { note: noteDraft.trim() })}>
+                            {commandBusy === 'notes' && <RefreshCw size={14} className="cc-spin" />} Save note
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    {noteEntries.length ? (
+                      <ul className="cc-note-list">
+                        {noteEntries.map((entry, index) => (
+                          <li key={`${entry.text}-${index}`}>
+                            {entry.time && <time>{entry.time}</time>}
+                            <p>{entry.text}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : !noteOpen && <p className="cc-empty-copy">No notes recorded for this call yet.</p>}
+                  </div>
+                </section>
+
+                <section className="card cc-card">
+                  <div className="cc-card__head"><h2>Call timeline</h2></div>
+                  <div className="cc-card__body">
+                    <div className="cc-timeline">
+                      {eventsQuery.isLoading && <Skeleton rows={3} />}
+                      {!eventsQuery.isLoading && events.slice(0, 6).map((event, index) => (
+                        <div key={event.id}>
+                          <i className={index === 0 ? 'is-current' : ''} />
+                          <time>{formatClock(event.createdAt)}</time>
+                          <p><strong>{event.summary}</strong><span>{event.actorName || 'System'}</span></p>
+                        </div>
+                      ))}
+                      {!eventsQuery.isLoading && !events.length && <p className="cc-empty-copy">Events will appear as the call progresses.</p>}
+                      {!eventsQuery.isLoading && selectedCall && !dispatched && (
+                        <div className="is-pending">
+                          <i />
+                          <time>Next</time>
+                          <p><strong>Dispatch ambulance</strong><span>Assign team &amp; inform facility</span></p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </section>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

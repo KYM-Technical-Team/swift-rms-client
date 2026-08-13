@@ -2,10 +2,10 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  ambulanceService,
   callCentreService,
   facilityService,
   readinessService,
-  userService,
 } from '@/lib/api';
 import type {
   Call,
@@ -26,6 +26,10 @@ export const callKeys = {
 export const facilityKeys = {
   active: ['facilities', 'active'] as const,
   readiness: (id?: string) => ['facilities', id ?? 'none', 'readiness'] as const,
+};
+
+export const ambulanceKeys = {
+  fleet: ['ambulances', 'live-fleet'] as const,
 };
 
 export type CallCommand = 'hold' | 'resume' | 'transfer' | 'conference' | 'notes' | 'complete';
@@ -54,9 +58,20 @@ export function useCallCentreDashboard() {
 export function useActiveFacilities() {
   return useQuery({
     queryKey: facilityKeys.active,
-    queryFn: () => facilityService.list({ isActive: true, limit: 100 }),
+    queryFn: () => facilityService.list({ isActive: true, limit: 500 }),
     staleTime: 10 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
+  });
+}
+
+/** The same live fleet used by the Ambulances workspace. */
+export function useAmbulanceFleet() {
+  return useQuery({
+    queryKey: ambulanceKeys.fleet,
+    queryFn: () => ambulanceService.list({ limit: 500 }),
+    refetchInterval: 30000,
+    refetchOnWindowFocus: true,
+    staleTime: 10000,
   });
 }
 
@@ -92,10 +107,10 @@ export function useFacilityReadiness(facilityId?: string) {
 /** Only fetched when the operator opens the transfer control. */
 export function useNemsOperators(enabled: boolean, excludeId?: string) {
   return useQuery({
-    queryKey: ['users', 'nems-operators'],
+    queryKey: [...callKeys.root, 'operators', excludeId ?? 'none'],
     queryFn: async () => {
-      const result = await userService.list({ userType: 'NEMS', limit: 50 });
-      return result.data.filter((item) => item.id !== excludeId);
+      const operators = await callCentreService.listOperators();
+      return operators.filter((item) => item.id !== excludeId);
     },
     enabled,
     staleTime: 5 * 60 * 1000,
