@@ -2,18 +2,33 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { referralService } from '@/lib/api';
-import type { Priority, Referral } from '@/types';
+import type { ClinicianReviewRequest, Priority, Referral } from '@/types';
 
 export const triageKeys = {
   pending: () => ['referrals', 'pending'] as const,
+  arrived: () => ['referrals', 'arrived'] as const,
   timeline: (id?: string) => ['referrals', id ?? 'none', 'timeline'] as const,
 };
 
-/** The triage worklist. Polled so a referral triaged elsewhere leaves this queue. */
+/** The pre-arrival worklist. Polled so a referral triaged elsewhere leaves this queue. */
 export function usePendingReferrals() {
   return useQuery({
     queryKey: triageKeys.pending(),
     queryFn: () => referralService.listPending(),
+    refetchInterval: 30000,
+    refetchOnWindowFocus: true,
+    staleTime: 10000,
+  });
+}
+
+/** Arrived patients awaiting the clinician's colour-code validation (Journey 3). */
+export function useArrivedReferrals() {
+  return useQuery({
+    queryKey: triageKeys.arrived(),
+    queryFn: async () => {
+      const result = await referralService.list({ status: 'ARRIVED', limit: 50 });
+      return result.data;
+    },
     refetchInterval: 30000,
     refetchOnWindowFocus: true,
     staleTime: 10000,
@@ -33,14 +48,16 @@ function useReferralInvalidation() {
   const queryClient = useQueryClient();
   return (referralId?: string) => {
     void queryClient.invalidateQueries({ queryKey: triageKeys.pending() });
+    void queryClient.invalidateQueries({ queryKey: triageKeys.arrived() });
     void queryClient.invalidateQueries({ queryKey: ['referrals', 'dashboard'] });
     if (referralId) void queryClient.invalidateQueries({ queryKey: triageKeys.timeline(referralId) });
   };
 }
 
 function patchQueue(queryClient: ReturnType<typeof useQueryClient>, updated: Referral) {
-  queryClient.setQueryData<Referral[]>(triageKeys.pending(), (current) =>
-    current?.map((referral) => referral.id === updated.id ? updated : referral));
+  const patch = (current?: Referral[]) => current?.map((referral) => referral.id === updated.id ? updated : referral);
+  queryClient.setQueryData<Referral[]>(triageKeys.pending(), patch);
+  queryClient.setQueryData<Referral[]>(triageKeys.arrived(), patch);
 }
 
 export function useAcceptReferral() {
@@ -79,5 +96,20 @@ export function useAddReferralNote() {
     mutationFn: ({ referralId, notes }: { referralId: string; notes: string }) =>
       referralService.addNote(referralId, { notes }),
     onSuccess: (_result, variables) => invalidate(variables.referralId),
+  });
+}
+
+/**
+ * Journey 3: the receiving clinician validates the triage colour once the patient
+ * is physically here. Only valid for ARRIVED referrals — the arrival condition is
+ * observed, not predicted, so this is never sent for a still-pending referral.
+ */
+export function useClinicianReview() {
+  const queryClient = useQueryClient();
+  const invalidate = useReferralInvalidation();
+  return useMutation({
+    mutationFn: ({ referralId, review }: { referralId: string; review: ClinicianReviewRequest }) =>
+      referralService.clinicianReview(referralId, review),
+    onSuccess: (updated) => { patchQueue(queryClient, updated); invalidate(updated.id); },
   });
 }
