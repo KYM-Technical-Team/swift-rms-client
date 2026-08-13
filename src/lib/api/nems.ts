@@ -7,6 +7,12 @@ import {
   NEMSListQuery,
   Call,
   CreateCallRequest,
+  CallListQuery,
+  UpdateCallRequest,
+  CallCommandRequest,
+  CallEvent,
+  AmbulanceRank,
+  TriageDispatchRequest,
   CallCentreDashboard,
   Location,
   LogVitalsRequest,
@@ -71,6 +77,11 @@ export const nemsService = {
 };
 
 export const callCentreService = {
+  listCalls: async (query?: CallListQuery): Promise<{ data: Call[]; meta?: PaginationMeta }> => {
+    const response = await apiClient.get<ApiResponse<Call[]>>('/call-centre/calls', { params: query });
+    return { data: response.data.data || [], meta: response.data.meta };
+  },
+
   logCall: async (data: CreateCallRequest): Promise<Call> => {
     const response = await apiClient.post<ApiResponse<Call>>('/call-centre/calls', data);
     return response.data.data!;
@@ -81,8 +92,38 @@ export const callCentreService = {
     return response.data.data!;
   },
 
-  updateCall: async (id: string, data: Partial<Call>): Promise<Call> => {
+  updateCall: async (id: string, data: UpdateCallRequest): Promise<Call> => {
     const response = await apiClient.patch<ApiResponse<Call>>(`/call-centre/calls/${id}`, data);
+    return response.data.data!;
+  },
+
+  listEvents: async (id: string): Promise<CallEvent[]> => {
+    const response = await apiClient.get<ApiResponse<CallEvent[]>>(`/call-centre/calls/${id}/events`);
+    return response.data.data || [];
+  },
+
+  rankAmbulances: async (id: string, equipment?: string[]): Promise<AmbulanceRank[]> => {
+    const response = await apiClient.get<ApiResponse<AmbulanceRank[]>>(
+      `/call-centre/calls/${id}/ambulance-ranking`,
+      { params: equipment?.length ? { equipment } : undefined, paramsSerializer: { indexes: null } },
+    );
+    return response.data.data || [];
+  },
+
+  command: async (
+    id: string,
+    command: 'hold' | 'resume' | 'transfer' | 'conference' | 'notes' | 'complete',
+    data: CallCommandRequest,
+  ): Promise<Call> => {
+    const response = await apiClient.post<ApiResponse<Call>>(`/call-centre/calls/${id}/${command}`, data);
+    return response.data.data!;
+  },
+
+  triageAndDispatch: async (id: string, data: TriageDispatchRequest): Promise<NEMSRequest> => {
+    const response = await apiClient.post<ApiResponse<NEMSRequest>>(
+      `/call-centre/calls/${id}/triage-and-dispatch`,
+      data,
+    );
     return response.data.data!;
   },
 
