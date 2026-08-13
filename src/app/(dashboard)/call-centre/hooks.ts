@@ -160,5 +160,6 @@ export function useTriageAndDispatch() {
     mutationFn: ({ callId, payload }: { callId: string; payload: TriageDispatchRequest }) =>
       callCentreService.triageAndDispatch(callId, payload),
     onSuccess: (_result, variables) => invalidate(variables.callId),
+    onError: (_error, variables) => invalidate(variables.callId),
   });
 }
