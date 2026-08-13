@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  ambulanceService,
   callCentreService,
   facilityService,
   readinessService,
@@ -25,6 +26,10 @@ export const callKeys = {
 export const facilityKeys = {
   active: ['facilities', 'active'] as const,
   readiness: (id?: string) => ['facilities', id ?? 'none', 'readiness'] as const,
+};
+
+export const ambulanceKeys = {
+  fleet: ['ambulances', 'live-fleet'] as const,
 };
 
 export type CallCommand = 'hold' | 'resume' | 'transfer' | 'conference' | 'notes' | 'complete';
@@ -53,9 +58,20 @@ export function useCallCentreDashboard() {
 export function useActiveFacilities() {
   return useQuery({
     queryKey: facilityKeys.active,
-    queryFn: () => facilityService.list({ isActive: true, limit: 100 }),
+    queryFn: () => facilityService.list({ isActive: true, limit: 500 }),
     staleTime: 10 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
+  });
+}
+
+/** The same live fleet used by the Ambulances workspace. */
+export function useAmbulanceFleet() {
+  return useQuery({
+    queryKey: ambulanceKeys.fleet,
+    queryFn: () => ambulanceService.list({ limit: 500 }),
+    refetchInterval: 30000,
+    refetchOnWindowFocus: true,
+    staleTime: 10000,
   });
 }
 
