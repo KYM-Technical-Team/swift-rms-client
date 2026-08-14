@@ -1,16 +1,16 @@
-# Graph Report - swift-rms-client  (2026-08-11)
+# Graph Report - swift-rms-client  (2026-08-14)
 
 ## Corpus Check
-- 110 files · ~71,784 words
+- 117 files · ~88,474 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 571 nodes · 739 edges · 50 communities (34 shown, 16 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 14 edges (avg confidence: 0.8)
+- 765 nodes · 1051 edges · 57 communities (37 shown, 20 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 28 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d333eaed`
+- Built from commit: `8d82799e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -56,172 +56,186 @@
 - [[_COMMUNITY_React Query Provider|React Query Provider]]
 - [[_COMMUNITY_Next.js TypeScript Declaration|Next.js TypeScript Declaration]]
 - [[_COMMUNITY_UI Components Index Export|UI Components Index Export]]
-- [[_COMMUNITY_Community 41|Community 41]]
 - [[_COMMUNITY_Community 42|Community 42]]
 - [[_COMMUNITY_Community 43|Community 43]]
 - [[_COMMUNITY_Community 44|Community 44]]
+- [[_COMMUNITY_Community 45|Community 45]]
+- [[_COMMUNITY_Community 46|Community 46]]
+- [[_COMMUNITY_Community 47|Community 47]]
+- [[_COMMUNITY_Community 48|Community 48]]
+- [[_COMMUNITY_Community 49|Community 49]]
+- [[_COMMUNITY_Community 50|Community 50]]
+- [[_COMMUNITY_Community 51|Community 51]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `useAuthStore` - 17 edges
-2. `useUIStore` - 10 edges
-3. `Referral` - 8 edges
-4. `ReadinessDetailModal()` - 6 edges
-5. `SingleFacilityView()` - 6 edges
-6. `FacilitySummary` - 5 edges
-7. `getScoreColor()` - 4 edges
-8. `getStatusColor()` - 4 edges
-9. `getStatusBg()` - 4 edges
-10. `calculateScore()` - 4 edges
+1. `CallCentrePage()` - 26 edges
+2. `TriagePage()` - 17 edges
+3. `useAuthStore` - 17 edges
+4. `useUIStore` - 10 edges
+5. `Register` - 9 edges
+6. `Referral` - 8 edges
+7. `Product` - 8 edges
+8. `ReferralDetailPage()` - 7 edges
+9. `useReferralInvalidation()` - 6 edges
+10. `ReadinessDetailModal()` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `DistrictDashboardPage()` --calls--> `useAuthStore`  [INFERRED]
-  src/app/(dashboard)/district-dashboard/page.tsx → src/store/authStore.ts
-- `LoginForm()` --calls--> `useAuthStore`  [INFERRED]
-  src/app/(auth)/login/page.tsx → src/store/authStore.ts
-- `DashboardPage()` --calls--> `useAuthStore`  [INFERRED]
-  src/app/(dashboard)/page.tsx → src/store/authStore.ts
-- `ReferralDetailPage()` --calls--> `useAuthStore`  [INFERRED]
-  src/app/(dashboard)/referrals/[id]/page.tsx → src/store/authStore.ts
-- `ProfilePage()` --calls--> `useAuthStore`  [INFERRED]
-  src/app/(dashboard)/profile/page.tsx → src/store/authStore.ts
+- `ForgotPasswordPage()` --calls--> `Register`  [INFERRED]
+  src/app/(auth)/forgot-password/page.tsx → PRODUCT.md
+- `ResetPasswordPage()` --calls--> `Register`  [INFERRED]
+  src/app/(auth)/reset-password/page.tsx → PRODUCT.md
+- `LoginForm()` --calls--> `Register`  [INFERRED]
+  src/app/(auth)/login/page.tsx → PRODUCT.md
+- `NewPatientPage()` --calls--> `Register`  [INFERRED]
+  src/app/(dashboard)/patients/new/page.tsx → PRODUCT.md
+- `NewReferralPage()` --calls--> `Register`  [INFERRED]
+  src/app/(dashboard)/referrals/new/page.tsx → PRODUCT.md
 
-## Communities (50 total, 16 thin omitted)
+## Communities (57 total, 20 thin omitted)
 
 ### Community 0 - "Authentication & API Client"
 Cohesion: 0.05
-Nodes (44): ReferralDetailPage(), canModifyReferral(), FacilityTransferVisualizer(), FacilityTransferVisualizerProps, InterventionsCard(), InterventionsCardProps, NEMSTransportCard(), NEMSTransportCardProps (+36 more)
+Nodes (43): getNotifications(), getUnreadCount(), markAllAsRead(), markAsRead(), Notification, NotificationListResponse, subscribeDevice(), SubscribeDeviceRequest (+35 more)
 
 ### Community 1 - "Core Type Definitions"
 Cohesion: 0.05
-Nodes (31): RouteGuard(), RouteGuardProps, CounterReferralsPage(), Referral, DashboardPage(), Referral, NavItem, NavSection (+23 more)
+Nodes (32): authService, apiClient, clearTokens(), originalRequest, refreshSubscribers, refreshToken, setTokens(), token (+24 more)
 
 ### Community 2 - "Route Guards & Counter Referrals"
-Cohesion: 0.05
-Nodes (20): Ambulance, referralService, FacilitiesMap, facilityTypes, ForgotPasswordFormData, forgotPasswordSchema, Props, Referral (+12 more)
+Cohesion: 0.07
+Nodes (40): CallLocationMap(), CallLocationMapProps, createPin(), pinColour, protocolById, ProtocolQuestion, recommendColour(), TriageColour (+32 more)
 
 ### Community 3 - "Referral Authentication & Authorization"
-Cohesion: 0.05
-Nodes (17): COLORS, analyticsService, COLORS, DistrictDashboardPage(), FacilityPerformance, FacilityReadinessMap, DistrictPerformance, NationalReferralMap (+9 more)
+Cohesion: 0.08
+Nodes (37): ambulanceKeys, CallCommand, callKeys, facilityKeys, useActiveFacilities(), useAmbulanceFleet(), useAmbulanceRanking(), useCallCentreDashboard() (+29 more)
 
 ### Community 4 - "Dashboard & Facility Management"
 Cohesion: 0.09
-Nodes (19): AmbulanceFormData, AmbulanceMap, ambulanceSchema, CrewCandidate, EditAmbulanceFormData, editAmbulanceSchema, AmbulanceListQuery, ambulanceService (+11 more)
+Nodes (26): actionButtonStyle, colourFromReferral(), detailCardStyle, formatDateTime(), formatTime(), PriorityBadge(), readable(), ReferralDetailPage() (+18 more)
 
 ### Community 5 - "Clinician Workflow & Triage"
+Cohesion: 0.05
+Nodes (30): AmbulancesPage(), FacilitiesPage(), ForgotPasswordFormData, ForgotPasswordPage(), forgotPasswordSchema, dangerSignOptions, NewPatientPage(), NewReferralPage() (+22 more)
+
+### Community 6 - "Ambulance Management & Dispatch"
+Cohesion: 0.07
+Nodes (25): AmbulanceFormData, AmbulanceMap, ambulanceSchema, CrewCandidate, EditAmbulanceFormData, editAmbulanceSchema, Ambulance, AmbulanceListQuery (+17 more)
+
+### Community 7 - "Patient Care Reports & Pre-hospital Vitals"
+Cohesion: 0.07
+Nodes (22): ChartPayloadEntry, ChartTooltipProps, DASHBOARD_TABS, DistrictPerformance, formatMinutes(), formatNumber(), formatPercent(), MapFacility (+14 more)
+
+### Community 8 - "Notification Service & Bell Dropdown"
+Cohesion: 0.07
+Nodes (27): AmbulanceStatus, NEMSRequestStatus, Ambulance, AmbulanceRank, Call, CallCentreDashboard, CallCommandRequest, CallEvent (+19 more)
+
+### Community 9 - "Analytics Dashboard & Visualizations"
+Cohesion: 0.08
+Nodes (17): ChartPayloadEntry, ChartTooltipProps, COLORS, FacilityPerformance, FacilityReadinessMap, FacilityWithDistrict, MapFacility, OutcomeRow (+9 more)
+
+### Community 10 - "UI Theme & Toast Messaging"
+Cohesion: 0.09
+Nodes (22): AnalyticsQuery, AnalyticsTrendPoint, DHIS2DataValue, DHIS2Export, DistrictPerformanceResponse, DistrictPerformanceRow, FacilityAnalytics, FacilityOutcome (+14 more)
+
+### Community 11 - "DHIS2 & System Analytics Models"
+Cohesion: 0.1
+Nodes (21): getStageIndex(), ReferralLifecycleStepper(), ReferralLifecycleStepperProps, STAGES, ReferralStatus, AddNoteRequest, AmbulanceSummary, AssignAmbulanceRequest (+13 more)
+
+### Community 12 - "Referral React Query Hooks"
 Cohesion: 0.09
 Nodes (21): ABCStatus, BODY_REGIONS, BodyRegion, CreatePatientReportRequest, INTERVENTIONS, LocationType, MissionTimeline, NON_TRAUMATIC_CONDITIONS (+13 more)
 
-### Community 6 - "Ambulance Management & Dispatch"
-Cohesion: 0.14
-Nodes (17): getNotifications(), getUnreadCount(), markAllAsRead(), markAsRead(), Notification, NotificationListResponse, subscribeDevice(), SubscribeDeviceRequest (+9 more)
+### Community 13 - "Facility Readiness & Bed Capacity Models"
+Cohesion: 0.12
+Nodes (17): ChangePasswordRequest, ForgotPasswordRequest, LoginRequest, LoginResponse, RefreshRequest, RefreshResponse, RegisterRequest, ResetPasswordRequest (+9 more)
 
-### Community 7 - "Patient Care Reports & Pre-hospital Vitals"
+### Community 14 - "Facility Readiness Scoring & UI"
+Cohesion: 0.12
+Nodes (11): ACTIVE_MISSION_STATUSES, elapsed(), EN_ROUTE_STATUSES, KpiProps, MissionsMap, missionStatusLabel, NemsCallCentreDashboard(), bucketColour() (+3 more)
+
+### Community 15 - "Call Centre & Dispatch Operations"
 Cohesion: 0.15
 Nodes (13): ThemeProvider(), Toast, UIState, useIsLoading(), useMobileSidebarOpen(), useSidebarCollapsed(), useTheme(), useToast() (+5 more)
 
-### Community 8 - "Notification Service & Bell Dropdown"
-Cohesion: 0.12
-Nodes (15): AnalyticsQuery, DHIS2DataValue, DHIS2Export, FacilityAnalytics, FacilityOutcome, FacilityResponseTime, GenerateReportRequest, HeatmapData (+7 more)
-
-### Community 9 - "Analytics Dashboard & Visualizations"
-Cohesion: 0.12
-Nodes (15): AmbulanceStatus, NEMSRequestStatus, Priority, Ambulance, Call, CallCentreDashboard, CreateCallRequest, CreateNEMSRequest (+7 more)
-
-### Community 11 - "DHIS2 & System Analytics Models"
-Cohesion: 0.17
-Nodes (11): callCentreService, nemsService, patientReportService, PatientReportPage(), STEP_ICONS, defaultFormData, defaultTimeline, FORM_STEPS (+3 more)
-
-### Community 12 - "Referral React Query Hooks"
-Cohesion: 0.16
-Nodes (8): authService, apiClient, clearTokens(), originalRequest, refreshSubscribers, refreshToken, setTokens(), token
-
-### Community 13 - "Facility Readiness & Bed Capacity Models"
-Cohesion: 0.17
-Nodes (10): ChangePasswordRequest, ForgotPasswordRequest, LoginRequest, LoginResponse, RefreshRequest, RefreshResponse, RegisterRequest, ResetPasswordRequest (+2 more)
-
-### Community 14 - "Facility Readiness Scoring & UI"
-Cohesion: 0.15
-Nodes (12): BedMonitoring, BedsByWard, BloodBankStatus, BloodUnit, BloodUnits, CreateReadinessRequest, CreateReminderRequest, EquipmentStatus (+4 more)
-
-### Community 15 - "Call Centre & Dispatch Operations"
-Cohesion: 0.17
-Nodes (11): BulkUploadError, BulkUploadFacilityItem, BulkUploadResult, CreateFacilityRequest, DistrictSummary, Facility, FacilityListQuery, FacilityStats (+3 more)
-
-### Community 16 - "Live Ambulance Tracking Map"
-Cohesion: 0.18
-Nodes (10): ApiError, ApiResponse, ArrivalCondition, DateRange, FacilityType, Outcome, Pagination, PaginationMeta (+2 more)
-
 ### Community 17 - "District & Facility Administrative Services"
+Cohesion: 0.14
+Nodes (13): ReadinessLevel, BedMonitoring, BedsByWard, BloodBankStatus, BloodUnit, BloodUnits, CreateReadinessRequest, CreateReminderRequest (+5 more)
+
+### Community 18 - "Skeleton Loading Components"
+Cohesion: 0.17
+Nodes (11): FacilityType, BulkUploadError, BulkUploadFacilityItem, BulkUploadResult, CreateFacilityRequest, Facility, FacilityListQuery, FacilityStats (+3 more)
+
+### Community 19 - "Facility Readiness Map Component"
+Cohesion: 0.2
+Nodes (5): Props, Referral, SingleFacilityMap, PatientFormData, patientSchema
+
+### Community 20 - "Priority Badge Components"
+Cohesion: 0.2
+Nodes (9): ApiError, ApiResponse, ArrivalCondition, DateRange, Outcome, Pagination, PaginationMeta, Priority (+1 more)
+
+### Community 21 - "Phone Number Validation Utilities"
 Cohesion: 0.53
 Nodes (9): calculateScore(), FacilityReadinessCard(), getScoreColor(), getStatusBg(), getStatusColor(), getTotalBloodUnits(), ReadinessDetailModal(), SingleFacilityView() (+1 more)
 
-### Community 18 - "Skeleton Loading Components"
-Cohesion: 0.25
-Nodes (5): Call, CallCentrePage(), formatDuration(), LogCallModalProps, mockCalls
-
-### Community 19 - "Facility Readiness Map Component"
+### Community 23 - "Firebase Service Worker & Push Messaging"
 Cohesion: 0.22
 Nodes (5): ActiveReferral, Ambulance, Facility, NationalReferralMapProps, PRIORITY_COLORS
 
-### Community 20 - "Priority Badge Components"
-Cohesion: 0.22
-Nodes (4): facilityService, patientService, readinessService, userService
-
-### Community 21 - "Phone Number Validation Utilities"
+### Community 24 - "Page Transitions & Animations"
 Cohesion: 0.25
-Nodes (5): District, districtService, defaultColumnMappings, FacilityFormData, facilitySchema
+Nodes (4): RecentDownload, recentDownloads, Report, reports
 
-### Community 22 - "Facilities Mapping Utilities"
+### Community 25 - "Status Indicator Components"
 Cohesion: 0.29
-Nodes (4): CreateUserRequest, User, UserFormData, userSchema
-
-### Community 23 - "Firebase Service Worker & Push Messaging"
-Cohesion: 0.29
-Nodes (6): UserStatus, UserType, FacilitySummary, UpdateProfileRequest, UpdateUserRequest, UserListQuery
+Nodes (6): CreatePatientRequest, Patient, PatientListQuery, PatientSearchQuery, PatientSummary, UpdatePatientRequest
 
 ### Community 26 - "Admin Settings Module"
+Cohesion: 0.29
+Nodes (5): bloodTypes, BloodUnit, staffingStatusOptions, statusOptions, WardBed
+
+### Community 31 - "Empty State UI Component"
 Cohesion: 0.33
 Nodes (4): defaultConfig, Priority, PriorityBadgeProps, priorityConfig
 
-### Community 29 - "Searchable Select UI Component"
-Cohesion: 0.33
-Nodes (4): defaultIcon, FacilitiesMapProps, hospitalIcon, phuIcon
-
-### Community 30 - "Status Badge UI Component"
+### Community 33 - "Data Table Component"
 Cohesion: 0.4
 Nodes (3): firebaseConfig, options, payload
 
-### Community 32 - "Stat Card Component"
+### Community 37 - "User Settings Page"
 Cohesion: 0.4
 Nodes (3): statusConfig, StatusIndicatorProps, StatusType
 
-### Community 34 - "ESLint Configuration"
+### Community 38 - "React Query Provider"
 Cohesion: 0.4
 Nodes (4): code:bash (npm run dev), Deploy on Vercel, Getting Started, Learn More
 
-### Community 37 - "User Settings Page"
+### Community 42 - "Community 42"
+Cohesion: 0.5
+Nodes (4): DistrictDashboardPage(), formatMinutes(), formatNumber(), formatPercent()
+
+### Community 44 - "Community 44"
 Cohesion: 0.67
 Nodes (3): createFacilityIcon(), SingleFacilityMap(), SingleFacilityMapProps
 
 ## Knowledge Gaps
-- **260 isolated node(s):** `eslintConfig`, `nextConfig`, `firebaseConfig`, `payload`, `options` (+255 more)
+- **346 isolated node(s):** `eslintConfig`, `nextConfig`, `firebaseConfig`, `payload`, `options` (+341 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **16 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `useAuthStore` connect `Core Type Definitions` to `Authentication & API Client`, `Referral Authentication & Authorization`, `Ambulance Management & Dispatch`?**
-  _High betweenness centrality (0.025) - this node is a cross-community bridge._
-- **Why does `useUIStore` connect `Patient Care Reports & Pre-hospital Vitals` to `Core Type Definitions`, `Ambulance Management & Dispatch`?**
-  _High betweenness centrality (0.022) - this node is a cross-community bridge._
-- **Why does `Header()` connect `Ambulance Management & Dispatch` to `Core Type Definitions`, `Patient Care Reports & Pre-hospital Vitals`?**
-  _High betweenness centrality (0.016) - this node is a cross-community bridge._
+- **Why does `Register` connect `Clinician Workflow & Triage` to `Authentication & API Client`?**
+  _High betweenness centrality (0.019) - this node is a cross-community bridge._
+- **Why does `useAuthStore` connect `Authentication & API Client` to `Community 42`, `Dashboard & Facility Management`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Are the 2 inferred relationships involving `CallCentrePage()` (e.g. with `useUser()` and `useToast()`) actually correct?**
+  _`CallCentrePage()` has 2 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 2 inferred relationships involving `TriagePage()` (e.g. with `useUser()` and `useToast()`) actually correct?**
+  _`TriagePage()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 10 inferred relationships involving `useAuthStore` (e.g. with `LoginForm()` and `DashboardPage()`) actually correct?**
   _`useAuthStore` has 10 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 4 inferred relationships involving `useUIStore` (e.g. with `ThemeProvider()` and `ToastContainer()`) actually correct?**
   _`useUIStore` has 4 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `eslintConfig`, `nextConfig`, `firebaseConfig` to the rest of the system?**
-  _260 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Authentication & API Client` be split into smaller, more focused modules?**
-  _Cohesion score 0.05 - nodes in this community are weakly interconnected._
+- **Are the 8 inferred relationships involving `Register` (e.g. with `ForgotPasswordPage()` and `ResetPasswordPage()`) actually correct?**
+  _`Register` has 8 INFERRED edges - model-reasoned connections that need verification._

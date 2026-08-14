@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,7 +16,7 @@ import {
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 import { userService, facilityService, ambulanceService } from '@/lib/api';
-import { UserType } from '@/types';
+import { UserStatus, UserType } from '@/types';
 import { 
   Plus,
   Search,
@@ -38,8 +38,9 @@ const userSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   phone: z.string().regex(/^\d{8}$/, 'Phone must be exactly 8 digits'),
   email: z.string().email('Invalid email').optional().or(z.literal('')),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string().optional().or(z.literal('')),
   userType: z.string().min(1, 'Role is required'),
+  status: z.string().optional(),
   facilityId: z.string().optional(),
   districtId: z.string().optional(),
   ambulanceId: z.string().optional().or(z.literal('')),
@@ -69,6 +70,7 @@ interface User {
     id: string;
     name: string;
   };
+  ambulanceId?: string;
   districtId?: string;
   district?: {
     id: string;
@@ -79,6 +81,24 @@ interface User {
 }
 
 const columnHelper = createColumnHelper<User>();
+
+const emptyUserForm: UserFormData = {
+  firstName: '',
+  lastName: '',
+  phone: '',
+  email: '',
+  password: '',
+  userType: '',
+  status: 'ACTIVE',
+  facilityId: '',
+  districtId: '',
+  ambulanceId: '',
+  crewRole: '',
+};
+
+function localPhone(phone: string) {
+  return phone.replace(/^\+232/, '').replace(/\D/g, '').slice(-8);
+}
 
 function RoleBadge({ role }: { role: string }) {
   const colors: Record<string, { bg: string; color: string; border: string }> = {
@@ -115,6 +135,7 @@ export default function AdminUsersPage() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
   const [facilitySearch, setFacilitySearch] = useState('');
   const queryClient = useQueryClient();
 
@@ -139,8 +160,9 @@ export default function AdminUsersPage() {
     queryFn: () => facilityService.getDistricts(),
   });
 
-  const { register, handleSubmit, setValue, control, reset, formState: { errors } } = useForm<UserFormData>({
+  const { register, handleSubmit, setValue, setError, control, reset, formState: { errors } } = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
+    defaultValues: emptyUserForm,
   });
 
   const createMutation = useMutation({
@@ -150,6 +172,7 @@ export default function AdminUsersPage() {
         ...data,
         phone: `+232${data.phone}`,
         email: data.email || undefined,
+        password: data.password || '',
         facilityId: isDistrictHealthUser ? undefined : data.facilityId || undefined,
         districtId: isDistrictHealthUser ? data.districtId || undefined : undefined,
         ambulanceId: data.ambulanceId || undefined,
@@ -160,7 +183,36 @@ export default function AdminUsersPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
       setShowAddModal(false);
+      setFacilitySearch('');
       reset();
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: (data: UserFormData) => {
+      if (!editingUser) {
+        throw new Error('No user selected for editing');
+      }
+      const isDistrictHealthUser = data.userType === 'DISTRICT_HEALTH';
+      return userService.update(editingUser.id, {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: `+232${data.phone}`,
+        email: data.email || '',
+        userType: data.userType as UserType,
+        status: data.status as UserStatus,
+        facilityId: isDistrictHealthUser ? '' : data.facilityId || '',
+        districtId: isDistrictHealthUser ? data.districtId || '' : '',
+        ambulanceId: data.userType === 'AMBULANCE_CREW' ? data.ambulanceId || '' : '',
+        crewRole: data.userType === 'AMBULANCE_CREW' ? data.crewRole || undefined : undefined,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
+      setShowAddModal(false);
+      setEditingUser(null);
+      setFacilitySearch('');
+      reset(emptyUserForm);
     },
   });
 
@@ -182,6 +234,52 @@ export default function AdminUsersPage() {
 
   const selectedFacilityId = useWatch({ control, name: 'facilityId' });
   const selectedUserType = useWatch({ control, name: 'userType' });
+  const isEditing = Boolean(editingUser);
+
+  const openAddModal = useCallback(() => {
+    setEditingUser(null);
+    setFacilitySearch('');
+    reset(emptyUserForm);
+    setShowAddModal(true);
+  }, [reset]);
+
+  const openEditModal = useCallback((user: User) => {
+    setEditingUser(user);
+    setFacilitySearch(user.facility?.name || '');
+    reset({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phone: localPhone(user.phone),
+      email: user.email || '',
+      password: '',
+      userType: user.userType,
+      status: user.status || 'ACTIVE',
+      facilityId: user.facility?.id || '',
+      districtId: user.districtId || user.district?.id || '',
+      ambulanceId: user.ambulanceId || '',
+      crewRole: '',
+    });
+    setShowAddModal(true);
+  }, [reset]);
+
+  const closeUserModal = useCallback(() => {
+    setShowAddModal(false);
+    setEditingUser(null);
+    setFacilitySearch('');
+    reset(emptyUserForm);
+  }, [reset]);
+
+  const handleUserSubmit = (data: UserFormData) => {
+    if (isEditing) {
+      updateMutation.mutate(data);
+      return;
+    }
+    if (!data.password || data.password.length < 8) {
+      setError('password', { type: 'manual', message: 'Password must be at least 8 characters' });
+      return;
+    }
+    createMutation.mutate(data);
+  };
 
   // Define columns
   const columns = useMemo(() => [
@@ -265,9 +363,14 @@ export default function AdminUsersPage() {
     columnHelper.display({
       id: 'actions',
       header: 'Actions',
-      cell: () => (
+      cell: info => (
         <div style={{ display: 'flex', gap: 'var(--space-1)' }}>
-          <button className="btn btn-ghost btn-sm btn-icon">
+          <button
+            className="btn btn-ghost btn-sm btn-icon"
+            type="button"
+            onClick={() => openEditModal(info.row.original)}
+            aria-label={`Edit ${info.row.original.firstName} ${info.row.original.lastName}`}
+          >
             <Edit size={14} />
           </button>
           <button className="btn btn-ghost btn-sm btn-icon" style={{ color: 'var(--error)' }}>
@@ -276,7 +379,7 @@ export default function AdminUsersPage() {
         </div>
       ),
     }),
-  ], []);
+  ], [openEditModal]);
 
   const table = useReactTable({
     data: users,
@@ -303,7 +406,7 @@ export default function AdminUsersPage() {
           <h1 className="page-title">User Management</h1>
           <p className="page-subtitle">Manage system users and permissions</p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
+        <button className="btn btn-primary" onClick={openAddModal}>
           <Plus size={16} />
           Add User
         </button>
@@ -451,7 +554,7 @@ export default function AdminUsersPage() {
         </div>
       )}
 
-      {/* Add User Modal */}
+      {/* User Modal */}
       {showAddModal && (
         <>
           <div 
@@ -461,7 +564,7 @@ export default function AdminUsersPage() {
               background: 'rgba(0,0,0,0.5)',
               zIndex: 999,
             }}
-            onClick={() => setShowAddModal(false)}
+            onClick={closeUserModal}
           />
           <div style={{
             position: 'fixed',
@@ -482,10 +585,10 @@ export default function AdminUsersPage() {
               padding: 'var(--space-6)',
               borderBottom: '1px solid var(--border)',
             }}>
-              <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 600 }}>Add New User</h2>
+              <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 600 }}>{isEditing ? 'Edit User' : 'Add New User'}</h2>
             </div>
 
-            <form onSubmit={handleSubmit((data) => createMutation.mutate(data))}>
+            <form onSubmit={handleSubmit(handleUserSubmit)}>
               <div style={{ padding: 'var(--space-6)' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
                   <div className="form-group">
@@ -534,16 +637,18 @@ export default function AdminUsersPage() {
                   {errors.email && <span className="form-error">{errors.email.message}</span>}
                 </div>
 
-                <div className="form-group">
-                  <label className="form-label">Password *</label>
-                  <input 
-                    type="password" 
-                    className={`form-input ${errors.password ? 'error' : ''}`} 
-                    {...register('password')}
-                  />
-                  {errors.password && <span className="form-error">{errors.password.message}</span>}
-                  <span className="form-hint">Minimum 8 characters</span>
-                </div>
+                {!isEditing && (
+                  <div className="form-group">
+                    <label className="form-label">Password *</label>
+                    <input 
+                      type="password" 
+                      className={`form-input ${errors.password ? 'error' : ''}`} 
+                      {...register('password')}
+                    />
+                    {errors.password && <span className="form-error">{errors.password.message}</span>}
+                    <span className="form-hint">Minimum 8 characters</span>
+                  </div>
+                )}
 
                 <div className="form-group">
                   <label className="form-label">Role *</label>
@@ -555,6 +660,17 @@ export default function AdminUsersPage() {
                   </select>
                   {errors.userType && <span className="form-error">{errors.userType.message}</span>}
                 </div>
+
+                {isEditing && (
+                  <div className="form-group">
+                    <label className="form-label">Status</label>
+                    <select className="form-input" {...register('status')}>
+                      <option value="ACTIVE">Active</option>
+                      <option value="INACTIVE">Inactive</option>
+                      <option value="SUSPENDED">Suspended</option>
+                    </select>
+                  </div>
+                )}
 
                 {selectedUserType === 'AMBULANCE_CREW' && (
                   <>
@@ -638,9 +754,9 @@ export default function AdminUsersPage() {
                   </div>
                 )}
 
-                {createMutation.isError && (
+                {(createMutation.isError || updateMutation.isError) && (
                   <div className="auth-error">
-                    Failed to create user. Please try again.
+                    Failed to {isEditing ? 'update' : 'create'} user. Please try again.
                   </div>
                 )}
               </div>
@@ -655,24 +771,24 @@ export default function AdminUsersPage() {
                 <button 
                   type="button" 
                   className="btn btn-secondary" 
-                  onClick={() => setShowAddModal(false)}
+                  onClick={closeUserModal}
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit" 
                   className="btn btn-primary"
-                  disabled={createMutation.isPending}
+                  disabled={createMutation.isPending || updateMutation.isPending}
                 >
-                  {createMutation.isPending ? (
+                  {createMutation.isPending || updateMutation.isPending ? (
                     <>
                       <div className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} />
-                      Creating...
+                      {isEditing ? 'Saving...' : 'Creating...'}
                     </>
                   ) : (
                     <>
-                      <Plus size={16} />
-                      Create User
+                      {isEditing ? <Edit size={16} /> : <Plus size={16} />}
+                      {isEditing ? 'Save Changes' : 'Create User'}
                     </>
                   )}
                 </button>
