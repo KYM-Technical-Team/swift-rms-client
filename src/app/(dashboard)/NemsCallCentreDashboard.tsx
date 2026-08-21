@@ -45,35 +45,24 @@ const COLOUR_YELLOW = '#f59e0b';
 const COLOUR_GREEN = '#10b981';
 const COLOUR_INFO = '#6366f1';
 
-const EN_ROUTE_STATUSES: NEMSRequestStatus[] = [
-  'DISPATCHED',
-  'DEPARTED_STANDBY',
-  'EN_ROUTE_PICKUP',
-];
+const EN_ROUTE_STATUSES: NEMSRequestStatus[] = ['DISPATCHED', 'EN_ROUTE_PICKUP'];
 const ACTIVE_MISSION_STATUSES: NEMSRequestStatus[] = [
   'DISPATCHED',
-  'DEPARTED_STANDBY',
   'EN_ROUTE_PICKUP',
   'AT_PICKUP',
-  'PATIENT_LOADED',
-  'EN_ROUTE_DROPOFF',
-  'AT_DROPOFF',
-  'HANDED_OVER',
+  'EN_ROUTE_DROP',
+  'AT_DROP',
 ];
 
 const missionStatusLabel: Record<NEMSRequestStatus, string> = {
   REQUESTED: 'Requested',
   DISPATCHED: 'Dispatched',
-  DEPARTED_STANDBY: 'Departed Standby',
   EN_ROUTE_PICKUP: 'En Route',
   AT_PICKUP: 'At Scene',
-  PATIENT_LOADED: 'Patient Loaded',
-  EN_ROUTE_DROPOFF: 'On Mission',
-  AT_DROPOFF: 'At Hospital',
-  HANDED_OVER: 'Handed Over',
+  EN_ROUTE_DROP: 'On Mission',
+  AT_DROP: 'At Hospital',
   COMPLETED: 'Completed',
   CANCELLED: 'Cancelled',
-  RETURNED_STANDBY: 'Returned Standby',
 };
 
 function elapsed(from: string | undefined, now: number) {
@@ -170,7 +159,7 @@ export default function NemsCallCentreDashboard() {
 
   const activeMissions = missions.filter((mission) => ACTIVE_MISSION_STATUSES.includes(mission.status));
   const enRouteMissions = missions.filter((mission) => EN_ROUTE_STATUSES.includes(mission.status));
-  const atHospitalMissions = missions.filter((mission) => mission.status === 'AT_DROPOFF');
+  const atHospitalMissions = missions.filter((mission) => mission.status === 'AT_DROP');
 
   const today = metrics?.todayStats;
   const totalToday = today?.totalCalls ?? 0;

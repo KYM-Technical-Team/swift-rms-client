@@ -10,19 +10,22 @@ export function PatientClinicalSummaryCard({ referral }: PatientClinicalSummaryC
   const { patient, dangerSignScore, chiefComplaint, clinicalSummary, vitalSigns, bloodGroup, allergyDetails, onSupplementalOxygen, oxygenSaturation } = referral;
 
   const dangerSignsCount = dangerSignScore || 0;
-  
+
   // Triage alert thresholds & colors
-  const getRiskDetails = (score: number) => {
-    if (score >= 7) {
+  const getRiskDetails = (priority: string) => {
+    if (priority === 'HIGH') {
       return { text: 'RED – LIFE THREATENING', bg: 'rgba(239, 68, 68, 0.15)', border: 'rgba(239, 68, 68, 0.3)', color: '#ef4444' };
-    } else if (score >= 4) {
+    } else if (priority === 'MEDIUM') {
       return { text: 'AMBER – MODERATE', bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)', color: '#f59e0b' };
     } else {
       return { text: 'GREEN – LOW RISK', bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.3)', color: '#10b981' };
     }
   };
 
-  const risk = getRiskDetails(dangerSignsCount);
+  const risk = getRiskDetails(referral.priority);
+
+  console.log('risk', referral.priority);
+
 
   // Vitals styling helpers
   const bpSys = vitalSigns?.bloodPressureSystolic;
@@ -131,24 +134,27 @@ export function PatientClinicalSummaryCard({ referral }: PatientClinicalSummaryC
         {/* BP */}
         <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', padding: '10px', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
           <span className="text-muted font-bold block" style={{ fontSize: '9px', textTransform: 'uppercase', marginBottom: '2px' }}>BP</span>
+          <br/>
           <span className="font-bold block" style={{ fontSize: '14px', color: isBPAbnormal ? '#ef4444' : 'var(--text-primary)' }}>
             {bpSys !== undefined && bpDia !== undefined ? `${bpSys}/${bpDia}` : '—'}
           </span>
-          <span className="text-muted block" style={{ fontSize: '9px', marginTop: '2px' }}>mmHg</span>
+          <span className="text-muted block" style={{ fontSize: '9px', marginTop: '2px' }}> mmHg</span>
         </div>
 
         {/* Pulse */}
         <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', padding: '10px', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
           <span className="text-muted font-bold block" style={{ fontSize: '9px', textTransform: 'uppercase', marginBottom: '2px' }}>Pulse</span>
+          <br/>
           <span className="font-bold block" style={{ fontSize: '14px', color: isHRAbnormal ? '#ef4444' : '#10b981' }}>
             {hr !== undefined ? `${hr}` : '—'}
           </span>
-          <span className="text-muted block" style={{ fontSize: '9px', marginTop: '2px' }}>bpm</span>
+          <span className="text-muted block" style={{ fontSize: '9px', marginTop: '2px' }}> bpm</span>
         </div>
 
         {/* Resp Rate */}
         <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', padding: '10px', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
           <span className="text-muted font-bold block" style={{ fontSize: '9px', textTransform: 'uppercase', marginBottom: '2px' }}>Resp. Rate</span>
+          <br/>
           <span className="font-bold block" style={{ fontSize: '14px', color: isRRAbnormal ? '#f59e0b' : 'var(--text-primary)' }}>
             {rr !== undefined ? `${rr}` : '—'}
           </span>
@@ -158,6 +164,7 @@ export function PatientClinicalSummaryCard({ referral }: PatientClinicalSummaryC
         {/* SpO2 */}
         <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', padding: '10px', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
           <span className="text-muted font-bold block" style={{ fontSize: '9px', textTransform: 'uppercase', marginBottom: '2px' }}>SpO2</span>
+          <br/>
           <span className="font-bold block" style={{ fontSize: '14px', color: isSpO2Abnormal ? '#ef4444' : '#10b981' }}>
             {spo2 !== undefined ? `${spo2}%` : '—'}
           </span>
@@ -167,6 +174,7 @@ export function PatientClinicalSummaryCard({ referral }: PatientClinicalSummaryC
         {/* Temp */}
         <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', padding: '10px', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
           <span className="text-muted font-bold block" style={{ fontSize: '9px', textTransform: 'uppercase', marginBottom: '2px' }}>Temp.</span>
+          <br/>
           <span className="font-bold block" style={{ fontSize: '14px', color: isTempAbnormal ? '#f59e0b' : '#10b981' }}>
             {temp !== undefined ? `${temp}°C` : '—'}
           </span>
@@ -176,8 +184,9 @@ export function PatientClinicalSummaryCard({ referral }: PatientClinicalSummaryC
         {/* Oxygen Delivery */}
         <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle)', padding: '10px', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
           <span className="text-muted font-bold block" style={{ fontSize: '9px', textTransform: 'uppercase', marginBottom: '2px' }}>Oxygen</span>
+          <br/>
           <span className="font-bold block text-warning" style={{ fontSize: '12px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {onSupplementalOxygen ? '6 L/min' : 'Room Air'}
+            {onSupplementalOxygen ? '6 L/min' : ' Room Air'}
           </span>
           <span className="text-muted block" style={{ fontSize: '9px', marginTop: '2px' }}>{onSupplementalOxygen ? 'Mask' : 'Ambient'}</span>
         </div>
@@ -190,7 +199,7 @@ export function PatientClinicalSummaryCard({ referral }: PatientClinicalSummaryC
       }}>
         <div className="flex items-center gap-1.5 text-secondary">
           <Droplet size={14} style={{ color: 'var(--danger)' }} />
-          Blood Group: <strong className="text-primary">{bloodGroup || 'O+'}</strong>
+          Blood Group: <strong className="text-primary">{bloodGroup || 'Not Known'}</strong>
         </div>
         <div className="flex items-center gap-1.5 text-secondary">
           <ShieldAlert size={14} style={{ color: 'var(--success)' }} />

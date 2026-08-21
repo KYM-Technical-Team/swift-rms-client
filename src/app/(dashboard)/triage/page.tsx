@@ -191,9 +191,16 @@ function Skeleton({ rows = 3 }: { rows?: number }) {
 export default function TriagePage() {
   const clinician = useUser();
   const toast = useToast();
+  const pendingScope =
+    clinician?.userType === 'SYSTEM_ADMIN' ||
+    clinician?.userType === 'NEMS' ||
+    clinician?.userType === 'AMBULANCE_DISPATCH' ||
+    !clinician?.facility?.id
+      ? 'global'
+      : 'facility';
 
   // ---- server state -----------------------------------------------------
-  const pendingQuery = usePendingReferrals();
+  const pendingQuery = usePendingReferrals(pendingScope);
   const arrivedQuery = useArrivedReferrals();
   const acceptReferral = useAcceptReferral();
   const rejectReferral = useRejectReferral();

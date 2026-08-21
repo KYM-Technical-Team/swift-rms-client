@@ -8,6 +8,8 @@ import {
   HeatmapData,
   DHIS2Export,
   AnalyticsQuery,
+  MonthlyReportQuery,
+  MonthlyOperationalReportResponse,
   NationalDashboardResponse,
   DistrictPerformanceResponse,
   GenerateReportRequest,
@@ -22,6 +24,14 @@ export const analyticsService = {
 
   getDistrictPerformance: async (query?: AnalyticsQuery): Promise<DistrictPerformanceResponse> => {
     const response = await apiClient.get<ApiResponse<DistrictPerformanceResponse>>('/analytics/district-performance', { params: query });
+    return response.data.data!;
+  },
+
+  getMonthlyOperationalReport: async (query?: MonthlyReportQuery): Promise<MonthlyOperationalReportResponse> => {
+    const response = await apiClient.get<ApiResponse<MonthlyOperationalReportResponse>>(
+      '/analytics/monthly-operational-report',
+      { params: query }
+    );
     return response.data.data!;
   },
 

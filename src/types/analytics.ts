@@ -106,6 +106,146 @@ export interface AnalyticsQuery {
   groupBy?: 'DAY' | 'WEEK' | 'MONTH';
 }
 
+export interface MonthlyReportQuery {
+  year?: number;
+  month?: number;
+  facilityId?: string;
+  districtId?: string;
+}
+
+export interface MonthlyReportPeriod {
+  year: number;
+  month: number;
+  label: string;
+  dateFrom: string;
+  dateTo: string;
+}
+
+export interface MonthlyReportKPIs {
+  totalCalls: number;
+  totalReferrals: number;
+  totalMissions: number;
+  nemsRequiredReferrals: number;
+  completedMissions: number;
+  cancelledMissions: number;
+  missionSuccessRate: number;
+  abortRate: number;
+  averageResponseTimeMinutes: number;
+  averageTimeToSceneMinutes: number;
+  averageTimeToHospitalMinutes: number;
+  averageTurnaroundMinutes: number;
+  readinessReportingRate: number;
+  totalAmbulances: number;
+  availableAmbulances: number;
+}
+
+export interface MonthlyReportCallSection {
+  total: number;
+  completed: number;
+  transferred: number;
+  averageCallDurationMinutes: number;
+  byCallType: Record<string, number>;
+  byEmergencyNature: Record<string, number>;
+  byStatus: Record<string, number>;
+  byDistrict: Record<string, number>;
+  byHour: Record<string, number>;
+}
+
+export interface MonthlyReportMissionSection {
+  total: number;
+  completed: number;
+  cancelled: number;
+  successRate: number;
+  abortRate: number;
+  averageResponseTimeMinutes: number;
+  averageTimeToSceneMinutes: number;
+  averageTimeToHospitalMinutes: number;
+  averageTurnaroundMinutes: number;
+  byStatus: Record<string, number>;
+  byPriority: Record<string, number>;
+  byColourCode: Record<string, number>;
+  byPickupDistrict: Record<string, number>;
+  byDropoffDistrict: Record<string, number>;
+  byHour: Record<string, number>;
+  transportDecisionDistribution: Record<string, number>;
+}
+
+export interface MonthlyReportReferralSection {
+  total: number;
+  incomingToScope: number;
+  outgoingFromScope: number;
+  nemsRequired: number;
+  bloodDonorAccompanying: number;
+  relativeAccompanying: number;
+  byStatus: Record<string, number>;
+  byPriority: Record<string, number>;
+  byColourCode: Record<string, number>;
+  byOutcome: Record<string, number>;
+  byPatientCategory: Record<string, number>;
+  byTransportMethod: Record<string, number>;
+  bySendingDistrict: Record<string, number>;
+  byReceivingDistrict: Record<string, number>;
+  rcTrackerOutcomes: Record<string, number>;
+  freeHealthCareDistribution: Record<string, number>;
+  arrivalMethodDistribution: Record<string, number>;
+}
+
+export interface MonthlyReportFacilityCapacity {
+  totalActiveFacilities: number;
+  reportingFacilities: number;
+  reportingRate: number;
+  bedCapacityTotal: number;
+  bedCapacityAvailable: number;
+  icuBedsTotal: number;
+  icuBedsAvailable: number;
+  operatingRoomsAvailable: number;
+  readinessHigh: number;
+  readinessMedium: number;
+  readinessLow: number;
+  byFacilityType: Record<string, number>;
+}
+
+export interface MonthlyReportAmbulanceUtilization {
+  total: number;
+  available: number;
+  onMission: number;
+  maintenance: number;
+  outOfService: number;
+  linkedToFacilities: number;
+  unlinked: number;
+  byDistrict: Record<string, number>;
+}
+
+export interface MonthlyReportSpecialOperations {
+  sampleTransportDataAvailable: boolean;
+  sampleTransports: number;
+  covidTransportDataAvailable: boolean;
+  covidTransports: number;
+  kilometresDataAvailable: boolean;
+  kilometresTravelled: number;
+}
+
+export interface MonthlyReportDataQualityIndicator {
+  key: string;
+  status: string;
+  message: string;
+  severity: string;
+}
+
+export interface MonthlyOperationalReportResponse {
+  period: MonthlyReportPeriod;
+  generatedAt: string;
+  definitionsVersion: string;
+  kpis: MonthlyReportKPIs;
+  calls: MonthlyReportCallSection;
+  missions: MonthlyReportMissionSection;
+  referrals: MonthlyReportReferralSection;
+  facilityCapacity: MonthlyReportFacilityCapacity;
+  ambulanceUtilization: MonthlyReportAmbulanceUtilization;
+  specialOperations: MonthlyReportSpecialOperations;
+  dataQuality: MonthlyReportDataQualityIndicator[];
+}
+
 export interface AnalyticsTrendPoint {
   period: string;
   red: number;

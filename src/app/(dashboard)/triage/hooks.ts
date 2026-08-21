@@ -5,16 +5,22 @@ import { referralService } from '@/lib/api';
 import type { ClinicianReviewRequest, Priority, Referral } from '@/types';
 
 export const triageKeys = {
-  pending: () => ['referrals', 'pending'] as const,
+  pending: (scope: 'facility' | 'global' = 'facility') => ['referrals', 'pending', scope] as const,
   arrived: () => ['referrals', 'arrived'] as const,
   timeline: (id?: string) => ['referrals', id ?? 'none', 'timeline'] as const,
 };
 
 /** The pre-arrival worklist. Polled so a referral triaged elsewhere leaves this queue. */
-export function usePendingReferrals() {
+export function usePendingReferrals(scope: 'facility' | 'global' = 'facility') {
   return useQuery({
-    queryKey: triageKeys.pending(),
-    queryFn: () => referralService.listPending(),
+    queryKey: triageKeys.pending(scope),
+    queryFn: async () => {
+      if (scope === 'global') {
+        const result = await referralService.list({ status: 'PENDING', limit: 100 });
+        return result.data;
+      }
+      return referralService.listPending();
+    },
     refetchInterval: 30000,
     refetchOnWindowFocus: true,
     staleTime: 10000,
@@ -47,7 +53,7 @@ export function useReferralTimeline(referralId?: string) {
 function useReferralInvalidation() {
   const queryClient = useQueryClient();
   return (referralId?: string) => {
-    void queryClient.invalidateQueries({ queryKey: triageKeys.pending() });
+    void queryClient.invalidateQueries({ queryKey: ['referrals', 'pending'] });
     void queryClient.invalidateQueries({ queryKey: triageKeys.arrived() });
     void queryClient.invalidateQueries({ queryKey: ['referrals', 'dashboard'] });
     if (referralId) void queryClient.invalidateQueries({ queryKey: triageKeys.timeline(referralId) });
@@ -56,7 +62,7 @@ function useReferralInvalidation() {
 
 function patchQueue(queryClient: ReturnType<typeof useQueryClient>, updated: Referral) {
   const patch = (current?: Referral[]) => current?.map((referral) => referral.id === updated.id ? updated : referral);
-  queryClient.setQueryData<Referral[]>(triageKeys.pending(), patch);
+  queryClient.setQueriesData<Referral[]>({ queryKey: ['referrals', 'pending'] }, patch);
   queryClient.setQueryData<Referral[]>(triageKeys.arrived(), patch);
 }
 
