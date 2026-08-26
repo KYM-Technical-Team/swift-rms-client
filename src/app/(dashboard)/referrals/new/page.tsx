@@ -4,11 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { referralService, patientService, facilityService } from '@/lib/api';
-import { ReferralType } from '@/types';
+import { Priority, ReferralPreparationResponse, ReferralType, VitalSigns } from '@/types';
 import { useAuthStore } from '@/store';
 import { 
   ArrowLeft, 
@@ -28,6 +28,7 @@ const referralSchema = z.object({
   receivingFacilityId: z.string().min(1, 'Receiving facility is required'),
   referralType: z.string().min(1, 'Referral type is required'),
   priority: z.string().min(1, 'Priority is required'),
+  patientCategory: z.string().optional(),
   chiefComplaint: z.string().min(1, 'Chief complaint is required'),
   clinicalSummary: z.string().min(1, 'Clinical summary is required'),
   bloodPressureSystolic: z.number().optional(),
@@ -63,19 +64,41 @@ const priorities = [
   'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'
 ];
 
+const patientCategories = [
+  'PREGNANT', 'CHILD', 'ADULT', 'ELDERLY', 'NEWBORN'
+];
+
 export default function NewReferralPage() {
   const router = useRouter();
   const [patientSearch, setPatientSearch] = useState('');
   const [facilitySearch, setFacilitySearch] = useState('');
   const [selectedDangerSigns, setSelectedDangerSigns] = useState<string[]>([]);
+  const [preparation, setPreparation] = useState<ReferralPreparationResponse | null>(null);
+  const [readinessConfirmed, setReadinessConfirmed] = useState(false);
 
-  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<ReferralFormData>({
+  const { register, handleSubmit, setValue, control, formState: { errors } } = useForm<ReferralFormData>({
     resolver: zodResolver(referralSchema),
     defaultValues: { bloodDonorAccompanying: false, relativeAccompanying: false },
   });
 
-  const selectedPatientId = watch('patientId');
-  const selectedFacilityId = watch('receivingFacilityId');
+  const clearPreparation = () => {
+    setPreparation(null);
+    setReadinessConfirmed(false);
+  };
+
+  const selectedPatientId = useWatch({ control, name: 'patientId' });
+  const selectedFacilityId = useWatch({ control, name: 'receivingFacilityId' });
+  const selectedTransportMethod = useWatch({ control, name: 'transportMethod' });
+  const referralTypeField = register('referralType', { onChange: clearPreparation });
+  const priorityField = register('priority', { onChange: clearPreparation });
+  const chiefComplaintField = register('chiefComplaint', { onChange: clearPreparation });
+  const systolicField = register('bloodPressureSystolic', { valueAsNumber: true, onChange: clearPreparation });
+  const diastolicField = register('bloodPressureDiastolic', { valueAsNumber: true, onChange: clearPreparation });
+  const heartRateField = register('heartRate', { valueAsNumber: true, onChange: clearPreparation });
+  const temperatureField = register('temperature', { valueAsNumber: true, onChange: clearPreparation });
+  const oxygenSaturationField = register('oxygenSaturation', { valueAsNumber: true, onChange: clearPreparation });
+  const patientCategoryField = register('patientCategory');
+  const transportMethodField = register('transportMethod');
 
   const { data: patients } = useQuery({
     queryKey: ['patients', 'search', patientSearch],
@@ -103,51 +126,63 @@ export default function NewReferralPage() {
 
   const createMutation = useMutation({
     mutationFn: async (data: ReferralFormData) => {
-      try {
-        const user = useAuthStore.getState().user;
-        
-        if (!user) {
-          throw new Error('User not logged in');
-        }
-        
-        if (!user.facility?.id) {
-          throw new Error('User facility not found. Please contact your administrator.');
-        }
-        
-        const vitalSigns = {
-          bloodPressureSystolic: data.bloodPressureSystolic,
-          bloodPressureDiastolic: data.bloodPressureDiastolic,
-          heartRate: data.heartRate,
-          temperature: data.temperature,
-          oxygenSaturation: data.oxygenSaturation,
-        };
-        
-        const payload = {
-          patientId: data.patientId,
-          sendingFacilityId: user.facility.id,
-          receivingFacilityId: data.receivingFacilityId,
-          referralType: data.referralType as ReferralType,
-          priority: data.priority as any,
-          chiefComplaint: data.chiefComplaint,
-          clinicalSummary: data.clinicalSummary || '',
-          vitalSigns: Object.values(vitalSigns).some(v => v !== undefined) ? vitalSigns : undefined,
-          transportMethod: data.transportMethod,
-          bloodDonorAccompanying: data.bloodDonorAccompanying,
-          relativeAccompanying: data.relativeAccompanying,
-        };
-        
-        console.log('Creating referral with payload:', payload);
-        
-        return await referralService.create(payload);
-      } catch (error) {
-        console.error('Error creating referral:', error);
-        throw error;
+      const user = useAuthStore.getState().user;
+
+      if (!user) {
+        throw new Error('User not logged in');
       }
+
+      if (!user.facility?.id) {
+        throw new Error('User facility not found. Please contact your administrator.');
+      }
+
+      const vitalSigns = sanitizeVitalSigns({
+        bloodPressureSystolic: data.bloodPressureSystolic,
+        bloodPressureDiastolic: data.bloodPressureDiastolic,
+        heartRate: data.heartRate,
+        temperature: data.temperature,
+        oxygenSaturation: data.oxygenSaturation,
+      });
+
+      const prepared = await referralService.prepare({
+        receivingFacilityId: data.receivingFacilityId,
+        referralType: data.referralType as ReferralType,
+        priority: data.priority as Priority,
+        chiefComplaint: data.chiefComplaint,
+        vitalSigns,
+        dangerSigns: selectedDangerSigns,
+        nemsRequired: data.transportMethod === 'AMBULANCE',
+      });
+
+      setPreparation(prepared);
+
+      const requiresConfirmation = !prepared.suitable || prepared.requiredConfirmations.length > 0 || prepared.warnings.length > 0;
+      if (requiresConfirmation && !readinessConfirmed) {
+        throw new Error('Review the readiness and triage guidance, then confirm before submitting.');
+      }
+
+      const colourCode = prepared.recommendedColourCode;
+      const nemsRequired = colourCode === 'RED' || colourCode === 'YELLOW' || data.transportMethod === 'AMBULANCE';
+
+      return referralService.create({
+        patientId: data.patientId,
+        sendingFacilityId: user.facility.id,
+        receivingFacilityId: data.receivingFacilityId,
+        referralType: data.referralType as ReferralType,
+        priority: prepared.recommendedPriority,
+        colourCode,
+        chiefComplaint: data.chiefComplaint,
+        clinicalSummary: data.clinicalSummary || '',
+        vitalSigns,
+        dangerSigns: selectedDangerSigns,
+        patientCategory: data.patientCategory,
+        transportMethod: nemsRequired ? 'NEMS_AMBULANCE' : data.transportMethod,
+        nemsRequired,
+        bloodDonorAccompanying: data.bloodDonorAccompanying,
+        relativeAccompanying: data.relativeAccompanying,
+      });
     },
     onSuccess: (response) => router.push(`/referrals/${response.id}`),
-    onError: (error) => {
-      console.error('Mutation error:', error);
-    },
   });
 
   const toggleDangerSign = (sign: string) => {
@@ -255,7 +290,7 @@ export default function NewReferralPage() {
                     <div className="font-medium">{selectedFacility.name}</div>
                     <div className="text-xs text-muted">{selectedFacility.type} | {selectedFacility.district?.name}</div>
                   </div>
-                  <button type="button" className="btn btn-ghost btn-sm" onClick={() => setValue('receivingFacilityId', '')}>
+                  <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setValue('receivingFacilityId', ''); clearPreparation(); }}>
                     <X size={14} />
                   </button>
                 </div>
@@ -277,7 +312,7 @@ export default function NewReferralPage() {
                         <div
                           key={f.id}
                           style={{ padding: 'var(--space-3)', cursor: 'pointer', borderBottom: '1px solid var(--border)', transition: 'background var(--duration-fast)' }}
-                          onClick={() => { setValue('receivingFacilityId', f.id); setFacilitySearch(''); }}
+                          onClick={() => { setValue('receivingFacilityId', f.id); setFacilitySearch(''); clearPreparation(); }}
                           onMouseEnter={(e) => e.currentTarget.style.background = 'var(--accent)'}
                           onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                         >
@@ -304,7 +339,7 @@ export default function NewReferralPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
                 <div className="form-group">
                   <label className="form-label">Referral Type *</label>
-                  <select className={`form-input ${errors.referralType ? 'error' : ''}`} {...register('referralType')}>
+                  <select className={`form-input ${errors.referralType ? 'error' : ''}`} {...referralTypeField}>
                     <option value="">Select type...</option>
                     {referralTypes.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
@@ -312,7 +347,7 @@ export default function NewReferralPage() {
                 </div>
                 <div className="form-group">
                   <label className="form-label">Priority *</label>
-                  <select className={`form-input ${errors.priority ? 'error' : ''}`} {...register('priority')}>
+                  <select className={`form-input ${errors.priority ? 'error' : ''}`} {...priorityField}>
                     <option value="">Select priority...</option>
                     {priorities.map(p => <option key={p} value={p}>{p}</option>)}
                   </select>
@@ -321,10 +356,18 @@ export default function NewReferralPage() {
               </div>
 
               <div className="form-group">
+                <label className="form-label">Patient Category</label>
+                <select className="form-input" {...patientCategoryField} onChange={(event) => { patientCategoryField.onChange(event); clearPreparation(); }}>
+                  <option value="">Select category...</option>
+                  {patientCategories.map(category => <option key={category} value={category}>{category.replace(/_/g, ' ')}</option>)}
+                </select>
+              </div>
+
+              <div className="form-group">
                 <label className="form-label">Transport Method</label>
-                <select className="form-input" {...register('transportMethod')}>
+                <select className="form-input" {...transportMethodField} onChange={(event) => { transportMethodField.onChange(event); clearPreparation(); }}>
                   <option value="">Select...</option>
-                  <option value="AMBULANCE">Ambulance</option>
+                  <option value="AMBULANCE">Ambulance / NEMS required</option>
                   <option value="PRIVATE">Private Vehicle</option>
                   <option value="PUBLIC">Public Transport</option>
                 </select>
@@ -336,7 +379,7 @@ export default function NewReferralPage() {
                   type="text"
                   className={`form-input ${errors.chiefComplaint ? 'error' : ''}`}
                   placeholder="Main reason for referral"
-                  {...register('chiefComplaint')}
+                  {...chiefComplaintField}
                 />
                 {errors.chiefComplaint && <span className="form-error">{errors.chiefComplaint.message}</span>}
               </div>
@@ -367,7 +410,7 @@ export default function NewReferralPage() {
                     <input
                       type="checkbox"
                       checked={selectedDangerSigns.includes(sign)}
-                      onChange={() => toggleDangerSign(sign)}
+                      onChange={() => { toggleDangerSign(sign); clearPreparation(); }}
                       style={{ width: 16, height: 16 }}
                     />
                     {sign}
@@ -398,23 +441,23 @@ export default function NewReferralPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3)' }}>
                 <div className="form-group">
                   <label className="form-label">BP Systolic</label>
-                  <input type="number" className="form-input" placeholder="mmHg" {...register('bloodPressureSystolic', { valueAsNumber: true })} />
+                  <input type="number" className="form-input" placeholder="mmHg" {...systolicField} />
                 </div>
                 <div className="form-group">
                   <label className="form-label">BP Diastolic</label>
-                  <input type="number" className="form-input" placeholder="mmHg" {...register('bloodPressureDiastolic', { valueAsNumber: true })} />
+                  <input type="number" className="form-input" placeholder="mmHg" {...diastolicField} />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Heart Rate</label>
-                  <input type="number" className="form-input" placeholder="bpm" {...register('heartRate', { valueAsNumber: true })} />
+                  <input type="number" className="form-input" placeholder="bpm" {...heartRateField} />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Temperature</label>
-                  <input type="number" step="0.1" className="form-input" placeholder="°C" {...register('temperature', { valueAsNumber: true })} />
+                  <input type="number" step="0.1" className="form-input" placeholder="°C" {...temperatureField} />
                 </div>
                 <div className="form-group" style={{ gridColumn: 'span 2' }}>
                   <label className="form-label">Oxygen Saturation</label>
-                  <input type="number" className="form-input" placeholder="%" {...register('oxygenSaturation', { valueAsNumber: true })} />
+                  <input type="number" className="form-input" placeholder="%" {...oxygenSaturationField} />
                 </div>
               </div>
 
@@ -432,18 +475,69 @@ export default function NewReferralPage() {
           </div>
         </div>
 
+        {preparation && (
+          <div className="card mt-6" style={{
+            borderColor: preparation.suitable ? 'rgba(34, 197, 94, 0.35)' : 'rgba(245, 158, 11, 0.45)',
+            background: preparation.suitable ? 'rgba(34, 197, 94, 0.08)' : 'rgba(245, 158, 11, 0.1)'
+          }}>
+            <h3 className="card-title mb-3">
+              {preparation.suitable ? <Check size={16} /> : <AlertTriangle size={16} />}
+              Pre-arrival triage and readiness check
+            </h3>
+            <div className="dashboard-grid" style={{ gap: 'var(--space-3)' }}>
+              <div className="col-4">
+                <div className="text-xs text-muted">Recommended colour</div>
+                <strong>{preparation.recommendedColourCode}</strong>
+              </div>
+              <div className="col-4">
+                <div className="text-xs text-muted">Recommended priority</div>
+                <strong>{preparation.recommendedPriority}</strong>
+              </div>
+              <div className="col-4">
+                <div className="text-xs text-muted">NEMS requirement</div>
+                <strong>{preparation.recommendedColourCode === 'RED' || preparation.recommendedColourCode === 'YELLOW' || selectedTransportMethod === 'AMBULANCE' ? 'Required' : 'Not required'}</strong>
+              </div>
+            </div>
+            {preparation.readinessAgeHours !== undefined && (
+              <p className="text-xs text-muted mt-3">
+                Latest readiness report: {preparation.readinessAgeHours} hour(s) old
+              </p>
+            )}
+            {[...preparation.warnings, ...preparation.requiredConfirmations].length > 0 && (
+              <ul className="mt-3" style={{ paddingLeft: 18 }}>
+                {[...preparation.warnings, ...preparation.requiredConfirmations].map((item) => (
+                  <li key={item} className="text-sm text-secondary">{item}</li>
+                ))}
+              </ul>
+            )}
+            {(!preparation.suitable || preparation.requiredConfirmations.length > 0 || preparation.warnings.length > 0) && (
+              <label className="flex items-center gap-2 text-sm mt-4" style={{ cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={readinessConfirmed}
+                  onChange={(event) => setReadinessConfirmed(event.target.checked)}
+                  style={{ width: 16, height: 16 }}
+                />
+                I have reviewed the readiness warning and confirmed the receiving facility by phone or operational protocol.
+              </label>
+            )}
+          </div>
+        )}
+
         <div className="flex gap-2 justify-end mt-6">
           <Link href="/referrals" className="btn btn-secondary">Cancel</Link>
           <button type="submit" className="btn btn-primary" disabled={createMutation.isPending}>
             {createMutation.isPending ? (
               <>
                 <div className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} />
-                Creating...
+                {preparation ? 'Creating...' : 'Checking...'}
               </>
             ) : (
               <>
                 <Send size={16} />
-                Create Referral
+                {preparation && (!preparation.suitable || preparation.requiredConfirmations.length > 0 || preparation.warnings.length > 0)
+                  ? 'Confirm & Create Referral'
+                  : 'Create Referral'}
               </>
             )}
           </button>
@@ -459,4 +553,20 @@ export default function NewReferralPage() {
       </form>
     </>
   );
+}
+
+function sanitizeVitalSigns(vitals: {
+  bloodPressureSystolic?: number;
+  bloodPressureDiastolic?: number;
+  heartRate?: number;
+  temperature?: number;
+  oxygenSaturation?: number;
+}): VitalSigns | undefined {
+  const cleaned: VitalSigns = {};
+  for (const [key, value] of Object.entries(vitals)) {
+    if (typeof value === 'number' && !Number.isNaN(value)) {
+      cleaned[key as keyof VitalSigns] = value;
+    }
+  }
+  return Object.keys(cleaned).length ? cleaned : undefined;
 }

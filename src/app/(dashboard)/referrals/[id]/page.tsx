@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { referralService } from '@/lib/api';
-import { ReferralStatus, TimelineEntry } from '@/types';
+import { referralService, readinessService } from '@/lib/api';
+import { TimelineEntry, FacilityReadiness } from '@/types';
 import { useAuthStore } from '@/store';
 import { canModifyReferral } from '@/lib/referral-auth';
 import { SearchableSelect } from '@/components/ui';
@@ -16,6 +16,7 @@ import { PatientClinicalSummaryCard } from '@/components/referral/PatientClinica
 import { ReferralLifecycleStepper } from '@/components/referral/ReferralLifecycleStepper';
 import { ResponsePerformanceCard } from '@/components/referral/ResponsePerformanceCard';
 import { NEMSTransportCard } from '@/components/referral/NEMSTransportCard';
+import { ReadinessDetailModal, FacilityReadinessPreview, calculateScore } from '@/components/readiness';
 import {
   AlertTriangle,
   Ambulance,
@@ -38,9 +39,13 @@ const detailCardStyle = {
 
 const actionButtonStyle = {
   border: 'none',
-  minHeight: 58,
+  minHeight: 48,
+  padding: 'var(--space-2.5) var(--space-4)',
+  display: 'inline-flex',
+  alignItems: 'center',
   justifyContent: 'flex-start',
-  padding: 'var(--space-3) var(--space-4)',
+  gap: 'var(--space-2.5)',
+  borderRadius: 'var(--radius-lg)',
 } as const;
 
 function formatDateTime(value?: string) {
@@ -224,6 +229,7 @@ export default function ReferralDetailPage() {
   const [showRedirectModal, setShowRedirectModal] = useState(false);
   const [redirectFacilityId, setRedirectFacilityId] = useState('');
   const [redirectReason, setRedirectReason] = useState('');
+  const [showRedirectReadinessModal, setShowRedirectReadinessModal] = useState(false);
   const [showAssignAmbulanceModal, setShowAssignAmbulanceModal] = useState(false);
 
   // Get user for permission checks (must be before conditional returns)
@@ -246,36 +252,89 @@ export default function ReferralDetailPage() {
     enabled: showRedirectModal,
   });
 
+  // Fetch all current facility readiness for redirect modal
+  const { data: allReadinessData } = useQuery({
+    queryKey: ['facilities-readiness-all-current'],
+    queryFn: () => readinessService.getAllCurrent(),
+    enabled: showRedirectModal,
+  });
+
+  const readinessMap = useMemo(() => {
+    const map = new Map<string, FacilityReadiness>();
+    if (allReadinessData && Array.isArray(allReadinessData)) {
+      allReadinessData.forEach((r) => {
+        if (r.facilityId) {
+          map.set(r.facilityId, r);
+        }
+      });
+    }
+    return map;
+  }, [allReadinessData]);
+
+  const redirectFacilityOptions = useMemo(() => {
+    if (!facilitiesData?.data) return [];
+    return facilitiesData.data
+      .filter((f) => f.id !== referral?.receivingFacility?.id)
+      .map((f) => {
+        const r = readinessMap.get(f.id);
+        let desc: string = f.facilityType || f.type || 'Facility';
+        if (r) {
+          const score = calculateScore(r);
+          const beds = `${r.bedCapacityAvailable ?? 0}/${r.bedCapacityTotal ?? 0} beds`;
+          desc = `${desc} • ${score}% readiness (${beds})`;
+        }
+        return {
+          value: f.id,
+          label: f.name,
+          description: desc,
+        };
+      });
+  }, [facilitiesData, referral, readinessMap]);
+
+  const selectedRedirectFacilityName = useMemo(() => {
+    return facilitiesData?.data?.find((f) => f.id === redirectFacilityId)?.name || '';
+  }, [facilitiesData, redirectFacilityId]);
+
+  type ReferralCommand =
+    | { type: 'ACCEPT' }
+    | { type: 'REJECT'; rejectionReason: string }
+    | { type: 'REDIRECT'; newReceivingFacilityId: string; redirectReason: string }
+    | { type: 'ARRIVAL' };
+
   const updateMutation = useMutation({
-    mutationFn: (data: {
-      action?: 'ACCEPT' | 'REJECT' | 'REDIRECT' | 'CANCEL' | 'CONFIRM_ARRIVAL' | 'RECORD_OUTCOME' | 'UPDATE_STATUS';
-      status?: ReferralStatus;
-      rejectionReason?: string;
-      newReceivingFacilityId?: string;
-      redirectReason?: string;
-    }) =>
-      referralService.update(id, data),
+    mutationFn: (command: ReferralCommand) => {
+      switch (command.type) {
+        case 'ACCEPT':
+          return referralService.accept(id);
+        case 'REJECT':
+          return referralService.reject(id, command.rejectionReason);
+        case 'REDIRECT':
+          return referralService.redirect(id, command.newReceivingFacilityId, command.redirectReason);
+        case 'ARRIVAL':
+          return referralService.markArrived(id);
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['referral', id] });
       queryClient.invalidateQueries({ queryKey: ['referrals'] });
     },
   });
 
-  const handleAccept = () => updateMutation.mutate({ status: 'ACCEPTED' });
+  const handleAccept = () => updateMutation.mutate({ type: 'ACCEPT' });
   const handleReject = () => {
     if (rejectReason.trim()) {
-      updateMutation.mutate({ status: 'REJECTED', rejectionReason: rejectReason });
+      updateMutation.mutate({ type: 'REJECT', rejectionReason: rejectReason.trim() });
       setShowRejectModal(false);
       setRejectReason('');
     }
   };
-  const handleMarkArrived = () => updateMutation.mutate({ status: 'ARRIVED' });
+  const handleMarkArrived = () => updateMutation.mutate({ type: 'ARRIVAL' });
   const handleRedirect = () => {
-    if (redirectFacilityId) {
+    if (redirectFacilityId && redirectReason.trim()) {
       updateMutation.mutate({
-        action: 'REDIRECT',
+        type: 'REDIRECT',
         newReceivingFacilityId: redirectFacilityId,
-        redirectReason: redirectReason || undefined,
+        redirectReason: redirectReason.trim(),
       });
       setShowRedirectModal(false);
       setRedirectFacilityId('');
@@ -305,7 +364,9 @@ export default function ReferralDetailPage() {
   const hasPermission = canModifyReferral(user, referral);
   const canAccept = referral.status === 'PENDING' && hasPermission;
   const canMarkArrived = (referral.status === 'ACCEPTED' || referral.status === 'IN_TRANSIT') && hasPermission;
-  const canAssignAmbulance = referral.status === 'PENDING' && 
+  const canAssignAmbulance = referral.status === 'ACCEPTED' &&
+    Boolean(referral.nemsRequired) &&
+    !referral.nemsRequest &&
     (user?.userType === 'SYSTEM_ADMIN' || user?.userType === 'NEMS' || user?.userType === 'AMBULANCE_DISPATCH');
   const dangerSigns = referral.dangerSigns ?? [];
   const timelineEntries = timeline?.length ? timeline : referral.timeline || [];
@@ -356,7 +417,7 @@ export default function ReferralDetailPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
             {hasActionBand && (
               <div className="card referral-action-grid" style={{ ...detailCardStyle, padding: 'var(--space-4)' }}>
-                <div className="flex items-center gap-3">
+                <div className="referral-action-info flex items-center gap-3">
                   <div style={{
                     width: 42,
                     height: 42,
@@ -373,50 +434,98 @@ export default function ReferralDetailPage() {
                   <div>
                     <div className="font-bold text-primary">Action Required</div>
                     <div className="text-sm text-secondary" style={{ marginTop: 2 }}>
-                      {canAccept ? 'Review and accept this referral to prepare the receiving facility.' : canMarkArrived ? 'Confirm the patient has arrived at the receiving facility.' : 'Assign transport for this emergency referral.'}
+                      {canAccept
+                        ? 'Review and accept this referral to prepare the receiving facility.'
+                        : canAssignAmbulance && canMarkArrived
+                        ? 'Assign emergency transport or confirm patient arrival at the receiving facility.'
+                        : canMarkArrived
+                        ? 'Confirm the patient has arrived at the receiving facility.'
+                        : 'Assign transport for this emergency referral.'}
                     </div>
                   </div>
                 </div>
 
-                {canAccept && (
-                  <>
-                    <button className="btn btn-success" onClick={handleAccept} disabled={updateMutation.isPending} style={actionButtonStyle}>
-                      <Check size={16} />
-                      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                        <strong>Accept &amp; Prepare</strong>
-                        <small>Accept referral</small>
-                      </span>
-                    </button>
-                    <button className="btn btn-secondary" onClick={() => setShowRedirectModal(true)} disabled={updateMutation.isPending} style={{ ...actionButtonStyle, background: 'rgba(245, 158, 11, 0.16)', border: '1px solid rgba(245, 158, 11, 0.28)', color: '#f59e0b' }}>
-                      <RotateCcw size={16} />
-                      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                        <strong>Redirect</strong>
-                        <small>Send elsewhere</small>
-                      </span>
-                    </button>
-                    <button className="btn btn-danger" onClick={() => setShowRejectModal(true)} disabled={updateMutation.isPending} style={actionButtonStyle}>
-                      <X size={16} />
-                      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                        <strong>Reject</strong>
-                        <small>Cannot accept</small>
-                      </span>
-                    </button>
-                  </>
-                )}
+                <div className="referral-action-buttons">
+                  {canAccept && (
+                    <>
+                      <button
+                        className="btn btn-success"
+                        onClick={handleAccept}
+                        disabled={updateMutation.isPending}
+                        style={actionButtonStyle}
+                      >
+                        <Check size={16} />
+                        <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
+                          <strong style={{ fontSize: '13px', lineHeight: 1.2 }}>Accept &amp; Prepare</strong>
+                          <small style={{ fontSize: '11px', opacity: 0.85, marginTop: '2px' }}>Accept referral</small>
+                        </span>
+                      </button>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => setShowRedirectModal(true)}
+                        disabled={updateMutation.isPending}
+                        style={{
+                          ...actionButtonStyle,
+                          background: 'rgba(245, 158, 11, 0.16)',
+                          border: '1px solid rgba(245, 158, 11, 0.28)',
+                          color: '#f59e0b',
+                        }}
+                      >
+                        <RotateCcw size={16} />
+                        <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
+                          <strong style={{ fontSize: '13px', lineHeight: 1.2 }}>Redirect</strong>
+                          <small style={{ fontSize: '11px', opacity: 0.85, marginTop: '2px' }}>Send elsewhere</small>
+                        </span>
+                      </button>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => setShowRejectModal(true)}
+                        disabled={updateMutation.isPending}
+                        style={actionButtonStyle}
+                      >
+                        <X size={16} />
+                        <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
+                          <strong style={{ fontSize: '13px', lineHeight: 1.2 }}>Reject</strong>
+                          <small style={{ fontSize: '11px', opacity: 0.85, marginTop: '2px' }}>Cannot accept</small>
+                        </span>
+                      </button>
+                    </>
+                  )}
 
-                {canMarkArrived && (
-                  <button className="btn btn-primary" onClick={handleMarkArrived} disabled={updateMutation.isPending} style={{ ...actionButtonStyle, gridColumn: 'span 3' }}>
-                    <MapPin size={16} />
-                    Mark Arrived
-                  </button>
-                )}
+                  {canAssignAmbulance && !canAccept && (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => setShowAssignAmbulanceModal(true)}
+                      disabled={updateMutation.isPending}
+                      style={{
+                        ...actionButtonStyle,
+                        background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                        border: 'none',
+                      }}
+                    >
+                      <Ambulance size={16} />
+                      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
+                        <strong style={{ fontSize: '13px', lineHeight: 1.2 }}>Assign Ambulance</strong>
+                        <small style={{ fontSize: '11px', opacity: 0.85, marginTop: '2px' }}>Dispatch transport</small>
+                      </span>
+                    </button>
+                  )}
 
-                {canAssignAmbulance && !canAccept && (
-                  <button className="btn btn-primary" onClick={() => setShowAssignAmbulanceModal(true)} disabled={updateMutation.isPending} style={{ ...actionButtonStyle, gridColumn: 'span 3' }}>
-                    <Ambulance size={16} />
-                    Assign Ambulance
-                  </button>
-                )}
+                  {canMarkArrived && (
+                    <button
+                      className="btn btn-primary"
+                      onClick={handleMarkArrived}
+                      disabled={updateMutation.isPending}
+                      style={actionButtonStyle}
+                    >
+                      <MapPin size={16} />
+                      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
+                        <strong style={{ fontSize: '13px', lineHeight: 1.2 }}>Mark Arrived</strong>
+                        <small style={{ fontSize: '11px', opacity: 0.85, marginTop: '2px' }}>Confirm arrival</small>
+                      </span>
+                    </button>
+                  )}
+                </div>
               </div>
             )}
 
@@ -566,42 +675,51 @@ export default function ReferralDetailPage() {
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0,0,0,0.5)',
+          background: 'rgba(0,0,0,0.6)',
+          backdropFilter: 'blur(4px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
           padding: 'var(--space-4)'
         }}>
-          <div className="card" style={{ maxWidth: 500, width: '100%' }}>
-            <h3 className="card-title mb-4">Redirect Referral</h3>
+          <div className="card" style={{ maxWidth: 580, width: '100%', maxHeight: '90vh', overflowY: 'auto' }}>
+            <h3 className="card-title mb-2">Redirect Referral</h3>
             <p className="text-sm text-muted mb-4">
               Select a new receiving facility. The referral will be reset to PENDING status for the new facility to accept.
             </p>
-            <div className="form-group">
-              <label className="form-label">New Receiving Facility *</label>
+            <div className="form-group mb-3">
+              <label className="form-label font-semibold">New Receiving Facility *</label>
               <SearchableSelect
-                options={facilitiesData?.data
-                  ?.filter(f => f.id !== referral.receivingFacility?.id)
-                  .map(f => ({
-                    value: f.id,
-                    label: f.name,
-                    description: f.facilityType || f.type,
-                  })) || []}
+                options={redirectFacilityOptions}
                 value={redirectFacilityId}
                 onChange={setRedirectFacilityId}
-                placeholder="Select a facility..."
-                searchPlaceholder="Search facilities..."
+                placeholder="Select candidate receiving facility..."
+                searchPlaceholder="Search facilities or readiness..."
               />
             </div>
-            <div className="form-group">
-              <label className="form-label">Reason for Redirect (Optional)</label>
+
+            {redirectFacilityId && (
+              <div className="form-group mb-3">
+                <label className="form-label font-semibold text-xs text-muted">
+                  Facility Capacity &amp; Readiness Preview
+                </label>
+                <FacilityReadinessPreview
+                  facilityId={redirectFacilityId}
+                  facilityName={selectedRedirectFacilityName}
+                  onViewDetails={() => setShowRedirectReadinessModal(true)}
+                />
+              </div>
+            )}
+
+            <div className="form-group mb-4">
+              <label className="form-label font-semibold">Reason for Redirect *</label>
               <textarea
                 className="form-input"
                 rows={3}
                 value={redirectReason}
                 onChange={(e) => setRedirectReason(e.target.value)}
-                placeholder="e.g., Closer facility available, specialized care needed..."
+                placeholder="e.g., Closer facility available, specialized care needed, bed capacity available..."
               />
             </div>
             <div className="flex gap-2 justify-end">
@@ -618,13 +736,21 @@ export default function ReferralDetailPage() {
               <button 
                 className="btn btn-primary"
                 onClick={handleRedirect}
-                disabled={!redirectFacilityId || updateMutation.isPending}
+                disabled={!redirectFacilityId || !redirectReason.trim() || updateMutation.isPending}
               >
-                {updateMutation.isPending ? 'Redirecting...' : 'Redirect'}
+                {updateMutation.isPending ? 'Redirecting...' : 'Redirect Referral'}
               </button>
             </div>
           </div>
         </div>
+      )}
+
+      {showRedirectReadinessModal && redirectFacilityId && (
+        <ReadinessDetailModal
+          facilityId={redirectFacilityId}
+          facilityName={selectedRedirectFacilityName}
+          onClose={() => setShowRedirectReadinessModal(false)}
+        />
       )}
 
       {/* Assign Ambulance Modal */}

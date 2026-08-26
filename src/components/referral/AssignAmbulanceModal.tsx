@@ -129,7 +129,7 @@ export function AssignAmbulanceModal({
             </div>
             <div>
               <h2 id="assign-ambulance-title" className="modal-title">Assign Ambulance</h2>
-              <p className="text-sm text-muted">Assign an available ambulance to this pending referral.</p>
+              <p className="text-sm text-muted">Assign an available ambulance to this accepted NEMS referral.</p>
             </div>
           </div>
           <button type="button" className="btn btn-ghost btn-icon btn-sm" onClick={onClose}>

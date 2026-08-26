@@ -149,6 +149,7 @@ export interface CreateReferralRequest {
   chiefComplaint: string;
   clinicalSummary: string;
   vitalSigns?: VitalSigns;
+  dangerSigns?: string[];
   patientCategory?: string;
   transportMethod?: string;
   nemsRequired?: boolean;
@@ -164,6 +165,27 @@ export interface CreateReferralRequest {
   bloodGroup?: string;
   documentsDescription?: string;
   telephoneArrangement?: boolean;
+}
+
+export interface PrepareReferralRequest {
+  receivingFacilityId: string;
+  referralType: ReferralType;
+  priority: Priority;
+  chiefComplaint: string;
+  vitalSigns?: VitalSigns;
+  dangerSigns?: string[];
+  nemsRequired?: boolean;
+}
+
+export interface ReferralPreparationResponse {
+  recommendedPriority: Priority;
+  recommendedColourCode: 'RED' | 'YELLOW' | 'GREEN';
+  facility?: FacilitySummary;
+  suitable: boolean;
+  readinessReportedAt?: string;
+  readinessAgeHours?: number;
+  warnings: string[];
+  requiredConfirmations: string[];
 }
 
 export interface UpdateReferralRequest {

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { readinessService } from '@/lib/api';
-import { Building2, Bed, Droplet, Wind, Activity, Phone } from 'lucide-react';
+import { Building2, Bed, Droplet, Wind, Activity, Phone, Eye } from 'lucide-react';
+import { ReadinessDetailModal } from '@/components/readiness';
 
 interface ReceivingFacilityReadinessCardProps {
   facilityId: string;
@@ -9,6 +10,7 @@ interface ReceivingFacilityReadinessCardProps {
 }
 
 export function ReceivingFacilityReadinessCard({ facilityId, facilityName }: ReceivingFacilityReadinessCardProps) {
+  const [showDetailModal, setShowDetailModal] = useState(false);
   const { data: readiness, isLoading } = useQuery({
     queryKey: ['facility-readiness-latest', facilityId],
     queryFn: () => readinessService.getLatest(facilityId),
@@ -51,29 +53,51 @@ export function ReceivingFacilityReadinessCard({ facilityId, facilityName }: Rec
     : '—';
 
   return (
-    <div className="card" style={{
-      background: 'var(--bg-elevated)',
-      border: '1px solid var(--border-default)',
-      borderRadius: 'var(--radius-xl)',
-      padding: 'var(--space-4.5)'
-    }}>
-      <div className="flex justify-between items-center mb-4" style={{
-        borderBottom: '1px solid var(--border-subtle)',
-        paddingBottom: '12px'
+    <>
+      <div className="card" style={{
+        background: 'var(--bg-elevated)',
+        border: '1px solid var(--border-default)',
+        borderRadius: 'var(--radius-xl)',
+        padding: 'var(--space-4.5)'
       }}>
-        <h3 className="text-xs font-bold text-muted flex items-center gap-1.5" style={{
-          textTransform: 'uppercase',
-          letterSpacing: '0.05em'
+        <div className="flex justify-between items-center mb-4" style={{
+          borderBottom: '1px solid var(--border-subtle)',
+          paddingBottom: '12px'
         }}>
-          <Building2 size={16} style={{ color: 'var(--accent)' }} />
-          Receiving Facility Readiness
-        </h3>
-        <span className="font-bold text-success" style={{
-          fontSize: '10px',
-          textTransform: 'uppercase',
-          letterSpacing: '0.05em'
-        }}>{readiness ? 'DATA INSTANT' : 'NO REPORT'}</span>
-      </div>
+          <h3 className="text-xs font-bold text-muted flex items-center gap-1.5" style={{
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>
+            <Building2 size={16} style={{ color: 'var(--accent)' }} />
+            Receiving Facility Readiness
+          </h3>
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-success" style={{
+              fontSize: '10px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em'
+            }}>{readiness ? 'DATA INSTANT' : 'NO REPORT'}</span>
+            {readiness && (
+              <button
+                type="button"
+                onClick={() => setShowDetailModal(true)}
+                className="btn btn-secondary btn-sm"
+                style={{
+                  padding: '3px 8px',
+                  fontSize: '11px',
+                  height: 'auto',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  border: '1px solid var(--border-default)',
+                }}
+              >
+                <Eye size={12} />
+                View Details
+              </button>
+            )}
+          </div>
+        </div>
 
       <h4 className="font-semibold text-sm text-primary" style={{ marginBottom: '14px' }}>
         {facilityName}
@@ -213,5 +237,15 @@ export function ReceivingFacilityReadinessCard({ facilityId, facilityName }: Rec
         </div>
       </div>
     </div>
-  );
+
+    {showDetailModal && readiness && (
+      <ReadinessDetailModal
+        data={readiness}
+        facilityId={facilityId}
+        facilityName={facilityName}
+        onClose={() => setShowDetailModal(false)}
+      />
+    )}
+  </>
+);
 }

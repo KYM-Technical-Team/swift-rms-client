@@ -8,6 +8,8 @@ import {
   TimelineEntry,
   AddNoteRequest,
   ClinicianReviewRequest,
+  PrepareReferralRequest,
+  ReferralPreparationResponse,
   AssignAmbulanceRequest,
   AssignAmbulanceResponse,
   ApiResponse,
@@ -50,6 +52,11 @@ export const referralService = {
     return response.data.data!;
   },
 
+  prepare: async (data: PrepareReferralRequest): Promise<ReferralPreparationResponse> => {
+    const response = await apiClient.post<ApiResponse<ReferralPreparationResponse>>('/referrals/prepare', data);
+    return response.data.data!;
+  },
+
   update: async (id: string, data: UpdateReferralRequest): Promise<Referral> => {
     const response = await apiClient.patch<ApiResponse<Referral>>(`/referrals/${id}`, data);
     return response.data.data!;
@@ -66,31 +73,34 @@ export const referralService = {
 
   // Status update helpers
   accept: async (id: string): Promise<Referral> => {
-    return referralService.update(id, { status: 'ACCEPTED' });
+    const response = await apiClient.post<ApiResponse<Referral>>(`/referrals/${id}/accept`, {});
+    return response.data.data!;
   },
 
   reject: async (id: string, reason: string): Promise<Referral> => {
-    return referralService.update(id, { status: 'REJECTED', rejectionReason: reason });
+    const response = await apiClient.post<ApiResponse<Referral>>(`/referrals/${id}/reject`, { rejectionReason: reason });
+    return response.data.data!;
   },
 
   redirect: async (id: string, newFacilityId: string, reason: string): Promise<Referral> => {
-    return referralService.update(id, { 
-      action: 'REDIRECT',
+    const response = await apiClient.post<ApiResponse<Referral>>(`/referrals/${id}/redirect`, {
       newReceivingFacilityId: newFacilityId,
-      redirectReason: reason 
+      redirectReason: reason,
     });
+    return response.data.data!;
   },
 
   markArrived: async (id: string): Promise<Referral> => {
-    return referralService.update(id, { status: 'ARRIVED' });
+    const response = await apiClient.post<ApiResponse<Referral>>(`/referrals/${id}/arrival`, {});
+    return response.data.data!;
   },
 
   complete: async (id: string, outcome: string, notes?: string): Promise<Referral> => {
-    return referralService.update(id, { 
-      status: 'COMPLETED', 
+    const response = await apiClient.post<ApiResponse<Referral>>(`/referrals/${id}/complete`, {
       outcome: outcome as 'DISCHARGED' | 'ADMITTED' | 'REFERRED_FURTHER' | 'DECEASED' | 'LEFT_AGAINST_ADVICE',
-      outcomeNotes: notes 
+      outcomeNotes: notes,
     });
+    return response.data.data!;
   },
 
   // Clinician review for Journey 3
@@ -99,7 +109,7 @@ export const referralService = {
     return response.data.data!;
   },
 
-  // Assign ambulance to pending referral
+  // Assign ambulance to an accepted NEMS referral
   assignAmbulance: async (id: string, data: AssignAmbulanceRequest): Promise<AssignAmbulanceResponse> => {
     const response = await apiClient.post<ApiResponse<AssignAmbulanceResponse>>(`/referrals/${id}/assign-ambulance`, data);
     return response.data.data!;
