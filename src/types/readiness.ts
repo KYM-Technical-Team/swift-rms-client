@@ -15,8 +15,10 @@ export interface FacilityReadiness {
     firstName: string;
     lastName: string;
   };
-  // Overall score is calculated on frontend
+  // Score from server if available
   overallScore?: number;
+  readinessScore?: number;
+  score?: number;
   // Bed capacity - matching backend naming
   bedCapacityTotal: number;
   bedCapacityAvailable: number;
@@ -50,6 +52,15 @@ export interface FacilityReadiness {
   theatreStatus?: string;
   theatreAvailable?: boolean;
   operatingRoomsAvailable: number;
+  diagnosticsStatus?: {
+    ctScan?: string;
+    laboratory?: string;
+    ultrasound?: string;
+    xray?: string;
+  } | Record<string, string>;
+  notes?: string;
+  version?: number;
+  updatedAt?: string;
   createdAt: string;
 }
 

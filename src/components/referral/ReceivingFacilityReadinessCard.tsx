@@ -48,9 +48,30 @@ export function ReceivingFacilityReadinessCard({ facilityId, facilityName }: Rec
     ? `Dr. ${readiness.reportedBy.firstName} ${readiness.reportedBy.lastName}`
     : '—';
   
-  const reportTime = readiness?.reportDate 
-    ? new Date(readiness.reportDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    : '—';
+  const formattedLastUpdated = (() => {
+    if (!readiness) return '—';
+    const timestamp = readiness.updatedAt || readiness.createdAt || readiness.reportDate;
+    if (!timestamp) return '—';
+    const d = new Date(timestamp);
+    if (isNaN(d.getTime())) return '—';
+
+    const dateStr = d.toLocaleDateString([], {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+
+    const timeSource = readiness.updatedAt || readiness.createdAt;
+    if (timeSource) {
+      const timeStr = new Date(timeSource).toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      return `${dateStr}, ${timeStr}`;
+    }
+
+    return dateStr;
+  })();
 
   return (
     <>
@@ -218,7 +239,7 @@ export function ReceivingFacilityReadinessCard({ facilityId, facilityName }: Rec
         borderTop: '1px solid rgba(255, 255, 255, 0.06)',
         paddingTop: '10px'
       }}>
-        <span>Last updated: {reportTime}</span>
+        <span>Last updated: {formattedLastUpdated}</span>
         <div className="flex items-center gap-2">
           <span>{reporterName}</span>
           {readiness?.reportedBy && (

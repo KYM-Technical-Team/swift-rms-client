@@ -10,9 +10,8 @@ import {
   Activity,
   AlertCircle,
   ExternalLink,
-  Users,
 } from 'lucide-react';
-import { calculateScore, getScoreColor, getStatusColor, StatusBadge } from './ReadinessDetailModal';
+import { calculateScore, getScoreColor, getStatusColor, formatSpecialist } from './ReadinessDetailModal';
 
 interface FacilityReadinessPreviewProps {
   facilityId: string;
@@ -36,9 +35,9 @@ export function FacilityReadinessPreview({
       <div
         className="p-3 my-2 text-center"
         style={{
-          background: 'var(--bg-overlay, rgba(255, 255, 255, 0.03))',
+          background: 'var(--bg-overlay)',
           border: '1px solid var(--border-subtle)',
-          borderRadius: 'var(--radius-lg)',
+          borderRadius: 'var(--radius-lg, 12px)',
         }}
       >
         <div className="spinner mx-auto" style={{ width: 20, height: 20 }} />
@@ -54,7 +53,7 @@ export function FacilityReadinessPreview({
         style={{
           background: 'rgba(245, 158, 11, 0.08)',
           border: '1px solid rgba(245, 158, 11, 0.2)',
-          borderRadius: 'var(--radius-lg)',
+          borderRadius: 'var(--radius-lg, 12px)',
         }}
       >
         <AlertCircle size={16} style={{ color: '#f59e0b', flexShrink: 0 }} />
@@ -68,7 +67,7 @@ export function FacilityReadinessPreview({
   const score = calculateScore(readiness);
   const bedsAvailable = readiness.bedCapacityAvailable ?? 0;
   const bedsTotal = readiness.bedCapacityTotal ?? 0;
-  const bloodO = readiness.bloodUnitsOPositive ?? 0;
+  const bloodO = (readiness.bloodUnitsOPositive ?? 0) + (readiness.bloodUnitsONegative ?? 0);
   const oxygen = readiness.oxygenStatus;
   const theatreRooms = readiness.operatingRoomsAvailable ?? 0;
 
@@ -85,11 +84,11 @@ export function FacilityReadinessPreview({
   return (
     <div
       style={{
-        background: 'var(--bg-elevated, rgba(255, 255, 255, 0.04))',
+        background: 'var(--bg-elevated)',
         border: '1px solid var(--border-default)',
-        borderRadius: 'var(--radius-lg)',
-        padding: 'var(--space-3.5)',
-        margin: 'var(--space-3) 0',
+        borderRadius: 'var(--radius-lg, 12px)',
+        padding: 'var(--space-3.5, 14px)',
+        margin: 'var(--space-3, 12px) 0',
       }}
     >
       <div className="flex justify-between items-center mb-2.5 pb-2" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
@@ -106,7 +105,7 @@ export function FacilityReadinessPreview({
           <span
             style={{
               padding: '2px 8px',
-              borderRadius: 'var(--radius-full)',
+              borderRadius: 'var(--radius-full, 9999px)',
               fontSize: '10px',
               fontWeight: 800,
               background: `rgba(255, 255, 255, 0.06)`,
@@ -127,7 +126,7 @@ export function FacilityReadinessPreview({
               padding: '2px 8px',
               height: 'auto',
               gap: 4,
-              color: 'var(--accent)',
+              color: 'var(--accent, #38bdf8)',
             }}
           >
             Full Details
@@ -140,23 +139,23 @@ export function FacilityReadinessPreview({
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: 'var(--space-2)',
-          marginBottom: 'var(--space-2.5)',
+          gap: 'var(--space-2, 8px)',
+          marginBottom: 'var(--space-2.5, 10px)',
         }}
       >
         <div
           style={{
             padding: '6px 8px',
-            background: 'var(--bg-overlay, rgba(0,0,0,0.2))',
-            borderRadius: 'var(--radius-md)',
+            background: 'var(--bg-surface)',
+            borderRadius: 'var(--radius-md, 8px)',
             border: '1px solid var(--border-subtle)',
           }}
         >
           <div className="flex items-center gap-1 text-muted" style={{ fontSize: '10px' }}>
-            <BedDouble size={12} style={{ color: 'var(--success)' }} />
+            <BedDouble size={12} style={{ color: 'var(--success, #22c55e)' }} />
             <span>Beds</span>
           </div>
-          <strong style={{ fontSize: '12px', color: bedsAvailable > 0 ? 'var(--success)' : 'var(--danger)' }}>
+          <strong style={{ fontSize: '12px', color: bedsAvailable > 0 ? 'var(--success, #22c55e)' : 'var(--danger, #ef4444)' }}>
             {bedsAvailable}/{bedsTotal}
           </strong>
         </div>
@@ -164,16 +163,16 @@ export function FacilityReadinessPreview({
         <div
           style={{
             padding: '6px 8px',
-            background: 'var(--bg-overlay, rgba(0,0,0,0.2))',
-            borderRadius: 'var(--radius-md)',
+            background: 'var(--bg-surface)',
+            borderRadius: 'var(--radius-md, 8px)',
             border: '1px solid var(--border-subtle)',
           }}
         >
           <div className="flex items-center gap-1 text-muted" style={{ fontSize: '10px' }}>
-            <Droplet size={12} style={{ color: 'var(--danger)' }} />
-            <span>Blood (O+)</span>
+            <Droplet size={12} style={{ color: 'var(--danger, #ef4444)' }} />
+            <span>Blood (O+/-)</span>
           </div>
-          <strong style={{ fontSize: '12px', color: bloodO > 0 ? 'var(--success)' : 'var(--danger)' }}>
+          <strong style={{ fontSize: '12px', color: bloodO > 0 ? 'var(--success, #22c55e)' : 'var(--danger, #ef4444)' }}>
             {bloodO} units
           </strong>
         </div>
@@ -181,13 +180,13 @@ export function FacilityReadinessPreview({
         <div
           style={{
             padding: '6px 8px',
-            background: 'var(--bg-overlay, rgba(0,0,0,0.2))',
-            borderRadius: 'var(--radius-md)',
+            background: 'var(--bg-surface)',
+            borderRadius: 'var(--radius-md, 8px)',
             border: '1px solid var(--border-subtle)',
           }}
         >
           <div className="flex items-center gap-1 text-muted" style={{ fontSize: '10px' }}>
-            <Wind size={12} style={{ color: 'var(--info)' }} />
+            <Wind size={12} style={{ color: 'var(--info, #38bdf8)' }} />
             <span>Oxygen</span>
           </div>
           <strong style={{ fontSize: '12px', color: getStatusColor(oxygen) }}>
@@ -198,16 +197,16 @@ export function FacilityReadinessPreview({
         <div
           style={{
             padding: '6px 8px',
-            background: 'var(--bg-overlay, rgba(0,0,0,0.2))',
-            borderRadius: 'var(--radius-md)',
+            background: 'var(--bg-surface)',
+            borderRadius: 'var(--radius-md, 8px)',
             border: '1px solid var(--border-subtle)',
           }}
         >
           <div className="flex items-center gap-1 text-muted" style={{ fontSize: '10px' }}>
-            <Activity size={12} style={{ color: 'var(--success)' }} />
+            <Activity size={12} style={{ color: 'var(--success, #22c55e)' }} />
             <span>Theatre</span>
           </div>
-          <strong style={{ fontSize: '12px', color: theatreRooms > 0 ? 'var(--success)' : 'var(--warning)' }}>
+          <strong style={{ fontSize: '12px', color: theatreRooms > 0 ? 'var(--success, #22c55e)' : 'var(--warning, #f59e0b)' }}>
             {theatreRooms} Room{theatreRooms !== 1 ? 's' : ''}
           </strong>
         </div>
@@ -221,7 +220,7 @@ export function FacilityReadinessPreview({
                 width: 6,
                 height: 6,
                 borderRadius: '50%',
-                background: obgyn ? 'var(--success)' : 'var(--text-secondary)',
+                background: obgyn ? 'var(--success, #22c55e)' : 'var(--text-secondary, #64748b)',
               }}
             />
             OB/GYN: {obgyn ? 'On duty' : 'Off'}
@@ -232,13 +231,25 @@ export function FacilityReadinessPreview({
                 width: 6,
                 height: 6,
                 borderRadius: '50%',
-                background: anaesthetist ? 'var(--success)' : 'var(--text-secondary)',
+                background: anaesthetist ? 'var(--success, #22c55e)' : 'var(--text-secondary, #64748b)',
               }}
             />
             Anaesthetist: {anaesthetist ? 'On duty' : 'Off'}
           </span>
         </div>
-        <span>Updated {readiness.reportDate ? new Date(readiness.reportDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}</span>
+        <span>Updated {(() => {
+          const timestamp = readiness.updatedAt || readiness.createdAt || readiness.reportDate;
+          if (!timestamp) return '—';
+          const d = new Date(timestamp);
+          if (isNaN(d.getTime())) return '—';
+          const dateStr = d.toLocaleDateString([], { day: '2-digit', month: 'short', year: 'numeric' });
+          const timeSource = readiness.updatedAt || readiness.createdAt;
+          if (timeSource) {
+            const timeStr = new Date(timeSource).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            return `${dateStr}, ${timeStr}`;
+          }
+          return dateStr;
+        })()}</span>
       </div>
     </div>
   );

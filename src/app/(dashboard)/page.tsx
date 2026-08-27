@@ -24,6 +24,7 @@ import {
   Wind
 } from 'lucide-react';
 import { StatCard, DataTable, PriorityBadge, StatusIndicator } from '@/components/ui';
+import { calculateScore } from '@/components/readiness';
 import NemsCallCentreDashboard from './NemsCallCentreDashboard';
 
 interface Referral {
@@ -182,47 +183,8 @@ export default function DashboardPage() {
   // Calculate critical count for urgency indicator
   const criticalCount = pendingReferrals?.filter((r: any) => r.priority === 'CRITICAL').length || 0;
 
-  // Calculate readiness score (percentage based on available resources)
-  const calculateReadinessScore = () => {
-    if (!facilityReadiness) return null;
-    
-    const r = facilityReadiness;
-    let score = 0;
-    let factors = 0;
-    
-    // Bed availability (weight: 25%)
-    if (r.bedCapacityTotal > 0) {
-      score += (r.bedCapacityAvailable / r.bedCapacityTotal) * 25;
-      factors++;
-    }
-    
-    // Resource statuses (weight: 75% total, 25% each)
-    const statusScore = (status: string) => {
-      switch (status) {
-        case 'ADEQUATE': case 'FULLY_STAFFED': return 100;
-        case 'LOW': case 'ADEQUATE': return 66;
-        case 'CRITICAL': case 'UNDERSTAFFED': return 33;
-        default: return 0;
-      }
-    };
-    
-    if (r.oxygenStatus) {
-      score += statusScore(r.oxygenStatus) * 0.25;
-      factors++;
-    }
-    if (r.staffingStatus) {
-      score += statusScore(r.staffingStatus) * 0.25;
-      factors++;
-    }
-    if (r.bloodBankStatus) {
-      score += statusScore(r.bloodBankStatus) * 0.25;
-      factors++;
-    }
-    
-    return factors > 0 ? Math.round(score) : null;
-  };
-  
-  const readinessScore = calculateReadinessScore();
+  // Calculate readiness score using server score or unified calculation
+  const readinessScore = facilityReadiness ? calculateScore(facilityReadiness) : null;
 
   const columnHelper = createColumnHelper<Referral>();
   

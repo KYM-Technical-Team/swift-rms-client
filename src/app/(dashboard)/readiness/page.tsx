@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { readinessService } from '@/lib/api';
 import { useAuthStore } from '@/store';
 import { FacilityReadiness } from '@/types';
-import { ReadinessDetailModal } from '@/components/readiness';
+import { ReadinessDetailModal, calculateScore, getScoreColor, getStatusColor, getStatusBg, StatusBadge } from '@/components/readiness';
 import { 
   BedDouble, 
   Droplets, 
@@ -24,104 +24,8 @@ import {
   ChevronDown,
   ChevronUp,
   X,
-  MapPin
+  MapPin,
 } from 'lucide-react';
-
-// Helper functions
-const getScoreColor = (score: number) => {
-  if (score >= 80) return 'var(--success)';
-  if (score >= 60) return 'var(--warning)';
-  return 'var(--error)';
-};
-
-const getStatusColor = (status: string) => {
-  switch (status?.toUpperCase()) {
-    case 'ADEQUATE':
-    case 'FULLY_STAFFED':
-    case 'AVAILABLE':
-      return 'var(--success)';
-    case 'LOW':
-    case 'UNDERSTAFFED':
-      return 'var(--warning)';
-    case 'CRITICAL':
-    case 'UNAVAILABLE':
-      return 'var(--error)';
-    default:
-      return 'var(--muted)';
-  }
-};
-
-const getStatusBg = (status: string) => {
-  switch (status?.toUpperCase()) {
-    case 'ADEQUATE':
-    case 'FULLY_STAFFED':
-    case 'AVAILABLE':
-      return 'rgba(34, 197, 94, 0.15)';
-    case 'LOW':
-    case 'UNDERSTAFFED':
-      return 'rgba(234, 179, 8, 0.15)';
-    case 'CRITICAL':
-    case 'UNAVAILABLE':
-      return 'rgba(239, 68, 68, 0.15)';
-    default:
-      return 'var(--bg-overlay)';
-  }
-};
-
-const StatusBadge = ({ status }: { status: string }) => (
-  <span style={{
-    padding: '4px 12px',
-    borderRadius: 'var(--radius-full)',
-    fontSize: 'var(--text-xs)',
-    fontWeight: 600,
-    color: getStatusColor(status),
-    background: getStatusBg(status),
-    textTransform: 'capitalize'
-  }}>
-    {status?.replace(/_/g, ' ').toLowerCase() || 'N/A'}
-  </span>
-);
-
-const calculateScore = (data: FacilityReadiness) => {
-  let score = 0;
-  let factors = 0;
-  
-  if (data.bedCapacityTotal > 0) {
-    const bedScore = (data.bedCapacityAvailable / data.bedCapacityTotal) * 100;
-    score += bedScore * 0.4;
-    factors += 0.4;
-  }
-  
-  const statusScore = (status: string) => {
-    switch (status) {
-      case 'ADEQUATE': return 100;
-      case 'LOW': return 50;
-      case 'CRITICAL': return 20;
-      default: return 0;
-    }
-  };
-  
-  if (data.oxygenStatus) {
-    score += statusScore(data.oxygenStatus) * 0.2;
-    factors += 0.2;
-  }
-  
-  if (data.bloodBankStatus) {
-    score += statusScore(data.bloodBankStatus) * 0.2;
-    factors += 0.2;
-  }
-  
-  if (data.staffingStatus) {
-    const status = String(data.staffingStatus);
-    const staffScore = status === 'FULLY_STAFFED' ? 100 : 
-                       status === 'ADEQUATE' ? 80 :
-                       status === 'UNDERSTAFFED' ? 50 : 20;
-    score += staffScore * 0.2;
-    factors += 0.2;
-  }
-  
-  return factors > 0 ? Math.round(score / factors) : 0;
-};
 
 const getTotalBloodUnits = (data: FacilityReadiness) => {
   return (
@@ -182,7 +86,7 @@ function FacilityReadinessCard({
             <div style={{ 
               width: 40, 
               height: 40, 
-              background: 'var(--card)',
+              background: 'var(--bg-surface)',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
@@ -399,7 +303,7 @@ function SingleFacilityView({ data }: { data: FacilityReadiness }) {
             <div style={{ 
               width: 80, 
               height: 80, 
-              background: 'var(--card)',
+              background: 'var(--bg-surface)',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',

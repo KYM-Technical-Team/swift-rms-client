@@ -129,6 +129,8 @@
   --background: var(--bg-base);
   --background-subtle: var(--bg-elevated);
   --background-muted: var(--bg-surface);
+  --card: var(--bg-surface);
+  --bg-card: var(--bg-surface);
   --border: var(--border-default);
   --border-muted: var(--border-subtle);
   --primary: var(--accent);
